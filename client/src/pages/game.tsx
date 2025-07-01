@@ -49,8 +49,8 @@ export default function Game() {
   });
 
   // Fetch random person
-  const { data: person, isLoading: personLoading, refetch: fetchNewPerson } = useQuery({
-    queryKey: ['/api/game/person', sessionId],
+  const { data: person, isLoading: personLoading } = useQuery({
+    queryKey: ['/api/game/person', sessionId, roundNumber],
     enabled: !!sessionId,
     staleTime: Infinity, // Don't refetch automatically
     queryFn: async () => {
@@ -129,7 +129,7 @@ export default function Game() {
   };
 
   const handleNextPerson = () => {
-    fetchNewPerson();
+    setRoundNumber(prev => prev + 1);
   };
 
   const handleGetHint = () => {
