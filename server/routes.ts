@@ -67,7 +67,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Session not found" });
       }
 
-      const isCorrect = normalizeGuess(guess) === normalizeGuess(personName);
+      const isCorrect = isCorrectGuess(guess, personName);
       let pointsEarned = 0;
       let newStreak = session.streak;
       let newScore = session.score;
@@ -131,6 +131,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 function normalizeGuess(guess: string): string {
   return guess.toLowerCase().trim().replace(/[^\w\s]/g, '');
+}
+
+function isCorrectGuess(guess: string, personName: string): boolean {
+  const normalizedGuess = normalizeGuess(guess);
+  const normalizedName = normalizeGuess(personName);
+  
+  // Exact match
+  if (normalizedGuess === normalizedName) {
+    return true;
+  }
+  
+  // Split name into parts
+  const nameParts = normalizedName.split(/\s+/);
+  const guessParts = normalizedGuess.split(/\s+/);
+  
+  // Check if guess matches the last name
+  if (guessParts.length === 1 && nameParts.length > 1) {
+    const lastName = nameParts[nameParts.length - 1];
+    if (guessParts[0] === lastName) {
+      return true;
+    }
+  }
+  
+  // Check if all parts of the guess are in the name
+  if (guessParts.every(part => nameParts.includes(part))) {
+    return true;
+  }
+  
+  return false;
 }
 
 async function getRandomWikipediaPerson(usedPeople: string[]): Promise<WikipediaPerson> {
