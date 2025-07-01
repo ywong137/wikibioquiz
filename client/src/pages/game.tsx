@@ -56,12 +56,16 @@ export default function Game() {
       if (!response.ok) throw new Error('Failed to fetch person');
       return response.json();
     },
-    onSuccess: (data: WikipediaPerson) => {
-      setCurrentPerson(data);
+  });
+
+  // Update currentPerson when person data changes
+  useEffect(() => {
+    if (person) {
+      setCurrentPerson(person);
       setShowFeedback(false);
       setGuess('');
-    },
-  });
+    }
+  }, [person]);
 
   // Submit guess
   const submitGuessMutation = useMutation({
