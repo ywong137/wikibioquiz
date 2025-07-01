@@ -103,6 +103,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/game/hint", async (req, res) => {
     try {
       const sessionId = parseInt(req.body.sessionId);
+      const personName = req.body.personName as string;
       const session = await storage.getGameSession(sessionId);
       
       if (!session) {
@@ -114,10 +115,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         score: newScore,
       });
 
-      // In a real implementation, this would return additional hints
-      // For now, return a generic hint
+      // Get additional hint from Wikipedia
+      const additionalHint = await getAdditionalHint(personName);
+
       res.json({
-        hint: "This person is well-known in their field and has multiple Wikipedia sections about their achievements.",
+        hint: additionalHint,
         session: updatedSession,
       });
     } catch (error) {
@@ -160,6 +162,75 @@ function isCorrectGuess(guess: string, personName: string): boolean {
   }
   
   return false;
+}
+
+async function getAdditionalHint(personName: string): Promise<string> {
+  try {
+    // Get Wikipedia summary for additional hint information
+    const response = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(personName)}`
+    );
+    
+    if (!response.ok) {
+      return "This person has made significant contributions to their field and has an extensive Wikipedia page.";
+    }
+    
+    const data = await response.json();
+    const extract = data.extract || "";
+    
+    // Extract more specific hints from the Wikipedia extract
+    const hints = [];
+    
+    // Look for birth/death years
+    const yearMatch = extract.match(/\b(1[0-9]{3}|20[0-9]{2})\b/);
+    if (yearMatch) {
+      const year = parseInt(yearMatch[1]);
+      if (year < 1800) hints.push("Lived before the 19th century");
+      else if (year < 1900) hints.push("Lived in the 19th century");
+      else if (year < 1950) hints.push("Born in the early 20th century");
+      else if (year < 2000) hints.push("Born in the mid-to-late 20th century");
+      else hints.push("Born in the 21st century");
+    }
+    
+    // Look for professions/fields
+    if (extract.includes('Nobel Prize')) hints.push("Nobel Prize winner");
+    if (extract.includes('President') || extract.includes('Prime Minister')) hints.push("Held high political office");
+    if (extract.includes('actor') || extract.includes('actress')) hints.push("Known for acting");
+    if (extract.includes('director')) hints.push("Film or theater director");
+    if (extract.includes('scientist')) hints.push("Made scientific discoveries");
+    if (extract.includes('physicist')) hints.push("Worked in physics");
+    if (extract.includes('mathematician')) hints.push("Known for mathematics");
+    if (extract.includes('painter') || extract.includes('artist')) hints.push("Visual artist");
+    if (extract.includes('composer') || extract.includes('musician')) hints.push("Musical composer or performer");
+    if (extract.includes('writer') || extract.includes('author') || extract.includes('poet')) hints.push("Literary figure");
+    if (extract.includes('inventor')) hints.push("Known for inventions");
+    if (extract.includes('philosopher')) hints.push("Philosophical thinker");
+    
+    // Look for achievements/works
+    if (extract.includes('theory of relativity')) hints.push("Associated with revolutionary physics theories");
+    if (extract.includes('Mona Lisa') || extract.includes('Last Supper')) hints.push("Created world-famous artworks");
+    if (extract.includes('plays') || extract.includes('Romeo') || extract.includes('Hamlet')) hints.push("Wrote famous plays");
+    if (extract.includes('civil rights')) hints.push("Civil rights leader");
+    if (extract.includes('World War')) hints.push("Played a role in a World War");
+    
+    // Look for locations
+    if (extract.includes('English') || extract.includes('England') || extract.includes('British')) hints.push("From England/Britain");
+    if (extract.includes('French') || extract.includes('France')) hints.push("From France");
+    if (extract.includes('German') || extract.includes('Germany')) hints.push("From Germany");
+    if (extract.includes('Italian') || extract.includes('Italy')) hints.push("From Italy");
+    if (extract.includes('American') || extract.includes('United States')) hints.push("From the United States");
+    
+    if (hints.length === 0) {
+      return "This person has made lasting contributions that earned them a detailed Wikipedia page.";
+    }
+    
+    // Return 2-3 hints, avoiding the original hint if possible
+    const selectedHints = hints.slice(0, 3);
+    return selectedHints.join(" • ");
+    
+  } catch (error) {
+    return "This person is notable enough to have extensive biographical information.";
+  }
 }
 
 async function getRandomWikipediaPerson(usedPeople: string[]): Promise<WikipediaPerson> {

@@ -22,6 +22,7 @@ export default function Game() {
   const [lastGuessCorrect, setLastGuessCorrect] = useState(false);
   const [pointsEarned, setPointsEarned] = useState(0);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [roundNumber, setRoundNumber] = useState(1);
   const { toast } = useToast();
 
   // Create game session
@@ -51,6 +52,7 @@ export default function Game() {
   const { data: person, isLoading: personLoading, refetch: fetchNewPerson } = useQuery({
     queryKey: ['/api/game/person', sessionId],
     enabled: !!sessionId,
+    staleTime: Infinity, // Don't refetch automatically
     queryFn: async () => {
       const response = await fetch(`/api/game/person?sessionId=${sessionId}`);
       if (!response.ok) throw new Error('Failed to fetch person');
@@ -96,7 +98,10 @@ export default function Game() {
   // Get hint
   const getHintMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/game/hint', { sessionId });
+      const response = await apiRequest('POST', '/api/game/hint', { 
+        sessionId, 
+        personName: currentPerson?.name 
+      });
       return response.json();
     },
     onSuccess: (data) => {
