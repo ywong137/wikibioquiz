@@ -337,7 +337,7 @@ Examples:
 
 async function getRandomWikipediaPerson(usedPeople: string[]): Promise<WikipediaPerson> {
   // Try multiple times to find a good person not already used
-  for (let attempt = 0; attempt < 10; attempt++) {
+  for (let attempt = 0; attempt < 5; attempt++) {
     try {
       const person = await tryGetRandomPerson();
       
@@ -346,8 +346,8 @@ async function getRandomWikipediaPerson(usedPeople: string[]): Promise<Wikipedia
         continue;
       }
       
-      // Skip if sections are too few or poor quality
-      if (person.sections.length < 3) {
+      // Skip if sections are too few 
+      if (person.sections.length < 2) {
         continue;
       }
       
@@ -359,7 +359,7 @@ async function getRandomWikipediaPerson(usedPeople: string[]): Promise<Wikipedia
   }
   
   // If all attempts failed, throw error instead of fallback
-  throw new Error("Failed to fetch person from Wikipedia after 10 attempts");
+  throw new Error("Failed to fetch person from Wikipedia after 5 attempts");
 }
 
 async function tryGetRandomPerson(): Promise<WikipediaPerson> {
@@ -591,10 +591,24 @@ async function getPersonFromCategory(usedPeople: string[]): Promise<WikipediaPer
 }
 
 function isProbablyPerson(title: string, extract: string): boolean {
+  // Skip obvious non-person pages
+  const excludeTerms = [
+    'list of', 'category:', 'disambiguation', 'redirect', 'template:', 
+    'people', 'americans', 'british', 'german', 'spanish', 'french',
+    'italians', 'canadians', 'japanese'
+  ];
+  
+  const titleLower = title.toLowerCase();
+  if (excludeTerms.some(term => titleLower.includes(term))) {
+    return false;
+  }
+  
+  // If it has any biographical indicators, it's probably a person
   const personIndicators = [
     'born', 'birth', 'died', 'death', 'is an', 'is a', 'was an', 'was a',
     'actor', 'actress', 'singer', 'musician', 'writer', 'author', 'scientist',
-    'politician', 'athlete', 'director', 'producer', 'artist'
+    'politician', 'athlete', 'director', 'producer', 'artist', 'composer',
+    'painter', 'philosopher', 'inventor', 'businessman'
   ];
   
   const text = (title + ' ' + extract).toLowerCase();
