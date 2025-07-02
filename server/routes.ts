@@ -154,9 +154,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           pointsEarned = 7; // 7 points for correct without hint
         }
         
-        // Add streak bonus equal to the current streak plus this correct answer
-        streakBonus = session.streak + 1;
-        pointsEarned += streakBonus;
+        // Add streak bonus only at multiples of 5
+        const newStreakValue = session.streak + 1;
+        if (newStreakValue % 5 === 0) {
+          streakBonus = newStreakValue;
+          pointsEarned += streakBonus;
+        }
         
         newStreak = session.streak + 1;
         newScore = session.score + pointsEarned;

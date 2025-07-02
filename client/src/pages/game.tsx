@@ -121,10 +121,19 @@ export default function Game() {
       setShowFeedback(true);
       
       if (data.correct) {
-        toast({
-          title: "Correct! 🎉",
-          description: `You earned ${data.pointsEarned} points!`,
-        });
+        // Show special toast for milestone streak bonuses
+        if (data.streakBonus && data.streakBonus % 5 === 0) {
+          toast({
+            title: "🎉 MILESTONE ACHIEVED! 🎉",
+            description: `${data.streakBonus} correct in a row! Bonus: +${data.streakBonus} points`,
+            duration: 4000,
+          });
+        } else {
+          toast({
+            title: "Correct! 🎉",
+            description: `You earned ${data.pointsEarned} points!`,
+          });
+        }
       } else {
         toast({
           title: "Not quite! 😅",
@@ -530,7 +539,12 @@ export default function Game() {
                   <div className="flex justify-center space-x-6 text-lg">
                     <div>Points: <span className="font-bold">+{pointsEarned}</span></div>
                     {streakBonus > 0 && (
-                      <div>Streak Bonus: <span className="font-bold">+{streakBonus}</span></div>
+                      <div className={`${streakBonus % 5 === 0 ? 'animate-pulse bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-lg shadow-lg' : ''}`}>
+                        <span className="font-bold">
+                          {streakBonus % 5 === 0 ? '🎉 MILESTONE BONUS' : 'Streak Bonus'}: +{streakBonus}
+                          {streakBonus % 5 === 0 ? ' 🎉' : ''}
+                        </span>
+                      </div>
                     )}
                     <div>Current Streak: <span className="font-bold">{gameSession?.streak || 0}</span></div>
                   </div>
