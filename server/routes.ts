@@ -466,31 +466,8 @@ Examples:
 }
 
 async function getRandomWikipediaPerson(usedPeople: string[], round: number): Promise<WikipediaPerson> {
-  const cachedCount = await storage.getCachedBiographyCount();
-  
-  // Strategy: Use cache for first 100 rounds if we have 1000+ cached, 
-  // then alternate between cache and new fetch
-  const shouldUseCache = (cachedCount >= 1000 && round <= 100) || 
-                        (cachedCount > 0 && round > 100 && round % 2 === 0);
-  
-  if (shouldUseCache) {
-    console.log(`\n🎯 ROUND ${round}: Using cached biography (${cachedCount} available)`);
-    const cachedBiographies = await storage.getRandomCachedBiographies(usedPeople, 1);
-    
-    if (cachedBiographies.length > 0) {
-      const cached = cachedBiographies[0];
-      console.log(`✅ CACHE HIT: Retrieved "${cached.name}" from cache`);
-      return {
-        name: cached.name,
-        sections: cached.sections,
-        hint: cached.hint,
-        aiHint: cached.aiHint ?? undefined,
-        initials: cached.initials,
-        url: cached.wikipediaUrl,
-      };
-    }
-    console.log(`❌ CACHE MISS: No suitable cached biographies found`);
-  }
+  // Always fetch fresh from Wikipedia - no caching to ensure quality
+  console.log(`\n🎯 ROUND ${round}: Always fetching fresh from Wikipedia (cache disabled)`);
   
   console.log(`\n🎯 ROUND ${round}: Fetching NEW Wikipedia person from live API...`);
   
@@ -513,23 +490,6 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
       }
       
       console.log(`✅ ATTEMPT ${attempt + 1}: Found suitable person "${person.name}" with ${person.sections.length} sections`);
-      
-      // Cache the person for future use
-      try {
-        await storage.addCachedBiography({
-          wikipediaUrl: person.url,
-          name: person.name,
-          sections: person.sections,
-          hint: person.hint,
-          aiHint: person.aiHint,
-          initials: person.initials,
-          extract: null, // We don't have extract from our current flow
-        });
-        console.log(`💾 CACHED: Successfully stored "${person.name}" for future use`);
-      } catch (cacheError) {
-        console.log(`💾 CACHE SKIP: "${person.name}" already cached (duplicate entry)`);
-        // Continue anyway, caching failure shouldn't break the game
-      }
       
       return person;
     } catch (error) {
