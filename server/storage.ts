@@ -137,7 +137,7 @@ export class MemStorage implements IStorage {
 
 // Database storage implementation with PostgreSQL
 import { db } from "./db";
-import { eq, and, notInArray, sql } from "drizzle-orm";
+import { eq, and, notInArray, sql, isNotNull } from "drizzle-orm";
 
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {

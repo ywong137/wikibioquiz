@@ -505,7 +505,7 @@ async function getFamousPersonFromDatabase(usedPeople: string[], round: number):
       name: famousPerson.name.replace(/ /g, '_'),
       sections: famousPerson.sections || [],
       hint: famousPerson.hint || `"${famousPerson.nationality || famousPerson.category} • ${famousPerson.timeperiod} • ${famousPerson.occupation}"`,
-      aiHint: famousPerson.aiHint1, // Use first AI hint as default aiHint
+      aiHint: famousPerson.aiHint1 || undefined, // Use first AI hint as default aiHint
       initials: famousPerson.initials || generateInitials(famousPerson.name),
       url: `https://en.wikipedia.org/wiki/${encodeURIComponent(famousPerson.wikipediaTitle || famousPerson.name.replace(/ /g, '_'))}`,
     };
