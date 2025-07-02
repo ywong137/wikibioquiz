@@ -166,8 +166,8 @@ export default function Game() {
       guess: guess.trim(),
       sessionId,
       personName: currentPerson.name,
-      hintUsed: hintUsed,
-      initialsUsed: initialsUsed,
+      hintUsed,
+      initialsUsed,
     });
   };
 
@@ -177,6 +177,10 @@ export default function Game() {
       setCurrentPerson(preloadedPerson);
       setShowFeedback(false);
       setGuess('');
+      setHintUsed(false);
+      setInitialsUsed(false);
+      setShowHint(false);
+      setShowInitials(false);
       setPreloadedPerson(null);
       
       // Update the session with the new person
@@ -197,9 +201,36 @@ export default function Game() {
   };
 
   const handleGetHint = () => {
-    if (!sessionId) return;
-    getHintMutation.mutate();
+    if (!hintUsed && currentPerson) {
+      setHintUsed(true);
+      setShowHint(true);
+    }
   };
+
+  const handleGetInitials = () => {
+    if (!initialsUsed && currentPerson) {
+      setInitialsUsed(true);
+      setShowInitials(true);
+    }
+  };
+
+  const updatePlayerName = useMutation({
+    mutationFn: async (name: string) => {
+      const response = await apiRequest('PATCH', `/api/game/session/${sessionId}/player`, {
+        playerName: name
+      });
+      return response.json();
+    },
+    onSuccess: (session: GameSession) => {
+      setGameSession(session);
+      toast({
+        title: "Name updated!",
+        description: `Welcome, ${session.playerName}!`,
+      });
+    },
+  });
+
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !showFeedback) {
@@ -239,6 +270,27 @@ export default function Game() {
             <p className="text-slate-600 text-lg font-medium">Can you guess the famous person from their biography sections?</p>
           </div>
           
+          {/* Player Name Input */}
+          {!gameSession?.playerName && (
+            <div className="mb-6 bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+              <div className="flex items-center justify-center space-x-3">
+                <User className="text-slate-500" size={20} />
+                <input
+                  type="text"
+                  placeholder="Enter your name (optional)"
+                  className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                      updatePlayerName.mutate(e.currentTarget.value.trim());
+                      e.currentTarget.value = '';
+                    }
+                  }}
+                />
+                <span className="text-sm text-slate-500">Press Enter to save</span>
+              </div>
+            </div>
+          )}
+
           {/* Score Display */}
           <div className="flex justify-center space-x-4 mb-4">
             <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg">
@@ -254,6 +306,15 @@ export default function Game() {
               <div className="text-2xl font-bold">{gameSession?.round || 1}</div>
             </div>
           </div>
+
+          {/* Player Greeting */}
+          {gameSession?.playerName && (
+            <div className="mb-4 text-center">
+              <p className="text-slate-600">
+                Welcome back, <span className="font-semibold text-indigo-600">{gameSession.playerName}</span>!
+              </p>
+            </div>
+          )}
         </header>
 
         {/* Game Instructions */}
