@@ -3,10 +3,15 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameSessionSchema, type WikipediaPerson } from "@shared/schema";
 import { z } from "zod";
+import OpenAI from "openai";
 
 const guessSchema = z.object({
   guess: z.string().min(1),
   sessionId: z.number(),
+});
+
+const openai = new OpenAI({ 
+  apiKey: process.env.OPENAI_API_KEY 
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -178,113 +183,283 @@ async function getAdditionalHint(personName: string): Promise<string> {
     const data = await response.json();
     const extract = data.extract || "";
     
-    // Extract more specific hints from the Wikipedia extract
-    const hints = [];
+    // Use OpenAI to generate intelligent hints
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: `You are helping create hints for a Wikipedia guessing game. Given information about a famous person, generate a helpful hint that gives clues without revealing their identity.
+
+Rules:
+- DO NOT mention the person's name directly
+- Give 2-3 specific, useful clues separated by " • "
+- Include details like time period, profession, nationality, or major achievements
+- Make hints challenging but fair - not too obvious, not too obscure
+- Focus on what makes this person notable and recognizable
+
+Examples of good hints:
+- "20th century physicist • German-born • Revolutionary theories about time and space"
+- "Renaissance Italian artist • Created famous paintings in the Louvre • Also an inventor"
+- "British playwright • 16th-17th century • Wrote about star-crossed lovers"`
+        },
+        {
+          role: "user", 
+          content: `Generate a hint for this person based on their Wikipedia information:\n\n${extract}`
+        }
+      ],
+      max_tokens: 100,
+      temperature: 0.3
+    });
     
-    // Look for birth/death years
-    const yearMatch = extract.match(/\b(1[0-9]{3}|20[0-9]{2})\b/);
-    if (yearMatch) {
-      const year = parseInt(yearMatch[1]);
-      if (year < 1800) hints.push("Lived before the 19th century");
-      else if (year < 1900) hints.push("Lived in the 19th century");
-      else if (year < 1950) hints.push("Born in the early 20th century");
-      else if (year < 2000) hints.push("Born in the mid-to-late 20th century");
-      else hints.push("Born in the 21st century");
-    }
-    
-    // Look for professions/fields
-    if (extract.includes('Nobel Prize')) hints.push("Nobel Prize winner");
-    if (extract.includes('President') || extract.includes('Prime Minister')) hints.push("Held high political office");
-    if (extract.includes('actor') || extract.includes('actress')) hints.push("Known for acting");
-    if (extract.includes('director')) hints.push("Film or theater director");
-    if (extract.includes('scientist')) hints.push("Made scientific discoveries");
-    if (extract.includes('physicist')) hints.push("Worked in physics");
-    if (extract.includes('mathematician')) hints.push("Known for mathematics");
-    if (extract.includes('painter') || extract.includes('artist')) hints.push("Visual artist");
-    if (extract.includes('composer') || extract.includes('musician')) hints.push("Musical composer or performer");
-    if (extract.includes('writer') || extract.includes('author') || extract.includes('poet')) hints.push("Literary figure");
-    if (extract.includes('inventor')) hints.push("Known for inventions");
-    if (extract.includes('philosopher')) hints.push("Philosophical thinker");
-    
-    // Look for achievements/works
-    if (extract.includes('theory of relativity')) hints.push("Associated with revolutionary physics theories");
-    if (extract.includes('Mona Lisa') || extract.includes('Last Supper')) hints.push("Created world-famous artworks");
-    if (extract.includes('plays') || extract.includes('Romeo') || extract.includes('Hamlet')) hints.push("Wrote famous plays");
-    if (extract.includes('civil rights')) hints.push("Civil rights leader");
-    if (extract.includes('World War')) hints.push("Played a role in a World War");
-    
-    // Look for locations
-    if (extract.includes('English') || extract.includes('England') || extract.includes('British')) hints.push("From England/Britain");
-    if (extract.includes('French') || extract.includes('France')) hints.push("From France");
-    if (extract.includes('German') || extract.includes('Germany')) hints.push("From Germany");
-    if (extract.includes('Italian') || extract.includes('Italy')) hints.push("From Italy");
-    if (extract.includes('American') || extract.includes('United States')) hints.push("From the United States");
-    
-    if (hints.length === 0) {
-      return "This person has made lasting contributions that earned them a detailed Wikipedia page.";
-    }
-    
-    // Return 2-3 hints, avoiding the original hint if possible
-    const selectedHints = hints.slice(0, 3);
-    return selectedHints.join(" • ");
+    const hint = completion.choices[0]?.message?.content?.trim();
+    return hint || "This person has made significant contributions to their field.";
     
   } catch (error) {
-    return "This person is notable enough to have extensive biographical information.";
+    console.error("OpenAI hint generation failed:", error);
+    // Fallback to simple extraction if OpenAI fails
+    return generateSimpleHint(extract);
+  }
+}
+
+function generateSimpleHint(extract: string): string {
+  const hints = [];
+  
+  // Basic fallback hints if OpenAI is unavailable
+  if (extract.includes('born')) {
+    const yearMatch = extract.match(/born.*?(\d{4})/);
+    if (yearMatch) {
+      const year = parseInt(yearMatch[1]);
+      if (year < 1900) hints.push("Born before 1900");
+      else if (year < 1950) hints.push("Born in early 20th century");
+      else hints.push("Born in mid-to-late 20th century");
+    }
+  }
+  
+  if (extract.includes('American')) hints.push("American");
+  if (extract.includes('British')) hints.push("British");
+  if (extract.includes('scientist')) hints.push("Scientist");
+  if (extract.includes('actor') || extract.includes('actress')) hints.push("Actor");
+  if (extract.includes('writer') || extract.includes('author')) hints.push("Writer");
+  
+  if (hints.length === 0) {
+    return "This person has made notable contributions to their field.";
+  }
+  
+  return hints.slice(0, 3).join(" • ");
+}
+
+async function generateInitialHint(extract: string): Promise<string> {
+  try {
+    // Use OpenAI for initial hint generation too
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: `Generate a brief initial hint for a Wikipedia guessing game. The hint should be displayed when the player first sees the biography sections.
+
+Rules:
+- Give 2-3 basic clues separated by " • "
+- Include nationality, time period, and general field/profession
+- Don't reveal the name or be too specific
+- Keep it concise and intriguing
+
+Examples:
+- "German-born • 20th century • Physicist"
+- "Italian • Renaissance • Artist and inventor"
+- "British • 16th century • Playwright"`
+        },
+        {
+          role: "user",
+          content: `Generate an initial hint based on this Wikipedia extract:\n\n${extract}`
+        }
+      ],
+      max_tokens: 60,
+      temperature: 0.3
+    });
+    
+    const hint = completion.choices[0]?.message?.content?.trim();
+    return hint || generateSimpleHint(extract);
+    
+  } catch (error) {
+    console.error("OpenAI initial hint generation failed:", error);
+    return generateSimpleHint(extract);
   }
 }
 
 async function getRandomWikipediaPerson(usedPeople: string[]): Promise<WikipediaPerson> {
+  // Try multiple times to find a good person not already used
+  for (let attempt = 0; attempt < 10; attempt++) {
+    try {
+      const person = await tryGetRandomPerson();
+      
+      // Skip if already used
+      if (usedPeople.includes(person.name)) {
+        continue;
+      }
+      
+      // Skip if sections are too few or poor quality
+      if (person.sections.length < 3) {
+        continue;
+      }
+      
+      return person;
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error);
+      continue;
+    }
+  }
+  
+  // If all attempts failed, try from category
+  return await getPersonFromCategory(usedPeople);
+}
+
+async function tryGetRandomPerson(): Promise<WikipediaPerson> {
+  // Try different strategies to get diverse people
+  const strategies = [
+    () => getFromBiographyCategory(),
+    () => getFromRandomProfessionCategory(),
+    () => getFromTimeperiodCategory(),
+    () => getFromNationalityCategory()
+  ];
+  
+  const strategy = strategies[Math.floor(Math.random() * strategies.length)];
+  return await strategy();
+}
+
+async function getFromBiographyCategory(): Promise<WikipediaPerson> {
+  const categories = [
+    "20th-century_American_actors",
+    "20th-century_American_musicians", 
+    "Nobel_Prize_winners",
+    "American_film_directors",
+    "British_actors",
+    "French_artists",
+    "German_scientists",
+    "Italian_Renaissance_artists",
+    "American_presidents",
+    "British_prime_ministers",
+    "Olympic_athletes",
+    "American_writers",
+    "British_writers",
+    "Philosophers",
+    "Inventors"
+  ];
+  
+  const category = categories[Math.floor(Math.random() * categories.length)];
+  return await getPersonFromWikipediaCategory(category);
+}
+
+async function getFromRandomProfessionCategory(): Promise<WikipediaPerson> {
+  const professions = ["actors", "musicians", "scientists", "writers", "artists", "directors"];
+  const profession = professions[Math.floor(Math.random() * professions.length)];
+  
+  // Get random page and check if it matches the profession
+  const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
+  const page = await response.json();
+  
+  if (page.extract && page.extract.toLowerCase().includes(profession.slice(0, -1))) {
+    return await createPersonFromPage(page);
+  }
+  
+  // Fallback to category
+  return await getPersonFromWikipediaCategory(`American_${profession}`);
+}
+
+async function getFromTimeperiodCategory(): Promise<WikipediaPerson> {
+  const periods = [
+    "19th-century_people",
+    "20th-century_people", 
+    "21st-century_people",
+    "Renaissance_people",
+    "Medieval_people"
+  ];
+  
+  const period = periods[Math.floor(Math.random() * periods.length)];
+  return await getPersonFromWikipediaCategory(period);
+}
+
+async function getFromNationalityCategory(): Promise<WikipediaPerson> {
+  const nationalities = [
+    "American_people",
+    "British_people",
+    "French_people", 
+    "German_people",
+    "Italian_people",
+    "Spanish_people",
+    "Japanese_people",
+    "Canadian_people"
+  ];
+  
+  const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
+  return await getPersonFromWikipediaCategory(nationality);
+}
+
+async function getPersonFromWikipediaCategory(categoryName: string): Promise<WikipediaPerson> {
   try {
-    // First, get a random person from a category
-    const categoryResponse = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/random/summary`
+    // Get random articles from category
+    const response = await fetch(
+      `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:${categoryName}&cmlimit=50&format=json&origin=*`
     );
     
-    if (!categoryResponse.ok) {
-      throw new Error("Failed to fetch random page");
+    if (!response.ok) {
+      throw new Error("Category fetch failed");
     }
     
-    const randomPage = await categoryResponse.json();
+    const data = await response.json();
+    const members = data.query?.categorymembers || [];
     
-    // If it's not about a person, try getting from a people category
-    if (!isProbablyPerson(randomPage.title, randomPage.extract)) {
-      return await getPersonFromCategory(usedPeople);
+    if (members.length === 0) {
+      throw new Error("No category members found");
     }
     
-    // Get the full page content to extract sections
-    const pageResponse = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/sections/${encodeURIComponent(randomPage.title)}`
+    // Pick random member
+    const randomMember = members[Math.floor(Math.random() * members.length)];
+    
+    // Get page summary
+    const summaryResponse = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(randomMember.title)}`
     );
     
-    if (!pageResponse.ok) {
-      return await getPersonFromCategory(usedPeople);
-    }
+    const page = await summaryResponse.json();
+    return await createPersonFromPage(page);
     
-    const sections = await pageResponse.json();
-    const sectionTitles = sections
+  } catch (error) {
+    // Fallback to simple random
+    const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
+    const page = await response.json();
+    return await createPersonFromPage(page);
+  }
+}
+
+async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
+  // Get sections
+  const sectionsResponse = await fetch(
+    `https://en.wikipedia.org/api/rest_v1/page/sections/${encodeURIComponent(page.title)}`
+  );
+  
+  let sections = [];
+  if (sectionsResponse.ok) {
+    const sectionsData = await sectionsResponse.json();
+    sections = sectionsData
       .filter((section: any) => section.toclevel === 1 && section.line)
       .map((section: any) => section.line)
       .filter((title: string) => 
         !title.toLowerCase().includes('reference') && 
         !title.toLowerCase().includes('external') &&
-        !title.toLowerCase().includes('see also')
+        !title.toLowerCase().includes('see also') &&
+        !title.toLowerCase().includes('bibliography')
       )
-      .slice(0, 8); // Limit to 8 sections
-
-    if (sectionTitles.length < 3) {
-      return await getPersonFromCategory(usedPeople);
-    }
-
-    return {
-      name: randomPage.title,
-      sections: sectionTitles,
-      hint: generateHint(randomPage.extract),
-      url: randomPage.content_urls?.desktop?.page || "",
-    };
-  } catch (error) {
-    console.error("Error fetching from Wikipedia:", error);
-    return await getFallbackPerson(usedPeople);
+      .slice(0, 8);
   }
+  
+  return {
+    name: page.title,
+    sections,
+    hint: await generateInitialHint(page.extract || ""),
+    url: page.content_urls?.desktop?.page || "",
+  };
 }
 
 async function getPersonFromCategory(usedPeople: string[]): Promise<WikipediaPerson> {
