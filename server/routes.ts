@@ -494,47 +494,46 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
   
   console.log(`\n🎯 ROUND ${round}: Fetching NEW Wikipedia person from live API...`);
   
-  // Try multiple times to find a good person not already used
-  for (let attempt = 0; attempt < 5; attempt++) {
-    try {
-      const person = await tryGetRandomPerson();
-      
-      // Skip if already used
-      if (usedPeople.includes(person.name)) {
-        continue;
-      }
-      
-      // Skip if sections are too few 
-      if (person.sections.length < 2) {
-        continue;
-      }
-      
-      // Cache the person for future use
-      try {
-        await storage.addCachedBiography({
-          wikipediaUrl: person.url,
-          name: person.name,
-          sections: person.sections,
-          hint: person.hint,
-          aiHint: person.aiHint,
-          initials: person.initials,
-          extract: null, // We don't have extract from our current flow
-        });
-        console.log(`💾 CACHED: Successfully stored "${person.name}" for future use`);
-      } catch (cacheError) {
-        console.log(`💾 CACHE SKIP: "${person.name}" already cached (duplicate entry)`);
-        // Continue anyway, caching failure shouldn't break the game
-      }
-      
-      return person;
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      continue;
+  // Single attempt - get any person and make it work
+  try {
+    console.log(`🔄 SINGLE ATTEMPT: Getting one Wikipedia person...`);
+    const person = await tryGetRandomPerson();
+    
+    // If already used, still return it but log the issue
+    if (usedPeople.includes(person.name)) {
+      console.log(`⚠️ WARNING: "${person.name}" already used, but continuing anyway to minimize API calls`);
     }
+    
+    // If sections are too few, pad with generic sections
+    if (person.sections.length < 2) {
+      console.log(`⚠️ WARNING: "${person.name}" has only ${person.sections.length} sections, padding with generic ones`);
+      person.sections = [...person.sections, "Biography", "Personal life", "Career"].slice(0, 3);
+    }
+    
+    console.log(`✅ SINGLE ATTEMPT: Using person "${person.name}" with ${person.sections.length} sections`);
+    
+    // Cache the person for future use
+    try {
+      await storage.addCachedBiography({
+        wikipediaUrl: person.url,
+        name: person.name,
+        sections: person.sections,
+        hint: person.hint,
+        aiHint: person.aiHint,
+        initials: person.initials,
+        extract: null, // We don't have extract from our current flow
+      });
+      console.log(`💾 CACHED: Successfully stored "${person.name}" for future use`);
+    } catch (cacheError) {
+      console.log(`💾 CACHE SKIP: "${person.name}" already cached (duplicate entry)`);
+      // Continue anyway, caching failure shouldn't break the game
+    }
+    
+    return person;
+  } catch (error) {
+    console.error(`Single attempt failed:`, error);
+    throw new Error("Failed to fetch person from Wikipedia: " + error.message);
   }
-  
-  // If all attempts failed, throw error instead of fallback
-  throw new Error("Failed to fetch person from Wikipedia after 5 attempts");
 }
 
 async function tryGetRandomPerson(): Promise<WikipediaPerson> {
