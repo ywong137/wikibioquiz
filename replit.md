@@ -98,6 +98,12 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 02, 2025. Major improvements to person diversity and hint quality
+  - Integrated OpenAI for intelligent hint generation
+  - Added comprehensive Wikipedia category fetching strategies
+  - Implemented person pre-loading for faster transitions
+  - Expanded fallback person list to 15+ diverse individuals
+  - Fixed repetition issues with only 3 people appearing
 - July 01, 2025. Initial setup
 
 ## User Preferences
