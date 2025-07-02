@@ -148,10 +148,10 @@ export default function Game() {
   });
 
   useEffect(() => {
-    if (!sessionId) {
+    if (!sessionId && !createSessionMutation.isPending) {
       createSessionMutation.mutate();
     }
-  }, []);
+  }, [sessionId, createSessionMutation.isPending]);
 
   const handleSubmitGuess = () => {
     if (!guess.trim() || !currentPerson || !sessionId) return;
