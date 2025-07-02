@@ -34,11 +34,6 @@ async function fetchWikipediaData(wikipediaTitle: string) {
     
     console.log(`📋 Found ${sectionNames.length} sections for ${wikipediaTitle}`);
     
-    if (sectionNames.length < 6) {
-      console.log(`⚠️ Only ${sectionNames.length} sections, skipping (minimum 6 required)`);
-      return null;
-    }
-    
     return sectionNames;
   } catch (error) {
     console.error(`❌ Error fetching Wikipedia data for ${wikipediaTitle}:`, error);
@@ -49,39 +44,47 @@ async function fetchWikipediaData(wikipediaTitle: string) {
 function generateInitials(fullName: string): string {
   const cleanName = fullName.replace(/_/g, ' ').trim();
   
+  // Handle "X of Y" patterns specially
+  if (cleanName.includes(' of ')) {
+    const parts = cleanName.split(' of ');
+    const beforeOf = parts[0].split(' ').map(word => word.charAt(0).toUpperCase()).join('. ');
+    const afterOf = parts.slice(1).join(' of ').split(' ').map(word => word.charAt(0).toUpperCase()).join('. ');
+    return `${beforeOf} of ${afterOf}`;
+  }
+  
   // Handle titles with numbers (e.g., "14th Dalai Lama")
   if (/^\d+th\s+/.test(cleanName)) {
     const match = cleanName.match(/^\d+th\s+(.+)/);
     if (match) {
       const titlePart = match[1];
-      return titlePart.split(' ')[0].charAt(0).toUpperCase();
+      return titlePart.split(' ').map(word => word.charAt(0).toUpperCase()).join('. ');
     }
   }
   
   // Handle names with periods (e.g., "J.R.R. Tolkien")
   if (cleanName.includes('.')) {
     const parts = cleanName.split(' ');
-    let initials = '';
+    const initials = [];
     
     for (const part of parts) {
       if (part.includes('.')) {
-        // Extract letters before periods: "J.R.R." → "JRR"
+        // Extract letters before periods: "J.R.R." → "J.R.R"
         const letters = part.match(/[A-Za-z]/g);
         if (letters) {
-          initials += letters.join('').toUpperCase();
+          initials.push(letters.join('.'));
         }
       } else if (part.length > 0 && /^[A-Za-z]/.test(part)) {
-        initials += part.charAt(0).toUpperCase();
+        initials.push(part.charAt(0).toUpperCase());
       }
     }
     
-    return initials || cleanName.charAt(0).toUpperCase();
+    return initials.join('. ') || cleanName.charAt(0).toUpperCase();
   }
   
-  // Standard case: first letter of first name
+  // Standard case: initials with periods
   const words = cleanName.split(' ').filter(word => word.length > 0);
   if (words.length > 0) {
-    return words[0].charAt(0).toUpperCase();
+    return words.map(word => word.charAt(0).toUpperCase()).join('. ');
   }
   
   return cleanName.charAt(0).toUpperCase();
