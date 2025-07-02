@@ -170,6 +170,8 @@ function isCorrectGuess(guess: string, personName: string): boolean {
 }
 
 async function getAdditionalHint(personName: string): Promise<string> {
+  let extract = "";
+  
   try {
     // Get Wikipedia summary for additional hint information
     const response = await fetch(
@@ -181,7 +183,7 @@ async function getAdditionalHint(personName: string): Promise<string> {
     }
     
     const data = await response.json();
-    const extract = data.extract || "";
+    extract = data.extract || "";
     
     // Use OpenAI to generate intelligent hints
     const completion = await openai.chat.completions.create({
