@@ -83,27 +83,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Pre-load next person for faster transitions
+  // Pre-load next person for faster transitions (TEMPORARILY DISABLED to reduce redundant fetching)
   app.get("/api/game/person/preload", async (req, res) => {
-    const sessionId = parseInt(req.query.sessionId as string);
-    
-    if (!sessionId) {
-      return res.status(400).json({ error: "Session ID is required" });
-    }
-
-    try {
-      const session = await storage.getGameSession(sessionId);
-      if (!session) {
-        return res.status(404).json({ error: "Session not found" });
-      }
-
-      // Fetch a person but don't update the session yet
-      const person = await getRandomWikipediaPerson(session.usedPeople, session.round);
-      res.json(person);
-    } catch (error) {
-      console.error("Error pre-loading Wikipedia person:", error);
-      res.status(500).json({ error: "Failed to pre-load person from Wikipedia" });
-    }
+    console.log("🚫 PRELOAD: Temporarily disabled to prevent redundant fetching");
+    res.json({ disabled: true, message: "Preload temporarily disabled" });
   });
 
   // Use preloaded person (update session with it)
@@ -520,15 +503,16 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
 async function tryGetRandomPerson(): Promise<WikipediaPerson> {
   // Try different strategies to get diverse people
   const strategies = [
-    () => getFromBiographyCategory(),
-    () => getFromRandomProfessionCategory(),
-    () => getFromTimeperiodCategory(),
-    () => getFromNationalityCategory(),
-    () => getRandomPersonDirect() // Add direct random as well
+    { name: "Biography Category", fn: () => getFromBiographyCategory() },
+    { name: "Profession Category", fn: () => getFromRandomProfessionCategory() },
+    { name: "Time Period Category", fn: () => getFromTimeperiodCategory() },
+    { name: "Nationality Category", fn: () => getFromNationalityCategory() },
+    { name: "Random Direct", fn: () => getRandomPersonDirect() }
   ];
   
-  const strategy = strategies[Math.floor(Math.random() * strategies.length)];
-  return await strategy();
+  const selectedStrategy = strategies[Math.floor(Math.random() * strategies.length)];
+  console.log(`🎯 STRATEGY: Using "${selectedStrategy.name}" approach`);
+  return await selectedStrategy.fn();
 }
 
 async function getRandomPersonDirect(): Promise<WikipediaPerson> {
@@ -538,9 +522,13 @@ async function getRandomPersonDirect(): Promise<WikipediaPerson> {
       const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
       const page = await response.json();
       
-      // Only accept if it looks like a person
-      if (isProbablyPerson(page.title, page.extract || "")) {
+      // Use LLM to verify this is actually a person
+      const isActualPerson = await verifyIsPersonWithLLM(page.title, page.extract || "");
+      if (isActualPerson) {
+        console.log(`🎲 RANDOM: LLM confirmed person "${page.title}"`);
         return await createPersonFromPage(page);
+      } else {
+        console.log(`🎲 RANDOM: LLM rejected "${page.title}" - not a person`);
       }
     } catch (error) {
       continue;
@@ -563,6 +551,7 @@ async function getFromBiographyCategory(): Promise<WikipediaPerson> {
   ];
   
   const category = categories[Math.floor(Math.random() * categories.length)];
+  console.log(`📚 BIOGRAPHY: Selected category "${category}"`);
   return await getPersonFromWikipediaCategory(category);
 }
 
