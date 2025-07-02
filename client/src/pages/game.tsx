@@ -529,7 +529,10 @@ export default function Game() {
                   <p className="text-xl opacity-90 mb-4">You guessed <span className="font-bold">{currentPerson.name}</span></p>
                   <div className="flex justify-center space-x-6 text-lg">
                     <div>Points: <span className="font-bold">+{pointsEarned}</span></div>
-                    <div>Streak: <span className="font-bold">1</span></div>
+                    {streakBonus > 0 && (
+                      <div>Streak Bonus: <span className="font-bold">+{streakBonus}</span></div>
+                    )}
+                    <div>Current Streak: <span className="font-bold">{gameSession?.streak || 0}</span></div>
                   </div>
                 </div>
               </div>
