@@ -342,10 +342,15 @@ export default function Game() {
                 <span className="w-2 h-2 bg-indigo-400 rounded-full mt-2 mr-3"></span>
                 Guess who it is based on the clues in the headings
               </p>
-              <p className="flex items-start">
-                <span className="w-2 h-2 bg-indigo-400 rounded-full mt-2 mr-3"></span>
-                Get points for correct guesses and build your streak!
-              </p>
+              <div className="bg-indigo-100 rounded-lg p-3 mt-3">
+                <p className="font-semibold text-indigo-800 mb-2">📊 Scoring System:</p>
+                <div className="text-sm space-y-1">
+                  <p>• 7 points - Correct guess without hints</p>
+                  <p>• 2 points - Correct guess with AI hint</p>
+                  <p>• 1 point - Correct guess with initials hint</p>
+                  <p>• Streak bonus: +1 point per consecutive correct answer</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -456,18 +461,56 @@ export default function Game() {
                     </div>
                   </div>
 
-                  {/* Hint Button */}
-                  <div className="text-center mb-6">
+                  {/* Hint Buttons */}
+                  <div className="flex justify-center space-x-4 mb-6">
                     <Button 
                       onClick={handleGetHint}
-                      disabled={getHintMutation.isPending}
+                      disabled={hintUsed}
                       variant="outline"
-                      className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white border-0 px-6 py-3 font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                      className={`px-6 py-3 font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 ${
+                        hintUsed 
+                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white border-0'
+                      }`}
                     >
                       <Lightbulb className="mr-2" size={16} />
-                      Get Hint (-5 points)
+                      {hintUsed ? 'Hint Used' : 'AI Hint (2 pts)'}
+                    </Button>
+                    <Button 
+                      onClick={handleGetInitials}
+                      disabled={initialsUsed}
+                      variant="outline"
+                      className={`px-6 py-3 font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 ${
+                        initialsUsed 
+                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0'
+                      }`}
+                    >
+                      <User className="mr-2" size={16} />
+                      {initialsUsed ? 'Initials Used' : 'Initials (1 pt)'}
                     </Button>
                   </div>
+
+                  {/* Display Hints */}
+                  {showHint && currentPerson && (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                      <div className="flex items-center text-yellow-800 mb-2">
+                        <Lightbulb className="mr-2" size={16} />
+                        <span className="font-semibold">AI Generated Hint:</span>
+                      </div>
+                      <p className="text-yellow-700">{currentPerson.hint}</p>
+                    </div>
+                  )}
+
+                  {showInitials && currentPerson && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                      <div className="flex items-center text-blue-800 mb-2">
+                        <User className="mr-2" size={16} />
+                        <span className="font-semibold">Initials Hint:</span>
+                      </div>
+                      <p className="text-blue-700 text-2xl font-bold tracking-widest">{currentPerson.initials}</p>
+                    </div>
+                  )}
                 </>
               )}
             </div>
