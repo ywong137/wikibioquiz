@@ -21,10 +21,16 @@ export default function Game() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [lastGuessCorrect, setLastGuessCorrect] = useState(false);
   const [pointsEarned, setPointsEarned] = useState(0);
+  const [streakBonus, setStreakBonus] = useState(0);
   const [showInstructions, setShowInstructions] = useState(false);
   const [roundNumber, setRoundNumber] = useState(1);
   const [preloadedPerson, setPreloadedPerson] = useState<WikipediaPerson | null>(null);
   const [gameSession, setGameSession] = useState<GameSession | null>(null);
+  const [playerName, setPlayerName] = useState('');
+  const [hintUsed, setHintUsed] = useState(false);
+  const [initialsUsed, setInitialsUsed] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [showInitials, setShowInitials] = useState(false);
   const { toast } = useToast();
 
   // Create game session
@@ -97,13 +103,20 @@ export default function Game() {
 
   // Submit guess
   const submitGuessMutation = useMutation({
-    mutationFn: async (guessData: { guess: string; sessionId: number; personName: string }) => {
+    mutationFn: async (guessData: { 
+      guess: string; 
+      sessionId: number; 
+      personName: string;
+      hintUsed: boolean;
+      initialsUsed: boolean;
+    }) => {
       const response = await apiRequest('POST', '/api/game/guess', guessData);
       return response.json();
     },
-    onSuccess: (data: GuessResponse) => {
+    onSuccess: (data: GuessResponse & { streakBonus?: number }) => {
       setLastGuessCorrect(data.correct);
       setPointsEarned(data.pointsEarned);
+      setStreakBonus(data.streakBonus || 0);
       setGameSession(data.session);
       setShowFeedback(true);
       
@@ -153,6 +166,8 @@ export default function Game() {
       guess: guess.trim(),
       sessionId,
       personName: currentPerson.name,
+      hintUsed: hintUsed,
+      initialsUsed: initialsUsed,
     });
   };
 

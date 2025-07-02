@@ -18,7 +18,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create new game session
   app.post("/api/game/session", async (req, res) => {
     try {
+      const { playerName } = req.body;
       const session = await storage.createGameSession({
+        playerName: playerName || null,
         score: 0,
         streak: 0,
         round: 1,
@@ -30,6 +32,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(session);
     } catch (error) {
       res.status(500).json({ error: "Failed to create game session" });
+    }
+  });
+
+  // Update player name
+  app.patch("/api/game/session/:id/player", async (req, res) => {
+    try {
+      const sessionId = parseInt(req.params.id);
+      const { playerName } = req.body;
+      
+      const updatedSession = await storage.updateGameSession(sessionId, {
+        playerName: playerName,
+      });
+      
+      if (!updatedSession) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+      
+      res.json(updatedSession);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update player name" });
     }
   });
 
@@ -109,8 +131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Submit guess
   app.post("/api/game/guess", async (req, res) => {
     try {
-      const { guess, sessionId } = guessSchema.parse(req.body);
-      const personName = req.body.personName as string;
+      const { guess, sessionId, personName, hintUsed, initialsUsed } = req.body;
       
       const session = await storage.getGameSession(sessionId);
       if (!session) {
@@ -121,14 +142,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let pointsEarned = 0;
       let newStreak = session.streak;
       let newScore = session.score;
+      let streakBonus = 0;
 
       if (isCorrect) {
-        pointsEarned = 10 + (session.streak * 2); // Bonus points for streak
+        // Base points based on hint usage
+        if (initialsUsed) {
+          pointsEarned = 1; // 1 point for correct with initials
+        } else if (hintUsed) {
+          pointsEarned = 2; // 2 points for correct with hint
+        } else {
+          pointsEarned = 7; // 7 points for correct without hint
+        }
+        
+        // Add streak bonus equal to the length of the streak they just finished
+        streakBonus = session.streak;
+        pointsEarned += streakBonus;
+        
         newStreak = session.streak + 1;
         newScore = session.score + pointsEarned;
       } else {
         newStreak = 0;
       }
+
+      // Record the game round
+      await storage.addGameRound({
+        sessionId: sessionId,
+        personName: personName,
+        hintUsed: hintUsed || false,
+        initialsUsed: initialsUsed || false,
+        correct: isCorrect,
+        pointsEarned: pointsEarned,
+      });
 
       const updatedSession = await storage.updateGameSession(sessionId, {
         score: newScore,
@@ -142,6 +186,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         correct: isCorrect,
         pointsEarned,
+        streakBonus,
         session: updatedSession,
       });
     } catch (error) {
@@ -336,6 +381,31 @@ Examples:
 }
 
 async function getRandomWikipediaPerson(usedPeople: string[], round: number): Promise<WikipediaPerson> {
+  const cachedCount = await storage.getCachedBiographyCount();
+  
+  // Strategy: Use cache for first 100 rounds if we have 1000+ cached, 
+  // then alternate between cache and new fetch
+  const shouldUseCache = (cachedCount >= 1000 && round <= 100) || 
+                        (cachedCount > 0 && round > 100 && round % 2 === 0);
+  
+  if (shouldUseCache) {
+    console.log(`Using cached biography for round ${round}`);
+    const cachedBiographies = await storage.getRandomCachedBiographies(usedPeople, 1);
+    
+    if (cachedBiographies.length > 0) {
+      const cached = cachedBiographies[0];
+      return {
+        name: cached.name,
+        sections: cached.sections,
+        hint: cached.hint,
+        initials: cached.initials,
+        url: cached.wikipediaUrl,
+      };
+    }
+  }
+  
+  console.log(`Fetching new Wikipedia person for round ${round}`);
+  
   // Try multiple times to find a good person not already used
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
@@ -349,6 +419,22 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
       // Skip if sections are too few 
       if (person.sections.length < 2) {
         continue;
+      }
+      
+      // Cache the person for future use
+      try {
+        await storage.addCachedBiography({
+          wikipediaUrl: person.url,
+          name: person.name,
+          sections: person.sections,
+          hint: person.hint,
+          initials: person.initials,
+          extract: null, // We don't have extract from our current flow
+        });
+        console.log(`Cached new person: ${person.name}`);
+      } catch (cacheError) {
+        console.log(`Failed to cache person (likely duplicate): ${person.name}`);
+        // Continue anyway, caching failure shouldn't break the game
       }
       
       return person;
