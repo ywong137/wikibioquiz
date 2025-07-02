@@ -1,6 +1,6 @@
 import { db } from '../server/db';
 import { famousPeople } from '../shared/schema';
-import { eq, isNull, sql } from 'drizzle-orm';
+import { eq, isNull, sql, and } from 'drizzle-orm';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -155,8 +155,10 @@ export async function prepopulateWikipediaData() {
   const unprocessedPeople = await db
     .select()
     .from(famousPeople)
-    .where(eq(famousPeople.filteredOut, 0))
-    .where(isNull(famousPeople.processedAt))
+    .where(and(
+      eq(famousPeople.filteredOut, 0),
+      isNull(famousPeople.processedAt)
+    ))
     .orderBy(sql`RANDOM()`)
     .limit(100); // Test with 100 random entries
   
