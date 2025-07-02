@@ -869,7 +869,13 @@ function isProbablyPerson(title: string, extract: string): boolean {
 function generateInitials(fullName: string): string {
   return fullName
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase())
+    .filter(word => word.length > 0) // Remove empty strings
+    .map(word => {
+      // Extract only alphabetic characters from the beginning of each word
+      const firstLetter = word.match(/^[A-Za-z]/);
+      return firstLetter ? firstLetter[0].toUpperCase() : '';
+    })
+    .filter(initial => initial !== '') // Remove empty initials
     .join('.');
 }
 
