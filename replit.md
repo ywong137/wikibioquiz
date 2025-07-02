@@ -98,6 +98,13 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 02, 2025. INITIALS ALGORITHM: Perfected proper initials formatting system for global names
+  - Updated initials to use periods: "Genghis Khan" → "G. K.", "Soong Mei-ling" → "S. M."
+  - Enhanced "X of Y" pattern handling: "Emperor Huizong of Song" → "E. H. of S."
+  - Handles complex names: "Ptolemy XII Auletes" → "P. X. A.", single names → "Muhammad" → "M."
+  - Removed section minimum requirement - prepopulates all entries regardless of section count
+  - Successfully tested on 7 diverse sample entries: actors, politicians, military leaders, religious figures
+  - System now processes authentic Pantheon 2.0 names with proper international formatting
 - July 02, 2025. PREPOPULATION SYSTEM: Massive architecture breakthrough - eliminated real-time Wikipedia API dependency
   - Added comprehensive database columns: sections, hint, aiHint1-3, initials, processedAt
   - Created intelligent prepopulation script with Wikipedia data extraction and AI hint generation

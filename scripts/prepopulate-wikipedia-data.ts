@@ -94,7 +94,15 @@ function generateBasicHint(person: any): string {
   const parts = [];
   if (person.nationality) parts.push(person.nationality);
   if (person.timeperiod) parts.push(person.timeperiod);
-  if (person.occupation) parts.push(person.occupation);
+  if (person.occupation) {
+    // Convert occupation from ALL CAPS to proper capitalization
+    const formattedOccupation = person.occupation
+      .toLowerCase()
+      .split(' ')
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+    parts.push(formattedOccupation);
+  }
   
   return `"${parts.join(' • ')}"`;
 }
