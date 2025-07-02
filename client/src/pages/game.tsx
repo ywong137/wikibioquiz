@@ -24,6 +24,7 @@ export default function Game() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [roundNumber, setRoundNumber] = useState(1);
   const [preloadedPerson, setPreloadedPerson] = useState<WikipediaPerson | null>(null);
+  const [gameSession, setGameSession] = useState<GameSession | null>(null);
   const { toast } = useToast();
 
   // Create game session
@@ -34,6 +35,7 @@ export default function Game() {
     },
     onSuccess: (session: GameSession) => {
       setSessionId(session.id);
+      setGameSession(session);
       queryClient.invalidateQueries({ queryKey: ['/api/game/session'] });
     },
   });
@@ -98,6 +100,7 @@ export default function Game() {
     onSuccess: (data: GuessResponse) => {
       setLastGuessCorrect(data.correct);
       setPointsEarned(data.pointsEarned);
+      setGameSession(data.session);
       setShowFeedback(true);
       
       if (data.correct) {
@@ -125,6 +128,7 @@ export default function Game() {
       return response.json();
     },
     onSuccess: (data) => {
+      setGameSession(data.session);
       toast({
         title: "Hint (-5 points)",
         description: data.hint,
@@ -220,15 +224,15 @@ export default function Game() {
           <div className="flex justify-center space-x-4 mb-4">
             <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg">
               <div className="text-sm font-medium opacity-90">Score</div>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">{gameSession?.score || 0}</div>
             </div>
             <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg">
               <div className="text-sm font-medium opacity-90">Streak</div>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">{gameSession?.streak || 0}</div>
             </div>
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg">
               <div className="text-sm font-medium opacity-90">Round</div>
-              <div className="text-2xl font-bold">1</div>
+              <div className="text-2xl font-bold">{gameSession?.round || 1}</div>
             </div>
           </div>
         </header>
