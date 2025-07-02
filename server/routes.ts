@@ -299,7 +299,7 @@ async function getAdditionalHint(personName: string): Promise<string> {
     
     // Use OpenAI to generate intelligent hints
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model: "gpt-4o-mini", // Using GPT-4o mini for cost efficiency as requested by the user
       messages: [
         {
           role: "system",
@@ -367,7 +367,7 @@ async function generateInitialHint(extract: string): Promise<string> {
   try {
     // Use OpenAI for initial hint generation too
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model: "gpt-4o-mini", // Using GPT-4o mini for cost efficiency as requested by the user
       messages: [
         {
           role: "system",
@@ -405,7 +405,7 @@ Examples:
 async function generateAdditionalHint(extract: string): Promise<string> {
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model: "gpt-4o-mini", // Using GPT-4o mini for cost efficiency as requested by the user
       messages: [
         {
           role: "system",
