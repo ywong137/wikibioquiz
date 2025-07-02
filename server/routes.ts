@@ -252,6 +252,8 @@ function decodeHtmlEntities(text: string): string {
   return decoded;
 }
 
+
+
 function isCorrectGuess(guess: string, personName: string): boolean {
   const normalizedGuess = normalizeGuess(guess);
   const normalizedName = normalizeGuess(personName);
@@ -594,6 +596,33 @@ async function getFromNationalityCategory(): Promise<WikipediaPerson> {
   return await getPersonFromWikipediaCategory(nationality);
 }
 
+async function verifyIsPersonWithLLM(title: string, extract: string): Promise<boolean> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a classifier that determines if a Wikipedia article is about a PERSON (human being) or not. Respond with only 'YES' if it's about a person, or 'NO' if it's about anything else (places, objects, organizations, concepts, etc.)."
+        },
+        {
+          role: "user",
+          content: `Title: ${title}\n\nFirst paragraph: ${extract.substring(0, 500)}`
+        }
+      ],
+      max_tokens: 10,
+      temperature: 0
+    });
+
+    const result = response.choices[0].message.content?.trim().toUpperCase();
+    return result === 'YES';
+  } catch (error) {
+    console.log(`LLM verification failed for ${title}, defaulting to old logic`);
+    // Fallback to old logic if LLM fails
+    return isProbablyPerson(title, extract);
+  }
+}
+
 async function getPersonFromWikipediaCategory(categoryName: string): Promise<WikipediaPerson> {
   try {
     console.log(`Trying to fetch from category: ${categoryName}`);
@@ -636,12 +665,13 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
         
         const page = await summaryResponse.json();
         
-        // Check if this looks like a person
-        if (isProbablyPerson(page.title, page.extract || "")) {
-          console.log(`Successfully got person: ${page.title}`);
+        // Use LLM to verify this is actually a person
+        const isActualPerson = await verifyIsPersonWithLLM(page.title, page.extract || "");
+        if (isActualPerson) {
+          console.log(`LLM confirmed person: ${page.title}`);
           return await createPersonFromPage(page);
         } else {
-          console.log(`Rejected ${page.title} - not detected as person`);
+          console.log(`LLM rejected ${page.title} - not a person`);
         }
       } catch (error) {
         console.log(`Failed to process member, trying next...`);
