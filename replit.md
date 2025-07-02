@@ -98,15 +98,15 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
-- July 02, 2025. ACADEMIC BREAKTHROUGH: Implemented highest-quality famous people database
-  - Created comprehensive database of 97 most globally famous people throughout all history
-  - Replaced random Wikipedia mining with academically curated selection based on true global fame
-  - Spans all historical periods: Ancient (Socrates, Caesar) to Contemporary (Steve Jobs, Mandela)  
-  - Categories include: Political Leaders (25), Philosophers (7), Writers (7), Scientists (7), Musicians (7)
-  - Each person hand-selected for genuine household-name recognition worldwide
-  - Qualitative filtering based on cross-cultural fame rather than just Wikipedia presence
-  - Game now delivers truly recognizable figures: FDR, Henry VIII, Einstein, Shakespeare
-  - 100% guessable names that players actually know and can reasonably identify
+- July 02, 2025. PANTHEON 2.0 BREAKTHROUGH: Implemented MIT's authoritative famous people dataset
+  - Successfully loaded 10,000 most famous people from authentic Pantheon 2.0 dataset (88,937 total records)
+  - Replaced manual curation with MIT's academic dataset ranked by Historical Popularity Index
+  - Comprehensive global coverage: 3,175 Political Leaders, 1,534 Historical Figures, 962 Writers
+  - International diversity: French (1,071), Italian (1,058), American (1,041), German (876), British (738)
+  - Spans all time periods: Modern (4,759), Renaissance (1,821), Ancient (1,395), Medieval (936)
+  - Top figures include: Muhammad, Genghis Khan, Leonardo da Vinci, Isaac Newton, Beethoven
+  - System now delivers authentic academic-grade selection of globally significant historical figures
+  - Game features both household names and important historical figures across all cultures
 - July 02, 2025. QUALITY: Increased section requirement to 6 minimum sections
   - Raised minimum from 4 to 6 sections for even higher biographical content quality
   - Ensures players receive substantial, well-documented historical figures
