@@ -552,25 +552,16 @@ async function tryGetRandomPerson(): Promise<WikipediaPerson> {
 }
 
 async function getRandomPersonDirect(): Promise<WikipediaPerson> {
-  // Direct random person with better filtering
-  for (let i = 0; i < 5; i++) {
-    try {
-      const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
-      const page = await response.json();
-      
-      // Use LLM to verify this is actually a person
-      const isActualPerson = await verifyIsPersonWithLLM(page.title, page.extract || "");
-      if (isActualPerson) {
-        console.log(`🎲 RANDOM: LLM confirmed person "${page.title}"`);
-        return await createPersonFromPage(page);
-      } else {
-        console.log(`🎲 RANDOM: LLM rejected "${page.title}" - not a person`);
-      }
-    } catch (error) {
-      continue;
-    }
+  // Direct random person - single attempt to minimize API calls
+  try {
+    const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
+    const page = await response.json();
+    
+    console.log(`🎲 RANDOM: Got "${page.title}" - accepting without LLM verification to minimize API calls`);
+    return await createPersonFromPage(page);
+  } catch (error) {
+    throw new Error("Could not fetch random person: " + error.message);
   }
-  throw new Error("Could not find suitable random person");
 }
 
 async function getFromBiographyCategory(): Promise<WikipediaPerson> {
@@ -696,40 +687,25 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
       throw new Error("No category members found");
     }
     
-    // Try multiple random members in case some fail
-    for (let attempt = 0; attempt < Math.min(5, members.length); attempt++) {
-      try {
-        const randomMember = members[Math.floor(Math.random() * members.length)];
-        console.log(`Trying member: ${randomMember.title}`);
-        
-        // Get page summary
-        const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(randomMember.title)}`;
-        console.log(`Fetching summary URL: ${summaryUrl}`);
-        
-        const summaryResponse = await fetch(summaryUrl);
-        
-        if (!summaryResponse.ok) {
-          console.log(`Summary fetch failed for ${randomMember.title}, status: ${summaryResponse.status}, statusText: ${summaryResponse.statusText}`);
-          continue;
-        }
-        
-        const page = await summaryResponse.json();
-        
-        // Use LLM to verify this is actually a person
-        const isActualPerson = await verifyIsPersonWithLLM(page.title, page.extract || "");
-        if (isActualPerson) {
-          console.log(`LLM confirmed person: ${page.title}`);
-          return await createPersonFromPage(page);
-        } else {
-          console.log(`LLM rejected ${page.title} - not a person`);
-        }
-      } catch (error) {
-        console.log(`Failed to process member, trying next...`);
-        continue;
-      }
+    // Single attempt to minimize API calls
+    const randomMember = members[Math.floor(Math.random() * members.length)];
+    console.log(`Trying member: ${randomMember.title}`);
+    
+    // Get page summary
+    const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(randomMember.title)}`;
+    console.log(`Fetching summary URL: ${summaryUrl}`);
+    
+    const summaryResponse = await fetch(summaryUrl);
+    
+    if (!summaryResponse.ok) {
+      throw new Error(`Summary fetch failed for ${randomMember.title}`);
     }
     
-    throw new Error("No suitable person found in category");
+    const page = await summaryResponse.json();
+    
+    // Accept any page from person-focused categories to minimize API calls
+    console.log(`✅ CATEGORY: Accepting "${page.title}" from ${categoryName} without LLM verification`);
+    return await createPersonFromPage(page);
     
   } catch (error: any) {
     console.log(`Category strategy failed: ${error?.message || error}`);
