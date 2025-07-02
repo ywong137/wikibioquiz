@@ -44,6 +44,20 @@ export const gameRounds = pgTable("game_rounds", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Famous people database - curated list of well-known historical and contemporary figures
+export const famousPeople = pgTable("famous_people", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  category: text("category"), // e.g. "Historical Figure", "Actor", "Musician", "Politician", etc.
+  timeperiod: text("timeperiod"), // e.g. "Ancient", "Medieval", "Renaissance", "Modern", "Contemporary"
+  nationality: text("nationality"), // Primary nationality
+  occupation: text("occupation"), // Primary occupation
+  birthYear: integer("birth_year"), // For historical context
+  deathYear: integer("death_year"), // null for living people
+  wikipediaTitle: text("wikipedia_title"), // Exact Wikipedia page title for lookups
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -64,6 +78,11 @@ export const insertGameRoundSchema = createInsertSchema(gameRounds).omit({
   createdAt: true,
 });
 
+export const insertFamousPersonSchema = createInsertSchema(famousPeople).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type GameSession = typeof gameSessions.$inferSelect;
@@ -72,6 +91,8 @@ export type CachedBiography = typeof cachedBiographies.$inferSelect;
 export type InsertCachedBiography = z.infer<typeof insertCachedBiographySchema>;
 export type GameRound = typeof gameRounds.$inferSelect;
 export type InsertGameRound = z.infer<typeof insertGameRoundSchema>;
+export type FamousPerson = typeof famousPeople.$inferSelect;
+export type InsertFamousPerson = z.infer<typeof insertFamousPersonSchema>;
 
 export interface WikipediaPerson {
   name: string;
