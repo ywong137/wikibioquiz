@@ -654,9 +654,32 @@ async function verifyIsPersonWithLLM(title: string, extract: string): Promise<bo
       messages: [
         {
           role: "user",
-          content: `Do these first sentence(s) from the beginning of a Wikipedia entry indicate that the entry is about a named human being, or is it about something else? Say only YES if it is, and NO if it is not, and say nothing else.
+          content: `Look at this Wikipedia entry title and opening text. 
 
-"${textToAnalyze}"`
+Title: "${title}"
+Text: "${textToAnalyze}"
+
+ONLY say YES if this meets ALL criteria:
+1. About exactly ONE real person (not a band, group, duo, or multiple people)
+2. The title is their actual birth/legal name (not a stage name, alias, or nickname)
+3. Not about an object, concept, place, or organization
+
+Examples that should be NO:
+- "The Beatles" = NO (band name)
+- "infinite bisous" = NO (stage name/alias)
+- "Dan Berk and Robert Olsen" = NO (multiple people)
+- "DJ Snake" = NO (stage name)
+- "Lady Gaga" = NO (stage name)
+- "50 Cent" = NO (stage name)
+- "The Kut" = NO (stage name)
+- "iPhone 15" = NO (not a person)
+
+Examples that should be YES:
+- "Albert Einstein" = YES (real name of one person)
+- "Marie Curie" = YES (real name of one person)
+- "Barack Obama" = YES (real name of one person)
+
+Say only YES or NO, nothing else.`
         }
       ],
       max_tokens: 5,
@@ -666,7 +689,7 @@ async function verifyIsPersonWithLLM(title: string, extract: string): Promise<bo
     const result = response.choices[0].message.content?.trim().toUpperCase();
     const isPersonResult = result === 'YES';
     
-    console.log(`🤖 PERSON CHECK RESULT: "${title}" -> ${isPersonResult ? 'CONFIRMED PERSON ✅' : 'NOT A PERSON ❌'} (LLM said: ${result})`);
+    console.log(`🤖 PERSON CHECK RESULT: "${title}" -> ${isPersonResult ? 'CONFIRMED REAL PERSON NAME ✅' : 'NOT REAL PERSON NAME ❌'} (LLM said: ${result})`);
     return isPersonResult;
   } catch (error) {
     console.log(`🤖 PERSON CHECK ERROR: LLM verification failed for "${title}", using fallback logic`);

@@ -98,10 +98,15 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 02, 2025. CRITICAL: Enhanced LLM verification for real person names only
+  - Updated LLM verification to reject stage names, aliases, and band names
+  - Added explicit criteria requiring birth/legal names only (not "The Kut", "infinite bisous", etc.)
+  - Prevents multiple people entries (no "Dan Berk and Robert Olsen")
+  - Ensures game only features actual person names that players can reasonably guess
 - July 02, 2025. MAJOR: Optimized Wikipedia API efficiency
   - Successfully reduced Wikipedia API calls from 10+ to 3 per request
   - Eliminated concurrent Wikipedia fetching with global lock mechanism
-  - Removed expensive LLM person verification calls
+  - Restored essential LLM person verification with sequential retry logic
   - Simplified strategy execution to single-attempt model
   - Added comprehensive server-side debugging and request tracking
   - Fixed duplicate session creation issues causing multiple concurrent requests
