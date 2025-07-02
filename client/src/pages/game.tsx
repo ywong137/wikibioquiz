@@ -498,7 +498,7 @@ export default function Game() {
                         <Lightbulb className="mr-2" size={16} />
                         <span className="font-semibold">AI Generated Hint:</span>
                       </div>
-                      <p className="text-yellow-700">{currentPerson.hint}</p>
+                      <p className="text-yellow-700">{currentPerson.aiHint || "Additional hint not available"}</p>
                     </div>
                   )}
 

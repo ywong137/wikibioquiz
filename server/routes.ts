@@ -436,6 +436,7 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
         name: cached.name,
         sections: cached.sections,
         hint: cached.hint,
+        aiHint: cached.aiHint ?? undefined,
         initials: cached.initials,
         url: cached.wikipediaUrl,
       };
@@ -466,6 +467,7 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
           name: person.name,
           sections: person.sections,
           hint: person.hint,
+          aiHint: person.aiHint,
           initials: person.initials,
           extract: null, // We don't have extract from our current flow
         });
@@ -670,21 +672,30 @@ async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
     console.log(`Sections fetch failed for ${page.title}: ${error}`);
   }
   
-  // Generate hint with fallback
-  console.log(`About to generate hint for ${page.title}`);
+  // Generate both types of hints
+  console.log(`About to generate hints for ${page.title}`);
   let hint: string;
+  let aiHint: string;
+  
   try {
+    // Generate initial hint (for top clue)
     hint = await generateInitialHint(page.extract || "");
-    console.log(`Generated hint successfully for ${page.title}`);
+    console.log(`Generated initial hint successfully for ${page.title}`);
+    
+    // Generate additional AI hint (for AI hint button)
+    aiHint = await generateAdditionalHint(page.extract || "");
+    console.log(`Generated AI hint successfully for ${page.title}`);
   } catch (error) {
     console.log(`OpenAI hint generation failed for ${page.title}, using fallback`);
     hint = generateSimpleHint(page.extract || "");
+    aiHint = generateSimpleHint(page.extract || "");
   }
   
   const result = {
     name: page.title,
     sections,
     hint,
+    aiHint,
     initials: generateInitials(page.title),
     url: page.content_urls?.desktop?.page || "",
   };
