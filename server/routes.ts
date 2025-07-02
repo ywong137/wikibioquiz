@@ -483,12 +483,7 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
         continue;
       }
       
-      // Skip if sections are too few 
-      if (person.sections.length < 4) {
-        console.log(`⚠️ ATTEMPT ${attempt + 1}: "${person.name}" has only ${person.sections.length} sections, trying next strategy...`);
-        continue;
-      }
-      
+      // Note: Section count check now happens in createPersonFromPage() before hint generation
       console.log(`✅ ATTEMPT ${attempt + 1}: Found suitable person "${person.name}" with ${person.sections.length} sections`);
       
       return person;
@@ -750,8 +745,14 @@ async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
     console.log(`Sections fetch failed for ${page.title}: ${error}`);
   }
   
-  // Generate both types of hints
-  console.log(`About to generate hints for ${page.title}`);
+  // Check if person has enough sections BEFORE generating expensive hints
+  if (sections.length < 4) {
+    console.log(`⚠️ SECTIONS: "${page.title}" has only ${sections.length} sections (minimum 4 required), skipping hint generation`);
+    throw new Error(`Insufficient sections: ${page.title} has only ${sections.length} sections (minimum 4 required)`);
+  }
+  
+  // Generate both types of hints (only after confirming sufficient sections)
+  console.log(`✅ SECTIONS: "${page.title}" has ${sections.length} sections, proceeding with hint generation`);
   let hint: string;
   let aiHint: string;
   

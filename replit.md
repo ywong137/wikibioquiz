@@ -98,6 +98,11 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 02, 2025. PERFORMANCE: Optimized LLM hint generation efficiency
+  - Moved section count validation BEFORE expensive hint generation
+  - Now generates hints only for people with 4+ sections (significant cost savings)
+  - Eliminated wasted OpenAI API calls for people who would be rejected anyway
+  - Improved request flow: fetch → verify person → get sections → check count → generate hints
 - July 02, 2025. CRITICAL: Enhanced LLM verification for real person names only
   - Updated LLM verification to reject stage names, aliases, and band names
   - Added explicit criteria requiring birth/legal names only (not "The Kut", "infinite bisous", etc.)
