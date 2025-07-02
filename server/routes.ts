@@ -494,46 +494,52 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
   
   console.log(`\n🎯 ROUND ${round}: Fetching NEW Wikipedia person from live API...`);
   
-  // Single attempt - get any person and make it work
-  try {
-    console.log(`🔄 SINGLE ATTEMPT: Getting one Wikipedia person...`);
-    const person = await tryGetRandomPerson();
-    
-    // If already used, still return it but log the issue
-    if (usedPeople.includes(person.name)) {
-      console.log(`⚠️ WARNING: "${person.name}" already used, but continuing anyway to minimize API calls`);
-    }
-    
-    // If sections are too few, pad with generic sections
-    if (person.sections.length < 2) {
-      console.log(`⚠️ WARNING: "${person.name}" has only ${person.sections.length} sections, padding with generic ones`);
-      person.sections = [...person.sections, "Biography", "Personal life", "Career"].slice(0, 3);
-    }
-    
-    console.log(`✅ SINGLE ATTEMPT: Using person "${person.name}" with ${person.sections.length} sections`);
-    
-    // Cache the person for future use
+  // Try up to 5 strategies sequentially to find a valid person
+  for (let attempt = 0; attempt < 5; attempt++) {
     try {
-      await storage.addCachedBiography({
-        wikipediaUrl: person.url,
-        name: person.name,
-        sections: person.sections,
-        hint: person.hint,
-        aiHint: person.aiHint,
-        initials: person.initials,
-        extract: null, // We don't have extract from our current flow
-      });
-      console.log(`💾 CACHED: Successfully stored "${person.name}" for future use`);
-    } catch (cacheError) {
-      console.log(`💾 CACHE SKIP: "${person.name}" already cached (duplicate entry)`);
-      // Continue anyway, caching failure shouldn't break the game
+      console.log(`🔄 ATTEMPT ${attempt + 1}: Trying to get a Wikipedia person...`);
+      const person = await tryGetRandomPerson();
+      
+      // Skip if already used
+      if (usedPeople.includes(person.name)) {
+        console.log(`⚠️ ATTEMPT ${attempt + 1}: "${person.name}" already used, trying next strategy...`);
+        continue;
+      }
+      
+      // Skip if sections are too few 
+      if (person.sections.length < 2) {
+        console.log(`⚠️ ATTEMPT ${attempt + 1}: "${person.name}" has only ${person.sections.length} sections, trying next strategy...`);
+        continue;
+      }
+      
+      console.log(`✅ ATTEMPT ${attempt + 1}: Found suitable person "${person.name}" with ${person.sections.length} sections`);
+      
+      // Cache the person for future use
+      try {
+        await storage.addCachedBiography({
+          wikipediaUrl: person.url,
+          name: person.name,
+          sections: person.sections,
+          hint: person.hint,
+          aiHint: person.aiHint,
+          initials: person.initials,
+          extract: null, // We don't have extract from our current flow
+        });
+        console.log(`💾 CACHED: Successfully stored "${person.name}" for future use`);
+      } catch (cacheError) {
+        console.log(`💾 CACHE SKIP: "${person.name}" already cached (duplicate entry)`);
+        // Continue anyway, caching failure shouldn't break the game
+      }
+      
+      return person;
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error);
+      continue;
     }
-    
-    return person;
-  } catch (error) {
-    console.error(`Single attempt failed:`, error);
-    throw new Error("Failed to fetch person from Wikipedia: " + error.message);
   }
+  
+  // If all attempts failed, throw error instead of fallback
+  throw new Error("Failed to fetch person from Wikipedia after 5 attempts");
 }
 
 async function tryGetRandomPerson(): Promise<WikipediaPerson> {
@@ -552,15 +558,21 @@ async function tryGetRandomPerson(): Promise<WikipediaPerson> {
 }
 
 async function getRandomPersonDirect(): Promise<WikipediaPerson> {
-  // Direct random person - single attempt to minimize API calls
+  // Direct random person - single attempt but with person verification
   try {
     const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
     const page = await response.json();
     
-    console.log(`🎲 RANDOM: Got "${page.title}" - accepting without LLM verification to minimize API calls`);
+    // Use LLM to verify this is actually a person
+    const isActualPerson = await verifyIsPersonWithLLM(page.title, page.extract || "");
+    if (!isActualPerson) {
+      throw new Error(`Random page "${page.title}" is not about a person`);
+    }
+    
+    console.log(`🎲 RANDOM: LLM confirmed "${page.title}" is a person`);
     return await createPersonFromPage(page);
   } catch (error) {
-    throw new Error("Could not fetch random person: " + error.message);
+    throw new Error("Could not fetch suitable random person: " + (error as Error).message);
   }
 }
 
@@ -703,8 +715,13 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
     
     const page = await summaryResponse.json();
     
-    // Accept any page from person-focused categories to minimize API calls
-    console.log(`✅ CATEGORY: Accepting "${page.title}" from ${categoryName} without LLM verification`);
+    // Use LLM to verify this is actually a person
+    const isActualPerson = await verifyIsPersonWithLLM(page.title, page.extract || "");
+    if (!isActualPerson) {
+      throw new Error(`Selected page "${page.title}" is not about a person`);
+    }
+    
+    console.log(`✅ CATEGORY: LLM confirmed "${page.title}" from ${categoryName} is a person`);
     return await createPersonFromPage(page);
     
   } catch (error: any) {
