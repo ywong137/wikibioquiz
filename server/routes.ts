@@ -616,8 +616,8 @@ Text: "${textToAnalyze}"
 
 ONLY say YES if this meets ALL criteria:
 1. About exactly ONE real person (not a band, group, duo, or multiple people)
-2. The title is their actual birth/legal name (not a stage name, alias, or nickname)
-3. Not about an object, concept, place, or organization
+2. The title is their actual birth/legal name or commonly used real name (Wikipedia disambiguation like "(actor)" is acceptable)
+3. Not about an object, concept, place, event, or organization
 
 Examples that should be NO:
 - "The Beatles" = NO (band name)
@@ -628,11 +628,14 @@ Examples that should be NO:
 - "50 Cent" = NO (stage name)
 - "The Kut" = NO (stage name)
 - "iPhone 15" = NO (not a person)
+- "Coronation of Edward VI" = NO (historical event)
 
 Examples that should be YES:
 - "Albert Einstein" = YES (real name of one person)
 - "Marie Curie" = YES (real name of one person)
 - "Barack Obama" = YES (real name of one person)
+- "John Means (comedian)" = YES (real name with disambiguation)
+- "Tom McKinney (broadcaster)" = YES (real name with disambiguation)
 
 Say only YES or NO, nothing else.`
         }
@@ -872,9 +875,11 @@ function generateInitials(fullName: string): string {
     .split(' ')
     .filter(word => word.length > 0) // Remove empty strings
     .map(word => {
-      // Extract only alphabetic characters from the beginning of each word
-      const firstLetter = word.match(/^[A-Za-z]/);
-      return firstLetter ? firstLetter[0].toUpperCase() : '';
+      // Extract first character if it's a letter (supports international characters)
+      const firstChar = word.charAt(0);
+      // Check if it's a letter by seeing if uppercase differs from lowercase
+      const isLetter = firstChar.toUpperCase() !== firstChar.toLowerCase();
+      return isLetter ? firstChar.toUpperCase() : '';
     })
     .filter(initial => initial !== '') // Remove empty initials
     .join('.');
