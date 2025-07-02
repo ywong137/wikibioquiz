@@ -207,8 +207,8 @@ export async function prepopulateWikipediaData() {
       processed++;
       console.log(`✅ Successfully processed ${person.name} (${initials}) - ${sections.length} sections`);
       
-      // Add delay to respect Wikipedia API limits
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Add delay to respect Wikipedia API limits (increased for better stability)
+      await new Promise(resolve => setTimeout(resolve, 500));
       
     } catch (error) {
       errors++;
