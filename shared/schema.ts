@@ -55,6 +55,7 @@ export const famousPeople = pgTable("famous_people", {
   birthYear: integer("birth_year"), // For historical context
   deathYear: integer("death_year"), // null for living people
   wikipediaTitle: text("wikipedia_title"), // Exact Wikipedia page title for lookups
+  filteredOut: integer("filtered_out").notNull().default(0), // 0 = active, 1 = filtered out
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
