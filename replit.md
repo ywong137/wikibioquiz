@@ -98,6 +98,13 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 02, 2025. QUALITY CONTROL: Advanced filtering and initials algorithm refinement
+  - Implemented comprehensive quality control scan of all 10,000 names for game appropriateness
+  - Added filtered_out flag column (default 0, set to 1 for problematic entries) preserving all data
+  - Filtered out 1,221 problematic names (12.2% filter rate) leaving 8,779 high-quality active entries
+  - Criteria: single confusing names (Sarah, Jerome), special characters (accents, commas), titles with numbers
+  - Enhanced initials algorithm to handle complex cases: "J.R.R. Tolkien" → JRR, "14th Dalai Lama" → D
+  - System now delivers authentic academic-grade selection filtered for optimal game experience
 - July 02, 2025. PANTHEON 2.0 BREAKTHROUGH: Implemented MIT's authoritative famous people dataset
   - Successfully loaded 10,000 most famous people from authentic Pantheon 2.0 dataset (88,937 total records)
   - Replaced manual curation with MIT's academic dataset ranked by Historical Popularity Index
