@@ -398,15 +398,9 @@ async function getFromBiographyCategory(): Promise<WikipediaPerson> {
   const categories = [
     "20th-century_American_actors",
     "20th-century_American_musicians", 
-    "Nobel_Prize_winners",
     "American_film_directors",
     "British_actors",
-    "French_artists",
     "German_scientists",
-    "Italian_Renaissance_artists",
-    "American_presidents",
-    "British_prime_ministers",
-    "Olympic_athletes",
     "American_writers",
     "British_writers",
     "Philosophers",
@@ -435,11 +429,7 @@ async function getFromRandomProfessionCategory(): Promise<WikipediaPerson> {
 
 async function getFromTimeperiodCategory(): Promise<WikipediaPerson> {
   const periods = [
-    "19th-century_people",
-    "20th-century_people", 
-    "21st-century_people",
-    "Renaissance_people",
-    "Medieval_people"
+    "Renaissance_people"
   ];
   
   const period = periods[Math.floor(Math.random() * periods.length)];
@@ -448,14 +438,8 @@ async function getFromTimeperiodCategory(): Promise<WikipediaPerson> {
 
 async function getFromNationalityCategory(): Promise<WikipediaPerson> {
   const nationalities = [
-    "American_people",
-    "British_people",
-    "French_people", 
     "German_people",
-    "Italian_people",
-    "Spanish_people",
-    "Japanese_people",
-    "Canadian_people"
+    "Spanish_people"
   ];
   
   const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];

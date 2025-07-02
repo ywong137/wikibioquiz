@@ -52,13 +52,17 @@ export default function Game() {
   });
 
   // Fetch random person
-  const { data: person, isLoading: personLoading } = useQuery({
+  const { data: person, isLoading: personLoading, error: personError } = useQuery({
     queryKey: ['/api/game/person', sessionId, roundNumber],
     enabled: !!sessionId,
     staleTime: Infinity, // Don't refetch automatically
+    retry: 2, // Try 2 more times before giving up
     queryFn: async () => {
       const response = await fetch(`/api/game/person?sessionId=${sessionId}`);
-      if (!response.ok) throw new Error('Failed to fetch person');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to fetch person from Wikipedia');
+      }
       return response.json();
     },
   });
@@ -281,8 +285,33 @@ export default function Game() {
             </div>
           )}
 
+          {/* Error State */}
+          {personError && !personLoading && (
+            <div className="text-center py-16">
+              <div className="bg-red-50 border border-red-200 rounded-xl p-8 max-w-md mx-auto">
+                <div className="text-red-600 mb-4">
+                  <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-red-800 mb-2">
+                  Unable to Load Person
+                </h3>
+                <p className="text-red-700 text-sm mb-4">
+                  {personError.message || 'Failed to fetch person from Wikipedia'}
+                </p>
+                <button 
+                  onClick={() => setRoundNumber(prev => prev + 1)}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Game Content */}
-          {currentPerson && !personLoading && (
+          {currentPerson && !personLoading && !personError && (
             <div>
               {/* Person Hint */}
               <div className="text-center mb-8">
