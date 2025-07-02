@@ -23,6 +23,7 @@ export default function Game() {
   const [pointsEarned, setPointsEarned] = useState(0);
   const [showInstructions, setShowInstructions] = useState(false);
   const [roundNumber, setRoundNumber] = useState(1);
+  const [preloadedPerson, setPreloadedPerson] = useState<WikipediaPerson | null>(null);
   const { toast } = useToast();
 
   // Create game session
@@ -60,6 +61,18 @@ export default function Game() {
     },
   });
 
+  // Pre-load next person
+  const { data: nextPerson } = useQuery({
+    queryKey: ['/api/game/person/preload', sessionId, roundNumber + 1],
+    enabled: !!sessionId && !!currentPerson,
+    staleTime: Infinity,
+    queryFn: async () => {
+      const response = await fetch(`/api/game/person/preload?sessionId=${sessionId}`);
+      if (!response.ok) throw new Error('Failed to preload person');
+      return response.json();
+    },
+  });
+
   // Update currentPerson when person data changes
   useEffect(() => {
     if (person) {
@@ -68,6 +81,13 @@ export default function Game() {
       setGuess('');
     }
   }, [person]);
+
+  // Store preloaded person
+  useEffect(() => {
+    if (nextPerson) {
+      setPreloadedPerson(nextPerson);
+    }
+  }, [nextPerson]);
 
   // Submit guess
   const submitGuessMutation = useMutation({
@@ -128,8 +148,29 @@ export default function Game() {
     });
   };
 
-  const handleNextPerson = () => {
-    setRoundNumber(prev => prev + 1);
+  const handleNextPerson = async () => {
+    if (preloadedPerson) {
+      // Use preloaded person for instant transition
+      setCurrentPerson(preloadedPerson);
+      setShowFeedback(false);
+      setGuess('');
+      setPreloadedPerson(null);
+      
+      // Update the session with the new person
+      try {
+        await apiRequest('POST', '/api/game/person/use', {
+          sessionId,
+          personName: preloadedPerson.name
+        });
+      } catch (error) {
+        console.error('Failed to update session with preloaded person');
+      }
+      
+      setRoundNumber(prev => prev + 1);
+    } else {
+      // Fallback to regular fetch
+      setRoundNumber(prev => prev + 1);
+    }
   };
 
   const handleGetHint = () => {

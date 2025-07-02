@@ -61,6 +61,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Pre-load next person for faster transitions
+  app.get("/api/game/person/preload", async (req, res) => {
+    const sessionId = parseInt(req.query.sessionId as string);
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: "Session ID is required" });
+    }
+
+    try {
+      const session = await storage.getGameSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      // Fetch a person but don't update the session yet
+      const person = await getRandomWikipediaPerson(session.usedPeople);
+      res.json(person);
+    } catch (error) {
+      console.error("Error pre-loading Wikipedia person:", error);
+      res.status(500).json({ error: "Failed to pre-load person from Wikipedia" });
+    }
+  });
+
+  // Use preloaded person (update session with it)
+  app.post("/api/game/person/use", async (req, res) => {
+    try {
+      const { sessionId, personName } = req.body;
+      
+      const session = await storage.getGameSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      // Update session with the preloaded person
+      await storage.updateGameSession(sessionId, {
+        usedPeople: [...session.usedPeople, personName],
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error using preloaded person:", error);
+      res.status(500).json({ error: "Failed to use preloaded person" });
+    }
+  });
+
   // Submit guess
   app.post("/api/game/guess", async (req, res) => {
     try {
@@ -323,11 +368,30 @@ async function tryGetRandomPerson(): Promise<WikipediaPerson> {
     () => getFromBiographyCategory(),
     () => getFromRandomProfessionCategory(),
     () => getFromTimeperiodCategory(),
-    () => getFromNationalityCategory()
+    () => getFromNationalityCategory(),
+    () => getRandomPersonDirect() // Add direct random as well
   ];
   
   const strategy = strategies[Math.floor(Math.random() * strategies.length)];
   return await strategy();
+}
+
+async function getRandomPersonDirect(): Promise<WikipediaPerson> {
+  // Direct random person with better filtering
+  for (let i = 0; i < 5; i++) {
+    try {
+      const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
+      const page = await response.json();
+      
+      // Only accept if it looks like a person
+      if (isProbablyPerson(page.title, page.extract || "")) {
+        return await createPersonFromPage(page);
+      }
+    } catch (error) {
+      continue;
+    }
+  }
+  throw new Error("Could not find suitable random person");
 }
 
 async function getFromBiographyCategory(): Promise<WikipediaPerson> {
@@ -400,38 +464,58 @@ async function getFromNationalityCategory(): Promise<WikipediaPerson> {
 
 async function getPersonFromWikipediaCategory(categoryName: string): Promise<WikipediaPerson> {
   try {
-    // Get random articles from category
+    console.log(`Trying to fetch from category: ${categoryName}`);
+    
+    // Get random articles from category using the correct API endpoint
     const response = await fetch(
-      `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:${categoryName}&cmlimit=50&format=json&origin=*`
+      `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:${categoryName}&cmlimit=100&format=json&origin=*&cmnamespace=0`
     );
     
     if (!response.ok) {
+      console.log(`Category fetch failed for ${categoryName}`);
       throw new Error("Category fetch failed");
     }
     
     const data = await response.json();
     const members = data.query?.categorymembers || [];
+    console.log(`Found ${members.length} members in category ${categoryName}`);
     
     if (members.length === 0) {
       throw new Error("No category members found");
     }
     
-    // Pick random member
-    const randomMember = members[Math.floor(Math.random() * members.length)];
+    // Try multiple random members in case some fail
+    for (let attempt = 0; attempt < Math.min(5, members.length); attempt++) {
+      try {
+        const randomMember = members[Math.floor(Math.random() * members.length)];
+        console.log(`Trying member: ${randomMember.title}`);
+        
+        // Get page summary
+        const summaryResponse = await fetch(
+          `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(randomMember.title)}`
+        );
+        
+        if (!summaryResponse.ok) continue;
+        
+        const page = await summaryResponse.json();
+        
+        // Check if this looks like a person
+        if (isProbablyPerson(page.title, page.extract || "")) {
+          console.log(`Successfully got person: ${page.title}`);
+          return await createPersonFromPage(page);
+        }
+      } catch (error) {
+        console.log(`Failed to process member, trying next...`);
+        continue;
+      }
+    }
     
-    // Get page summary
-    const summaryResponse = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(randomMember.title)}`
-    );
-    
-    const page = await summaryResponse.json();
-    return await createPersonFromPage(page);
+    throw new Error("No suitable person found in category");
     
   } catch (error) {
-    // Fallback to simple random
-    const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
-    const page = await response.json();
-    return await createPersonFromPage(page);
+    console.log(`Category strategy failed: ${error.message}`);
+    // Try a completely different approach
+    return await getRandomPersonDirect();
   }
 }
 
@@ -561,7 +645,7 @@ function generateHint(extract: string): string {
 }
 
 async function getFallbackPerson(usedPeople: string[]): Promise<WikipediaPerson> {
-  // Fallback to well-known people if Wikipedia API fails
+  // Extensive fallback list of well-known people if Wikipedia API fails
   const fallbackPeople = [
     {
       name: "Albert Einstein",
@@ -580,12 +664,85 @@ async function getFallbackPerson(usedPeople: string[]): Promise<WikipediaPerson>
       sections: ["Early life", "Career", "Plays", "Sonnets", "Later years", "Death", "Legacy", "Authorship question"],
       hint: "English • Playwright • 16th-17th century",
       url: "https://en.wikipedia.org/wiki/William_Shakespeare"
+    },
+    {
+      name: "Marie Curie",
+      sections: ["Early life", "Education", "Scientific career", "Nobel Prizes", "Later life", "Death", "Legacy"],
+      hint: "Polish-French • Scientist • Nobel Prize winner",
+      url: "https://en.wikipedia.org/wiki/Marie_Curie"
+    },
+    {
+      name: "Nelson Mandela",
+      sections: ["Early life", "Political activism", "Imprisonment", "Presidency", "Later life", "Death", "Legacy"],
+      hint: "South African • Political leader • Anti-apartheid activist",
+      url: "https://en.wikipedia.org/wiki/Nelson_Mandela"
+    },
+    {
+      name: "Pablo Picasso",
+      sections: ["Early life", "Blue Period", "Rose Period", "Cubism", "Later work", "Personal life", "Death", "Legacy"],
+      hint: "Spanish • Artist • Co-founder of Cubism",
+      url: "https://en.wikipedia.org/wiki/Pablo_Picasso"
+    },
+    {
+      name: "Winston Churchill",
+      sections: ["Early life", "Political career", "World War II", "Post-war career", "Writing", "Death", "Legacy"],
+      hint: "British • Prime Minister • World War II leader",
+      url: "https://en.wikipedia.org/wiki/Winston_Churchill"
+    },
+    {
+      name: "Michael Jackson",
+      sections: ["Early life", "Jackson 5", "Solo career", "Thriller era", "Later career", "Personal life", "Death", "Legacy"],
+      hint: "American • Musician • King of Pop",
+      url: "https://en.wikipedia.org/wiki/Michael_Jackson"
+    },
+    {
+      name: "Frida Kahlo",
+      sections: ["Early life", "Accident and recovery", "Artistic career", "Political views", "Personal life", "Death", "Legacy"],
+      hint: "Mexican • Artist • Self-portraits",
+      url: "https://en.wikipedia.org/wiki/Frida_Kahlo"
+    },
+    {
+      name: "Martin Luther King Jr.",
+      sections: ["Early life", "Education", "Civil rights movement", "Montgomery Bus Boycott", "March on Washington", "Assassination", "Legacy"],
+      hint: "American • Civil rights leader • I Have a Dream",
+      url: "https://en.wikipedia.org/wiki/Martin_Luther_King_Jr."
+    },
+    {
+      name: "Steve Jobs",
+      sections: ["Early life", "Apple I and Apple II", "Departure from Apple", "Return to Apple", "iPhone and iPad", "Personal life", "Death", "Legacy"],
+      hint: "American • Technology entrepreneur • Co-founder of Apple",
+      url: "https://en.wikipedia.org/wiki/Steve_Jobs"
+    },
+    {
+      name: "Oprah Winfrey",
+      sections: ["Early life", "Career beginnings", "The Oprah Winfrey Show", "Media empire", "Philanthropy", "Personal life", "Awards and honors"],
+      hint: "American • Media mogul • Talk show host",
+      url: "https://en.wikipedia.org/wiki/Oprah_Winfrey"
+    },
+    {
+      name: "Muhammad Ali",
+      sections: ["Early life", "Amateur career", "Professional boxing", "Vietnam War", "Later career", "Retirement", "Death", "Legacy"],
+      hint: "American • Boxer • The Greatest",
+      url: "https://en.wikipedia.org/wiki/Muhammad_Ali"
+    },
+    {
+      name: "Jane Austen",
+      sections: ["Early life", "Juvenilia", "First publications", "Later novels", "Death", "Posthumous publication", "Legacy"],
+      hint: "English • Novelist • Pride and Prejudice",
+      url: "https://en.wikipedia.org/wiki/Jane_Austen"
+    },
+    {
+      name: "Charles Darwin",
+      sections: ["Early life", "Voyage of the Beagle", "Theory of evolution", "Origin of Species", "Later life", "Death", "Legacy"],
+      hint: "British • Naturalist • Theory of evolution",
+      url: "https://en.wikipedia.org/wiki/Charles_Darwin"
     }
   ];
   
   const available = fallbackPeople.filter(person => !usedPeople.includes(person.name));
   if (available.length === 0) {
-    return fallbackPeople[0]; // Reset if we've used all fallbacks
+    // Reset and return a random person
+    return fallbackPeople[Math.floor(Math.random() * fallbackPeople.length)];
   }
   
   return available[Math.floor(Math.random() * available.length)];
