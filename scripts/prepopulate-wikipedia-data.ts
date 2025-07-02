@@ -1,6 +1,6 @@
 import { db } from '../server/db';
 import { famousPeople } from '../shared/schema';
-import { eq, isNull } from 'drizzle-orm';
+import { eq, isNull, sql } from 'drizzle-orm';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -140,13 +140,14 @@ Each hint should be 1-2 sentences, factual, and progressively more obvious. Form
 export async function prepopulateWikipediaData() {
   console.log('🚀 Starting Wikipedia data prepopulation...');
   
-  // Get all unprocessed people that aren't filtered out
+  // Get 100 random unprocessed people that aren't filtered out for testing
   const unprocessedPeople = await db
     .select()
     .from(famousPeople)
     .where(eq(famousPeople.filteredOut, 0))
     .where(isNull(famousPeople.processedAt))
-; // Process all unprocessed people
+    .orderBy(sql`RANDOM()`)
+    .limit(100); // Test with 100 random entries
   
   console.log(`📊 Found ${unprocessedPeople.length} unprocessed people to prepopulate`);
   
