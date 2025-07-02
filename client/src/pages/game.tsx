@@ -24,7 +24,7 @@ export default function Game() {
   const [streakBonus, setStreakBonus] = useState(0);
   const [showInstructions, setShowInstructions] = useState(false);
   const [roundNumber, setRoundNumber] = useState(1);
-  const [preloadedPerson, setPreloadedPerson] = useState<WikipediaPerson | null>(null);
+  // Preload functionality disabled to prevent redundant fetching
   const [gameSession, setGameSession] = useState<GameSession | null>(null);
   const [playerName, setPlayerName] = useState('');
   const [hintUsed, setHintUsed] = useState(false);
@@ -73,17 +73,7 @@ export default function Game() {
     },
   });
 
-  // Pre-load next person
-  const { data: nextPerson } = useQuery({
-    queryKey: ['/api/game/person/preload', sessionId, roundNumber + 1],
-    enabled: !!sessionId && !!currentPerson,
-    staleTime: Infinity,
-    queryFn: async () => {
-      const response = await fetch(`/api/game/person/preload?sessionId=${sessionId}`);
-      if (!response.ok) throw new Error('Failed to preload person');
-      return response.json();
-    },
-  });
+  // Preload functionality removed to prevent redundant fetching
 
   // Update currentPerson when person data changes
   useEffect(() => {
@@ -94,12 +84,7 @@ export default function Game() {
     }
   }, [person]);
 
-  // Store preloaded person
-  useEffect(() => {
-    if (nextPerson) {
-      setPreloadedPerson(nextPerson);
-    }
-  }, [nextPerson]);
+  // Preload functionality removed
 
   // Submit guess
   const submitGuessMutation = useMutation({
@@ -181,32 +166,16 @@ export default function Game() {
   };
 
   const handleNextPerson = async () => {
-    if (preloadedPerson) {
-      // Use preloaded person for instant transition
-      setCurrentPerson(preloadedPerson);
-      setShowFeedback(false);
-      setGuess('');
-      setHintUsed(false);
-      setInitialsUsed(false);
-      setShowHint(false);
-      setShowInitials(false);
-      setPreloadedPerson(null);
-      
-      // Update the session with the new person
-      try {
-        await apiRequest('POST', '/api/game/person/use', {
-          sessionId,
-          personName: preloadedPerson.name
-        });
-      } catch (error) {
-        console.error('Failed to update session with preloaded person');
-      }
-      
-      setRoundNumber(prev => prev + 1);
-    } else {
-      // Fallback to regular fetch
-      setRoundNumber(prev => prev + 1);
-    }
+    // Reset all state for new round
+    setShowFeedback(false);
+    setGuess('');
+    setHintUsed(false);
+    setInitialsUsed(false);
+    setShowHint(false);
+    setShowInitials(false);
+    
+    // Increment round number to trigger new fetch
+    setRoundNumber(prev => prev + 1);
   };
 
   const handleGetHint = () => {
