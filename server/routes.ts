@@ -451,12 +451,13 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
     console.log(`Trying to fetch from category: ${categoryName}`);
     
     // Get random articles from category using the correct API endpoint
-    const response = await fetch(
-      `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:${categoryName}&cmlimit=100&format=json&origin=*&cmnamespace=0`
-    );
+    const url = `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:${categoryName}&cmlimit=100&format=json&origin=*&cmnamespace=0`;
+    console.log(`Fetching URL: ${url}`);
+    
+    const response = await fetch(url);
     
     if (!response.ok) {
-      console.log(`Category fetch failed for ${categoryName}`);
+      console.log(`Category fetch failed for ${categoryName}, status: ${response.status}, statusText: ${response.statusText}`);
       throw new Error("Category fetch failed");
     }
     
@@ -475,11 +476,15 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
         console.log(`Trying member: ${randomMember.title}`);
         
         // Get page summary
-        const summaryResponse = await fetch(
-          `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(randomMember.title)}`
-        );
+        const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(randomMember.title)}`;
+        console.log(`Fetching summary URL: ${summaryUrl}`);
         
-        if (!summaryResponse.ok) continue;
+        const summaryResponse = await fetch(summaryUrl);
+        
+        if (!summaryResponse.ok) {
+          console.log(`Summary fetch failed for ${randomMember.title}, status: ${summaryResponse.status}, statusText: ${summaryResponse.statusText}`);
+          continue;
+        }
         
         const page = await summaryResponse.json();
         
@@ -505,9 +510,10 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
 
 async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
   // Get sections
-  const sectionsResponse = await fetch(
-    `https://en.wikipedia.org/api/rest_v1/page/sections/${encodeURIComponent(page.title)}`
-  );
+  const sectionsUrl = `https://en.wikipedia.org/api/rest_v1/page/sections/${encodeURIComponent(page.title)}`;
+  console.log(`Fetching sections URL: ${sectionsUrl}`);
+  
+  const sectionsResponse = await fetch(sectionsUrl);
   
   let sections = [];
   if (sectionsResponse.ok) {
