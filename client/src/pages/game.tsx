@@ -33,13 +33,15 @@ export default function Game() {
   const [showInitials, setShowInitials] = useState(false);
   const { toast } = useToast();
 
-  // Create game session
+  // Create game session (with debugging)
   const createSessionMutation = useMutation({
     mutationFn: async () => {
+      console.log(`🎮 Frontend: Creating new session...`);
       const response = await apiRequest('POST', '/api/game/session');
       return response.json();
     },
     onSuccess: (session: GameSession) => {
+      console.log(`🎮 Frontend: Session created successfully with ID ${session.id}`);
       setSessionId(session.id);
       setGameSession(session);
       queryClient.invalidateQueries({ queryKey: ['/api/game/session'] });
@@ -57,13 +59,14 @@ export default function Game() {
     },
   });
 
-  // Fetch random person
+  // Fetch random person (with concurrency protection)
   const { data: person, isLoading: personLoading, error: personError } = useQuery({
     queryKey: ['/api/game/person', sessionId, roundNumber],
-    enabled: !!sessionId,
+    enabled: !!sessionId && !createSessionMutation.isPending,
     staleTime: Infinity, // Don't refetch automatically
-    retry: 2, // Try 2 more times before giving up
+    retry: 1, // Reduce retries to minimize API calls
     queryFn: async () => {
+      console.log(`🎯 Frontend: Requesting person for sessionId=${sessionId}, round=${roundNumber}`);
       const response = await fetch(`/api/game/person?sessionId=${sessionId}`);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -148,8 +151,12 @@ export default function Game() {
   });
 
   useEffect(() => {
+    console.log(`🎮 Frontend: useEffect triggered - sessionId=${sessionId}, isPending=${createSessionMutation.isPending}`);
     if (!sessionId && !createSessionMutation.isPending) {
+      console.log(`🎮 Frontend: Triggering session creation...`);
       createSessionMutation.mutate();
+    } else {
+      console.log(`🎮 Frontend: Skipping session creation (already exists or pending)`);
     }
   }, [sessionId, createSessionMutation.isPending]);
 
