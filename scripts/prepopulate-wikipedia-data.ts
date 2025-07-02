@@ -146,7 +146,7 @@ export async function prepopulateWikipediaData() {
     .from(famousPeople)
     .where(eq(famousPeople.filteredOut, 0))
     .where(isNull(famousPeople.processedAt))
-    .limit(5); // Start with small test batch
+; // Process all unprocessed people
   
   console.log(`📊 Found ${unprocessedPeople.length} unprocessed people to prepopulate`);
   

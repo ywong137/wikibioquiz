@@ -220,8 +220,11 @@ export class DatabaseStorage implements IStorage {
   async getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined> {
     let query = db.select().from(famousPeople);
     
-    // Always filter out entries marked as filtered_out = 1
-    const conditions = [eq(famousPeople.filteredOut, 0)];
+    // Always filter out entries marked as filtered_out = 1 AND only get prepopulated entries
+    const conditions = [
+      eq(famousPeople.filteredOut, 0),
+      isNotNull(famousPeople.processedAt) // Only return prepopulated people
+    ];
     
     if (excludeNames.length > 0) {
       conditions.push(notInArray(famousPeople.name, excludeNames));

@@ -488,28 +488,33 @@ Examples:
 
 // New curated approach: Select from famous people database, then fetch from Wikipedia
 async function getFamousPersonFromDatabase(usedPeople: string[], round: number): Promise<WikipediaPerson> {
-  console.log(`\n🎯 ROUND ${round}: Selecting from curated famous people database...`);
+  console.log(`\n🎯 ROUND ${round}: Selecting from prepopulated famous people database...`);
   
   try {
-    // Get random famous person from database
+    // Get random famous person from database with prepopulated data
     const famousPerson = await storage.getRandomFamousPerson(usedPeople);
     
     if (!famousPerson) {
-      throw new Error("No available famous people in database");
+      throw new Error("No prepopulated famous people available in database");
     }
     
     console.log(`📍 SELECTED: ${famousPerson.name} (${famousPerson.category}, ${famousPerson.timeperiod})`);
-    console.log(`🔍 WIKIPEDIA: Looking up "${famousPerson.wikipediaTitle || famousPerson.name}"`);
     
-    // Fetch Wikipedia data for the famous person
-    const wikipediaTitle = famousPerson.wikipediaTitle || famousPerson.name;
-    const wikipediaPerson = await createPersonFromWikipediaTitle(wikipediaTitle);
+    // Create WikipediaPerson directly from prepopulated data - no Wikipedia API calls needed!
+    const wikipediaPerson: WikipediaPerson = {
+      name: famousPerson.name.replace(/ /g, '_'),
+      sections: famousPerson.sections || [],
+      hint: famousPerson.hint || `"${famousPerson.nationality || famousPerson.category} • ${famousPerson.timeperiod} • ${famousPerson.occupation}"`,
+      aiHint: famousPerson.aiHint1, // Use first AI hint as default aiHint
+      initials: famousPerson.initials || generateInitials(famousPerson.name),
+      url: `https://en.wikipedia.org/wiki/${encodeURIComponent(famousPerson.wikipediaTitle || famousPerson.name.replace(/ /g, '_'))}`,
+    };
     
-    console.log(`✅ CURATED: Successfully created WikipediaPerson for ${famousPerson.name}`);
+    console.log(`✅ PREPOPULATED: Successfully created WikipediaPerson for ${famousPerson.name}`);
     return wikipediaPerson;
     
   } catch (error) {
-    console.error(`❌ CURATED: Error fetching famous person: ${error}`);
+    console.error(`❌ PREPOPULATED: Error fetching famous person: ${error}`);
     throw new Error(`Failed to fetch famous person: ${error.message}`);
   }
 }
