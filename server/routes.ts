@@ -47,7 +47,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Session not found" });
       }
 
-      const person = await getRandomWikipediaPerson(session.usedPeople);
+      const person = await getRandomWikipediaPerson(session.usedPeople, session.round);
       
       // Update session with the new person
       await storage.updateGameSession(sessionId, {
@@ -76,7 +76,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Fetch a person but don't update the session yet
-      const person = await getRandomWikipediaPerson(session.usedPeople);
+      const person = await getRandomWikipediaPerson(session.usedPeople, session.round);
       res.json(person);
     } catch (error) {
       console.error("Error pre-loading Wikipedia person:", error);
@@ -335,7 +335,7 @@ Examples:
   }
 }
 
-async function getRandomWikipediaPerson(usedPeople: string[]): Promise<WikipediaPerson> {
+async function getRandomWikipediaPerson(usedPeople: string[], round: number): Promise<WikipediaPerson> {
   // Try multiple times to find a good person not already used
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
@@ -561,6 +561,7 @@ async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
     name: page.title,
     sections,
     hint,
+    initials: generateInitials(page.title),
     url: page.content_urls?.desktop?.page || "",
   };
   
@@ -619,6 +620,7 @@ async function getPersonFromCategory(usedPeople: string[]): Promise<WikipediaPer
       name: page.title,
       sections,
       hint: generateHint(page.extract),
+      initials: generateInitials(page.title),
       url: page.content_urls?.desktop?.page || "",
     };
   } catch (error) {
@@ -649,6 +651,13 @@ function isProbablyPerson(title: string, extract: string): boolean {
   
   const text = (title + ' ' + extract).toLowerCase();
   return personIndicators.some(indicator => text.includes(indicator));
+}
+
+function generateInitials(fullName: string): string {
+  return fullName
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase())
+    .join('.');
 }
 
 function generateHint(extract: string): string {
