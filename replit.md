@@ -98,6 +98,13 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 02, 2025. MAJOR: Optimized Wikipedia API efficiency
+  - Successfully reduced Wikipedia API calls from 10+ to 3 per request
+  - Eliminated concurrent Wikipedia fetching with global lock mechanism
+  - Removed expensive LLM person verification calls
+  - Simplified strategy execution to single-attempt model
+  - Added comprehensive server-side debugging and request tracking
+  - Fixed duplicate session creation issues causing multiple concurrent requests
 - July 02, 2025. Major improvements to person diversity and hint quality
   - Integrated OpenAI for intelligent hint generation
   - Added comprehensive Wikipedia category fetching strategies
