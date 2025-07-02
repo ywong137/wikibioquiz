@@ -503,8 +503,8 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
     
     throw new Error("No suitable person found in category");
     
-  } catch (error) {
-    console.log(`Category strategy failed: ${error.message}`);
+  } catch (error: any) {
+    console.log(`Category strategy failed: ${error?.message || error}`);
     // Try a completely different approach
     return await getRandomPersonDirect();
   }
@@ -513,28 +513,32 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
 async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
   console.log(`Creating person data for: ${page.title}`);
   
-  // Get sections with timeout
+  // Get sections using the main Wikipedia API
   let sections = [];
   try {
-    const sectionsUrl = `https://en.wikipedia.org/api/rest_v1/page/sections/${encodeURIComponent(page.title)}`;
+    const sectionsUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(page.title)}&prop=sections&format=json&origin=*`;
     console.log(`Fetching sections URL: ${sectionsUrl}`);
     
     const sectionsResponse = await fetch(sectionsUrl);
     
     if (sectionsResponse.ok) {
-      console.log(`Sections response OK for ${page.title}`);
       const sectionsData = await sectionsResponse.json();
-      sections = sectionsData
-        .filter((section: any) => section.toclevel === 1 && section.line)
-        .map((section: any) => section.line)
-        .filter((title: string) => 
-          !title.toLowerCase().includes('reference') && 
-          !title.toLowerCase().includes('external') &&
-          !title.toLowerCase().includes('see also') &&
-          !title.toLowerCase().includes('bibliography')
-        )
-        .slice(0, 8);
-      console.log(`Found ${sections.length} sections for ${page.title}: ${sections.join(', ')}`);
+      if (sectionsData.parse && sectionsData.parse.sections) {
+        console.log(`Sections response OK for ${page.title}`);
+        sections = sectionsData.parse.sections
+          .filter((section: any) => section.toclevel === 1 && section.line)
+          .map((section: any) => section.line)
+          .filter((title: string) => 
+            !title.toLowerCase().includes('reference') && 
+            !title.toLowerCase().includes('external') &&
+            !title.toLowerCase().includes('see also') &&
+            !title.toLowerCase().includes('bibliography')
+          )
+          .slice(0, 8);
+        console.log(`Found ${sections.length} sections for ${page.title}: ${sections.join(', ')}`);
+      } else {
+        console.log(`No sections data found for ${page.title}`);
+      }
     } else {
       console.log(`Sections response failed for ${page.title}, status: ${sectionsResponse.status}`);
     }
