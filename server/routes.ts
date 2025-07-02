@@ -250,7 +250,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 }
 
 function normalizeGuess(guess: string): string {
-  return guess.toLowerCase().trim().replace(/[^\w\s]/g, '');
+  return normalizeAccentedText(guess.toLowerCase().trim());
+}
+
+function normalizeAccentedText(text: string): string {
+  // Replace accented characters with their base equivalents for generous matching
+  const accentMap: Record<string, string> = {
+    'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a', 'å': 'a', 'æ': 'ae',
+    'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+    'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+    'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o', 'ø': 'o',
+    'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u',
+    'ñ': 'n', 'ç': 'c', 'ý': 'y', 'ÿ': 'y',
+    'ð': 'd', 'þ': 'th'
+  };
+  
+  let normalized = text;
+  for (const [accented, base] of Object.entries(accentMap)) {
+    normalized = normalized.replace(new RegExp(accented, 'g'), base);
+  }
+  
+  // Remove any remaining non-alphanumeric characters except spaces
+  return normalized.replace(/[^\w\s]/g, '');
 }
 
 function decodeHtmlEntities(text: string): string {
