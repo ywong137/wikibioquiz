@@ -98,9 +98,12 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 02, 2025. QUALITY: Increased section requirement to 6 minimum sections
+  - Raised minimum from 4 to 6 sections for even higher biographical content quality
+  - Ensures players receive substantial, well-documented historical figures
+  - Maintains efficiency by checking section count before expensive hint generation
 - July 02, 2025. PERFORMANCE: Optimized LLM hint generation efficiency
   - Moved section count validation BEFORE expensive hint generation
-  - Now generates hints only for people with 4+ sections (significant cost savings)
   - Eliminated wasted OpenAI API calls for people who would be rejected anyway
   - Improved request flow: fetch → verify person → get sections → check count → generate hints
 - July 02, 2025. CRITICAL: Enhanced LLM verification for real person names only

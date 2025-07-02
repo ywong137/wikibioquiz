@@ -749,9 +749,9 @@ async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
   }
   
   // Check if person has enough sections BEFORE generating expensive hints
-  if (sections.length < 4) {
-    console.log(`⚠️ SECTIONS: "${page.title}" has only ${sections.length} sections (minimum 4 required), skipping hint generation`);
-    throw new Error(`Insufficient sections: ${page.title} has only ${sections.length} sections (minimum 4 required)`);
+  if (sections.length < 6) {
+    console.log(`⚠️ SECTIONS: "${page.title}" has only ${sections.length} sections (minimum 6 required), skipping hint generation`);
+    throw new Error(`Insufficient sections: ${page.title} has only ${sections.length} sections (minimum 6 required)`);
   }
   
   // Generate both types of hints (only after confirming sufficient sections)
