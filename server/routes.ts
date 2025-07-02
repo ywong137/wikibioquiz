@@ -358,8 +358,8 @@ async function getRandomWikipediaPerson(usedPeople: string[]): Promise<Wikipedia
     }
   }
   
-  // If all attempts failed, try from category
-  return await getPersonFromCategory(usedPeople);
+  // If all attempts failed, throw error instead of fallback
+  throw new Error("Failed to fetch person from Wikipedia after 10 attempts");
 }
 
 async function tryGetRandomPerson(): Promise<WikipediaPerson> {
@@ -567,7 +567,7 @@ async function getPersonFromCategory(usedPeople: string[]): Promise<WikipediaPer
     );
     
     if (!response.ok) {
-      return await getFallbackPerson(usedPeople);
+      throw new Error("Failed to fetch random Wikipedia page");
     }
     
     const page = await response.json();
@@ -592,7 +592,7 @@ async function getPersonFromCategory(usedPeople: string[]): Promise<WikipediaPer
     }
     
     if (sections.length < 3) {
-      return await getFallbackPerson(usedPeople);
+      throw new Error("Person has insufficient sections for game");
     }
     
     return {
@@ -602,7 +602,7 @@ async function getPersonFromCategory(usedPeople: string[]): Promise<WikipediaPer
       url: page.content_urls?.desktop?.page || "",
     };
   } catch (error) {
-    return await getFallbackPerson(usedPeople);
+    throw new Error("Failed to get person from category");
   }
 }
 
@@ -644,106 +644,4 @@ function generateHint(extract: string): string {
   return hints.slice(0, 3).join(" • ");
 }
 
-async function getFallbackPerson(usedPeople: string[]): Promise<WikipediaPerson> {
-  // Extensive fallback list of well-known people if Wikipedia API fails
-  const fallbackPeople = [
-    {
-      name: "Albert Einstein",
-      sections: ["Early life and education", "Swiss years", "Annus Mirabilis papers", "Nobel Prize", "Theory of relativity", "Later years", "Death", "Legacy"],
-      hint: "German-born • Scientist • Theory of relativity",
-      url: "https://en.wikipedia.org/wiki/Albert_Einstein"
-    },
-    {
-      name: "Leonardo da Vinci",
-      sections: ["Early life", "Professional life", "Paintings", "Inventions", "Anatomy studies", "Later years", "Death", "Legacy"],
-      hint: "Italian • Renaissance • Artist and inventor",
-      url: "https://en.wikipedia.org/wiki/Leonardo_da_Vinci"
-    },
-    {
-      name: "William Shakespeare",
-      sections: ["Early life", "Career", "Plays", "Sonnets", "Later years", "Death", "Legacy", "Authorship question"],
-      hint: "English • Playwright • 16th-17th century",
-      url: "https://en.wikipedia.org/wiki/William_Shakespeare"
-    },
-    {
-      name: "Marie Curie",
-      sections: ["Early life", "Education", "Scientific career", "Nobel Prizes", "Later life", "Death", "Legacy"],
-      hint: "Polish-French • Scientist • Nobel Prize winner",
-      url: "https://en.wikipedia.org/wiki/Marie_Curie"
-    },
-    {
-      name: "Nelson Mandela",
-      sections: ["Early life", "Political activism", "Imprisonment", "Presidency", "Later life", "Death", "Legacy"],
-      hint: "South African • Political leader • Anti-apartheid activist",
-      url: "https://en.wikipedia.org/wiki/Nelson_Mandela"
-    },
-    {
-      name: "Pablo Picasso",
-      sections: ["Early life", "Blue Period", "Rose Period", "Cubism", "Later work", "Personal life", "Death", "Legacy"],
-      hint: "Spanish • Artist • Co-founder of Cubism",
-      url: "https://en.wikipedia.org/wiki/Pablo_Picasso"
-    },
-    {
-      name: "Winston Churchill",
-      sections: ["Early life", "Political career", "World War II", "Post-war career", "Writing", "Death", "Legacy"],
-      hint: "British • Prime Minister • World War II leader",
-      url: "https://en.wikipedia.org/wiki/Winston_Churchill"
-    },
-    {
-      name: "Michael Jackson",
-      sections: ["Early life", "Jackson 5", "Solo career", "Thriller era", "Later career", "Personal life", "Death", "Legacy"],
-      hint: "American • Musician • King of Pop",
-      url: "https://en.wikipedia.org/wiki/Michael_Jackson"
-    },
-    {
-      name: "Frida Kahlo",
-      sections: ["Early life", "Accident and recovery", "Artistic career", "Political views", "Personal life", "Death", "Legacy"],
-      hint: "Mexican • Artist • Self-portraits",
-      url: "https://en.wikipedia.org/wiki/Frida_Kahlo"
-    },
-    {
-      name: "Martin Luther King Jr.",
-      sections: ["Early life", "Education", "Civil rights movement", "Montgomery Bus Boycott", "March on Washington", "Assassination", "Legacy"],
-      hint: "American • Civil rights leader • I Have a Dream",
-      url: "https://en.wikipedia.org/wiki/Martin_Luther_King_Jr."
-    },
-    {
-      name: "Steve Jobs",
-      sections: ["Early life", "Apple I and Apple II", "Departure from Apple", "Return to Apple", "iPhone and iPad", "Personal life", "Death", "Legacy"],
-      hint: "American • Technology entrepreneur • Co-founder of Apple",
-      url: "https://en.wikipedia.org/wiki/Steve_Jobs"
-    },
-    {
-      name: "Oprah Winfrey",
-      sections: ["Early life", "Career beginnings", "The Oprah Winfrey Show", "Media empire", "Philanthropy", "Personal life", "Awards and honors"],
-      hint: "American • Media mogul • Talk show host",
-      url: "https://en.wikipedia.org/wiki/Oprah_Winfrey"
-    },
-    {
-      name: "Muhammad Ali",
-      sections: ["Early life", "Amateur career", "Professional boxing", "Vietnam War", "Later career", "Retirement", "Death", "Legacy"],
-      hint: "American • Boxer • The Greatest",
-      url: "https://en.wikipedia.org/wiki/Muhammad_Ali"
-    },
-    {
-      name: "Jane Austen",
-      sections: ["Early life", "Juvenilia", "First publications", "Later novels", "Death", "Posthumous publication", "Legacy"],
-      hint: "English • Novelist • Pride and Prejudice",
-      url: "https://en.wikipedia.org/wiki/Jane_Austen"
-    },
-    {
-      name: "Charles Darwin",
-      sections: ["Early life", "Voyage of the Beagle", "Theory of evolution", "Origin of Species", "Later life", "Death", "Legacy"],
-      hint: "British • Naturalist • Theory of evolution",
-      url: "https://en.wikipedia.org/wiki/Charles_Darwin"
-    }
-  ];
-  
-  const available = fallbackPeople.filter(person => !usedPeople.includes(person.name));
-  if (available.length === 0) {
-    // Reset and return a random person
-    return fallbackPeople[Math.floor(Math.random() * fallbackPeople.length)];
-  }
-  
-  return available[Math.floor(Math.random() * available.length)];
-}
+
