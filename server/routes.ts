@@ -953,18 +953,41 @@ function isProbablyPerson(title: string, extract: string): boolean {
 }
 
 function generateInitials(fullName: string): string {
-  return fullName
-    .split(' ')
-    .filter(word => word.length > 0) // Remove empty strings
-    .map(word => {
-      // Extract first character if it's a letter (supports international characters)
-      const firstChar = word.charAt(0);
-      // Check if it's a letter by seeing if uppercase differs from lowercase
-      const isLetter = firstChar.toUpperCase() !== firstChar.toLowerCase();
-      return isLetter ? firstChar.toUpperCase() : '';
-    })
-    .filter(initial => initial !== '') // Remove empty initials
-    .join('.');
+  const name = fullName.replace(/_/g, ' ').trim();
+  
+  // Handle names with initials like "J.R.R. Tolkien"
+  if (name.includes('.')) {
+    const parts = name.split(' ');
+    // If first part has dots, extract all letters from it
+    if (parts[0].includes('.')) {
+      return parts[0].replace(/\./g, '').toUpperCase();
+    }
+  }
+  
+  // Handle titles and numbers like "14th Dalai Lama"
+  if (/\d/.test(name)) {
+    const parts = name.split(' ').filter(part => !/^\d/.test(part) && !part.includes('th') && !part.includes('st') && !part.includes('nd') && !part.includes('rd'));
+    if (parts.length > 0) {
+      return parts[0].charAt(0).toUpperCase();
+    }
+  }
+  
+  // Handle special cases with particles
+  if (name.includes(' of ') || name.includes(' the ')) {
+    // For "Alexander the Great", "Joan of Arc" -> "A", "J"
+    const parts = name.split(' ');
+    return parts[0].charAt(0).toUpperCase();
+  }
+  
+  if (name.includes(' de ') || name.includes(' da ') || name.includes(' del ') || name.includes(' van ') || name.includes(' von ')) {
+    // For "Leonardo da Vinci", "Vincent van Gogh" -> "L", "V"
+    const parts = name.split(' ');
+    return parts[0].charAt(0).toUpperCase();
+  }
+  
+  // Default: first letter of first word
+  const firstWord = name.split(' ')[0];
+  return firstWord.charAt(0).toUpperCase();
 }
 
 function generateHint(extract: string): string {

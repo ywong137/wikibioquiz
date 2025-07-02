@@ -220,9 +220,14 @@ export class DatabaseStorage implements IStorage {
   async getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined> {
     let query = db.select().from(famousPeople);
     
+    // Always filter out entries marked as filtered_out = 1
+    const conditions = [eq(famousPeople.filteredOut, 0)];
+    
     if (excludeNames.length > 0) {
-      query = query.where(notInArray(famousPeople.name, excludeNames));
+      conditions.push(notInArray(famousPeople.name, excludeNames));
     }
+    
+    query = query.where(and(...conditions));
     
     // Get random person using ORDER BY RANDOM()
     query = query.orderBy(sql`RANDOM()`).limit(1);
