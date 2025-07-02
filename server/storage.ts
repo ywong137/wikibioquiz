@@ -3,6 +3,7 @@ import {
   gameSessions, 
   cachedBiographies, 
   gameRounds,
+  famousPeople,
   type User, 
   type InsertUser, 
   type GameSession, 
@@ -10,7 +11,9 @@ import {
   type CachedBiography,
   type InsertCachedBiography,
   type GameRound,
-  type InsertGameRound
+  type InsertGameRound,
+  type FamousPerson,
+  type InsertFamousPerson
 } from "@shared/schema";
 
 export interface IStorage {
@@ -30,6 +33,10 @@ export interface IStorage {
   
   // Game rounds
   addGameRound(round: InsertGameRound): Promise<GameRound>;
+  
+  // Famous people database
+  getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined>;
+  getFamousPersonCount(): Promise<number>;
 }
 
 export class MemStorage implements IStorage {
@@ -116,6 +123,118 @@ export class MemStorage implements IStorage {
       createdAt: new Date(),
     };
   }
+
+  async getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined> {
+    // For MemStorage, return undefined to indicate database storage needed
+    return undefined;
+  }
+
+  async getFamousPersonCount(): Promise<number> {
+    // For MemStorage, return 0 to indicate database storage needed
+    return 0;
+  }
 }
 
-export const storage = new MemStorage();
+// Database storage implementation with PostgreSQL
+import { db } from "./db";
+import { eq, and, notInArray, sql } from "drizzle-orm";
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async createGameSession(insertSession: InsertGameSession): Promise<GameSession> {
+    const [session] = await db
+      .insert(gameSessions)
+      .values(insertSession)
+      .returning();
+    return session;
+  }
+
+  async updateGameSession(id: number, updates: Partial<InsertGameSession>): Promise<GameSession | undefined> {
+    const [session] = await db
+      .update(gameSessions)
+      .set(updates)
+      .where(eq(gameSessions.id, id))
+      .returning();
+    return session || undefined;
+  }
+
+  async getGameSession(id: number): Promise<GameSession | undefined> {
+    const [session] = await db.select().from(gameSessions).where(eq(gameSessions.id, id));
+    return session || undefined;
+  }
+
+  async getCachedBiography(url: string): Promise<CachedBiography | undefined> {
+    const [biography] = await db.select().from(cachedBiographies).where(eq(cachedBiographies.wikipediaUrl, url));
+    return biography || undefined;
+  }
+
+  async addCachedBiography(biography: InsertCachedBiography): Promise<CachedBiography> {
+    const [result] = await db
+      .insert(cachedBiographies)
+      .values(biography)
+      .returning();
+    return result;
+  }
+
+  async getRandomCachedBiographies(excludeNames: string[], limit: number): Promise<CachedBiography[]> {
+    let query = db.select().from(cachedBiographies);
+    
+    if (excludeNames.length > 0) {
+      query = query.where(notInArray(cachedBiographies.name, excludeNames));
+    }
+    
+    return await query.limit(limit);
+  }
+
+  async getCachedBiographyCount(): Promise<number> {
+    const [result] = await db.select({ count: sql<number>`count(*)` }).from(cachedBiographies);
+    return result.count;
+  }
+
+  async addGameRound(round: InsertGameRound): Promise<GameRound> {
+    const [result] = await db
+      .insert(gameRounds)
+      .values(round)
+      .returning();
+    return result;
+  }
+
+  // Famous people database methods
+  async getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined> {
+    let query = db.select().from(famousPeople);
+    
+    if (excludeNames.length > 0) {
+      query = query.where(notInArray(famousPeople.name, excludeNames));
+    }
+    
+    // Get random person using ORDER BY RANDOM()
+    query = query.orderBy(sql`RANDOM()`).limit(1);
+    
+    const [person] = await query;
+    return person || undefined;
+  }
+
+  async getFamousPersonCount(): Promise<number> {
+    const [result] = await db.select({ count: sql<number>`count(*)` }).from(famousPeople);
+    return result.count;
+  }
+}
+
+export const storage = new DatabaseStorage();

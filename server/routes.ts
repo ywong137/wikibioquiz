@@ -94,13 +94,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.json(person);
       }
       
-      // Start new Wikipedia fetch with lock
+      // Start new curated person fetch with lock
       lockRequestId = requestId;
-      wikipediaFetchLock = getRandomWikipediaPerson(session.usedPeople, session.round);
+      wikipediaFetchLock = getFamousPersonFromDatabase(session.usedPeople, session.round);
       
       try {
         const person = await wikipediaFetchLock;
-        console.log(`🔓 REQUEST [${requestId}]: Wikipedia fetch completed: ${person.name}`);
+        console.log(`🔓 REQUEST [${requestId}]: Famous person fetch completed: ${person.name}`);
         
         // Update session with the new person
         await storage.updateGameSession(sessionId, {
@@ -463,6 +463,88 @@ Examples:
     console.error("OpenAI additional hint generation failed:", error);
     return generateSimpleHint(extract);
   }
+}
+
+// New curated approach: Select from famous people database, then fetch from Wikipedia
+async function getFamousPersonFromDatabase(usedPeople: string[], round: number): Promise<WikipediaPerson> {
+  console.log(`\n🎯 ROUND ${round}: Selecting from curated famous people database...`);
+  
+  try {
+    // Get random famous person from database
+    const famousPerson = await storage.getRandomFamousPerson(usedPeople);
+    
+    if (!famousPerson) {
+      throw new Error("No available famous people in database");
+    }
+    
+    console.log(`📍 SELECTED: ${famousPerson.name} (${famousPerson.category}, ${famousPerson.timeperiod})`);
+    console.log(`🔍 WIKIPEDIA: Looking up "${famousPerson.wikipediaTitle || famousPerson.name}"`);
+    
+    // Fetch Wikipedia data for the famous person
+    const wikipediaTitle = famousPerson.wikipediaTitle || famousPerson.name;
+    const wikipediaPerson = await createPersonFromWikipediaTitle(wikipediaTitle);
+    
+    console.log(`✅ CURATED: Successfully created WikipediaPerson for ${famousPerson.name}`);
+    return wikipediaPerson;
+    
+  } catch (error) {
+    console.error(`❌ CURATED: Error fetching famous person: ${error}`);
+    throw new Error(`Failed to fetch famous person: ${error.message}`);
+  }
+}
+
+async function createPersonFromWikipediaTitle(title: string): Promise<WikipediaPerson> {
+  console.log(`📖 WIKI: Fetching data for "${title}"`);
+  
+  // Fetch Wikipedia summary
+  const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+  console.log(`Fetching summary URL: ${summaryUrl}`);
+  
+  const summaryResponse = await fetch(summaryUrl);
+  if (!summaryResponse.ok) {
+    throw new Error(`Wikipedia summary fetch failed: ${summaryResponse.status}`);
+  }
+  
+  const summaryData = await summaryResponse.json();
+  const extract = summaryData.extract || "";
+  
+  if (!extract) {
+    throw new Error(`No extract available for ${title}`);
+  }
+  
+  // Get sections
+  const sectionsUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(title)}&prop=sections&format=json&origin=*`;
+  console.log(`Fetching sections URL: ${sectionsUrl}`);
+  
+  const sectionsResponse = await fetch(sectionsUrl);
+  if (!sectionsResponse.ok) {
+    throw new Error(`Wikipedia sections fetch failed: ${sectionsResponse.status}`);
+  }
+  
+  const sectionsData = await sectionsResponse.json();
+  const sections = sectionsData.parse?.sections?.map((s: any) => s.line) || [];
+  
+  console.log(`Found ${sections.length} sections for ${title}: ${sections.join(', ')}`);
+  
+  // Check if person has enough sections BEFORE generating expensive hints
+  if (sections.length < 6) {
+    console.log(`⚠️ SECTIONS: "${title}" has only ${sections.length} sections (minimum 6 required), skipping hint generation`);
+    throw new Error(`Insufficient sections: ${title} has only ${sections.length} sections (minimum 6 required)`);
+  }
+  
+  // Generate hints only after confirming sufficient sections
+  const hint = await generateInitialHint(extract);
+  const aiHint = await generateAdditionalHint(extract);
+  const initials = generateInitials(title);
+  
+  return {
+    name: title,
+    sections: sections,
+    hint: hint,
+    aiHint: aiHint,
+    initials: initials,
+    url: `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`
+  };
 }
 
 async function getRandomWikipediaPerson(usedPeople: string[], round: number): Promise<WikipediaPerson> {
