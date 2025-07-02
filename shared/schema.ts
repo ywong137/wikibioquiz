@@ -27,6 +27,7 @@ export const cachedBiographies = pgTable("cached_biographies", {
   name: text("name").notNull(),
   sections: text("sections").array().notNull(),
   hint: text("hint").notNull(),
+  aiHint: text("ai_hint"), // Additional AI-generated hint for on-demand use
   initials: text("initials").notNull(),
   extract: text("extract"), // Store the Wikipedia extract for future use
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -75,8 +76,9 @@ export type InsertGameRound = z.infer<typeof insertGameRoundSchema>;
 export interface WikipediaPerson {
   name: string;
   sections: string[];
-  hint: string;
-  initials: string;
+  hint: string;           // Always visible clue at top
+  aiHint?: string;        // Additional AI-generated hint (on demand)
+  initials: string;       // Initials hint
   url: string;
 }
 

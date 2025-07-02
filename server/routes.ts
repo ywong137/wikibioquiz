@@ -380,6 +380,44 @@ Examples:
   }
 }
 
+async function generateAdditionalHint(extract: string): Promise<string> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: `Generate a detailed hint for a Wikipedia guessing game. This hint will be shown when the player clicks "AI Hint" button.
+
+Rules:
+- Give 2-3 specific accomplishments or well-known facts separated by " • "
+- Include major achievements, famous works, or significant contributions
+- Focus on what they're most famous for
+- Don't reveal the name but be more specific than the initial hint
+
+Examples:
+- "Developed theory of relativity • Won Nobel Prize in Physics • Famous equation E=mc²"
+- "Painted the Mona Lisa • Designed flying machines • Renaissance polymath"
+- "Wrote Romeo and Juliet • Created Hamlet • Elizabethan playwright"`
+        },
+        {
+          role: "user",
+          content: `Generate a detailed hint based on this person's accomplishments:\n\n${extract}`
+        }
+      ],
+      max_tokens: 100,
+      temperature: 0.3
+    });
+    
+    const hint = completion.choices[0]?.message?.content?.trim();
+    return hint || "Known for significant contributions to their field";
+    
+  } catch (error) {
+    console.error("OpenAI additional hint generation failed:", error);
+    return generateSimpleHint(extract);
+  }
+}
+
 async function getRandomWikipediaPerson(usedPeople: string[], round: number): Promise<WikipediaPerson> {
   const cachedCount = await storage.getCachedBiographyCount();
   
