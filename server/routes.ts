@@ -484,7 +484,7 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
       }
       
       // Skip if sections are too few 
-      if (person.sections.length < 2) {
+      if (person.sections.length < 4) {
         console.log(`⚠️ ATTEMPT ${attempt + 1}: "${person.name}" has only ${person.sections.length} sections, trying next strategy...`);
         continue;
       }
