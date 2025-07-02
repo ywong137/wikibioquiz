@@ -14,6 +14,10 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY 
 });
 
+// Global lock to prevent concurrent Wikipedia fetches
+let wikipediaFetchLock: Promise<WikipediaPerson> | null = null;
+let lockRequestId: string | null = null;
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create new game session
   app.post("/api/game/session", async (req, res) => {
@@ -58,27 +62,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get random Wikipedia person
   app.get("/api/game/person", async (req, res) => {
     const sessionId = parseInt(req.query.sessionId as string);
+    const requestId = Math.random().toString(36).substring(7);
+    console.log(`\n🚀 REQUEST START [${requestId}]: GET /api/game/person?sessionId=${sessionId}`);
     
     if (!sessionId) {
+      console.log(`❌ REQUEST END [${requestId}]: Missing sessionId`);
       return res.status(400).json({ error: "Session ID is required" });
     }
 
     try {
       const session = await storage.getGameSession(sessionId);
       if (!session) {
+        console.log(`❌ REQUEST END [${requestId}]: Session not found`);
         return res.status(404).json({ error: "Session not found" });
       }
 
-      const person = await getRandomWikipediaPerson(session.usedPeople, session.round);
+      console.log(`🎯 REQUEST [${requestId}]: Calling getRandomWikipediaPerson for round ${session.round}`);
       
-      // Update session with the new person
-      await storage.updateGameSession(sessionId, {
-        usedPeople: [...session.usedPeople, person.name],
-      });
+      // Check if there's already a Wikipedia fetch in progress
+      if (wikipediaFetchLock) {
+        console.log(`🔒 REQUEST [${requestId}]: Waiting for existing Wikipedia fetch (${lockRequestId}) to complete...`);
+        const person = await wikipediaFetchLock;
+        console.log(`🔓 REQUEST [${requestId}]: Reusing person from existing fetch: ${person.name}`);
+        
+        // Update session with the new person
+        await storage.updateGameSession(sessionId, {
+          usedPeople: [...session.usedPeople, person.name],
+        });
 
-      res.json(person);
+        console.log(`✅ REQUEST END [${requestId}]: Returning person ${person.name}`);
+        return res.json(person);
+      }
+      
+      // Start new Wikipedia fetch with lock
+      lockRequestId = requestId;
+      wikipediaFetchLock = getRandomWikipediaPerson(session.usedPeople, session.round);
+      
+      try {
+        const person = await wikipediaFetchLock;
+        console.log(`🔓 REQUEST [${requestId}]: Wikipedia fetch completed: ${person.name}`);
+        
+        // Update session with the new person
+        await storage.updateGameSession(sessionId, {
+          usedPeople: [...session.usedPeople, person.name],
+        });
+
+        console.log(`✅ REQUEST END [${requestId}]: Returning person ${person.name}`);
+        res.json(person);
+      } finally {
+        // Clear the lock when done
+        wikipediaFetchLock = null;
+        lockRequestId = null;
+      }
     } catch (error) {
-      console.error("Error fetching Wikipedia person:", error);
+      console.error(`❌ REQUEST END [${requestId}]: Error -`, error);
       res.status(500).json({ error: "Failed to fetch person from Wikipedia" });
     }
   });
