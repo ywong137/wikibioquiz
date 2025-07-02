@@ -538,16 +538,18 @@ async function getRandomPersonDirect(): Promise<WikipediaPerson> {
 }
 
 async function getFromBiographyCategory(): Promise<WikipediaPerson> {
+  // Use more specific categories with higher person success rates
   const categories = [
     "20th-century_American_actors",
-    "20th-century_American_musicians", 
+    "21st-century_American_actors", 
     "American_film_directors",
     "British_actors",
-    "German_scientists",
+    "American_musicians",
+    "British_musicians",
     "American_writers",
     "British_writers",
-    "Philosophers",
-    "Inventors"
+    "Nobel_Prize_winners",
+    "Academy_Award_winners"
   ];
   
   const category = categories[Math.floor(Math.random() * categories.length)];
@@ -556,19 +558,21 @@ async function getFromBiographyCategory(): Promise<WikipediaPerson> {
 }
 
 async function getFromRandomProfessionCategory(): Promise<WikipediaPerson> {
-  const professions = ["actors", "musicians", "scientists", "writers", "artists", "directors"];
-  const profession = professions[Math.floor(Math.random() * professions.length)];
+  // Use specific person-focused profession categories to reduce API calls
+  const categories = [
+    "American_actors", 
+    "American_musicians", 
+    "American_scientists", 
+    "American_writers", 
+    "American_film_directors",
+    "British_actors",
+    "British_musicians",
+    "British_writers"
+  ];
+  const category = categories[Math.floor(Math.random() * categories.length)];
   
-  // Get random page and check if it matches the profession
-  const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`);
-  const page = await response.json();
-  
-  if (page.extract && page.extract.toLowerCase().includes(profession.slice(0, -1))) {
-    return await createPersonFromPage(page);
-  }
-  
-  // Fallback to category
-  return await getPersonFromWikipediaCategory(`American_${profession}`);
+  console.log(`👔 PROFESSION: Selected category "${category}"`);
+  return await getPersonFromWikipediaCategory(category);
 }
 
 async function getFromTimeperiodCategory(): Promise<WikipediaPerson> {
@@ -581,13 +585,21 @@ async function getFromTimeperiodCategory(): Promise<WikipediaPerson> {
 }
 
 async function getFromNationalityCategory(): Promise<WikipediaPerson> {
-  const nationalities = [
-    "German_people",
-    "Spanish_people"
+  // Use more specific nationality-based categories that are more likely to contain people
+  const categories = [
+    "American_actors",
+    "British_actors", 
+    "Canadian_actors",
+    "Australian_actors",
+    "American_musicians",
+    "British_musicians",
+    "German_scientists",
+    "French_writers"
   ];
   
-  const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
-  return await getPersonFromWikipediaCategory(nationality);
+  const category = categories[Math.floor(Math.random() * categories.length)];
+  console.log(`🌍 NATIONALITY: Selected category "${category}"`);
+  return await getPersonFromWikipediaCategory(category);
 }
 
 async function verifyIsPersonWithLLM(title: string, extract: string): Promise<boolean> {
