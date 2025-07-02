@@ -454,11 +454,12 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
                         (cachedCount > 0 && round > 100 && round % 2 === 0);
   
   if (shouldUseCache) {
-    console.log(`Using cached biography for round ${round}`);
+    console.log(`\n🎯 ROUND ${round}: Using cached biography (${cachedCount} available)`);
     const cachedBiographies = await storage.getRandomCachedBiographies(usedPeople, 1);
     
     if (cachedBiographies.length > 0) {
       const cached = cachedBiographies[0];
+      console.log(`✅ CACHE HIT: Retrieved "${cached.name}" from cache`);
       return {
         name: cached.name,
         sections: cached.sections,
@@ -468,9 +469,10 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
         url: cached.wikipediaUrl,
       };
     }
+    console.log(`❌ CACHE MISS: No suitable cached biographies found`);
   }
   
-  console.log(`Fetching new Wikipedia person for round ${round}`);
+  console.log(`\n🎯 ROUND ${round}: Fetching NEW Wikipedia person from live API...`);
   
   // Try multiple times to find a good person not already used
   for (let attempt = 0; attempt < 5; attempt++) {
@@ -498,9 +500,9 @@ async function getRandomWikipediaPerson(usedPeople: string[], round: number): Pr
           initials: person.initials,
           extract: null, // We don't have extract from our current flow
         });
-        console.log(`Cached new person: ${person.name}`);
+        console.log(`💾 CACHED: Successfully stored "${person.name}" for future use`);
       } catch (cacheError) {
-        console.log(`Failed to cache person (likely duplicate): ${person.name}`);
+        console.log(`💾 CACHE SKIP: "${person.name}" already cached (duplicate entry)`);
         // Continue anyway, caching failure shouldn't break the game
       }
       
@@ -601,28 +603,36 @@ async function getFromNationalityCategory(): Promise<WikipediaPerson> {
 
 async function verifyIsPersonWithLLM(title: string, extract: string): Promise<boolean> {
   try {
+    console.log(`🤖 PERSON CHECK: Verifying if "${title}" is about a human being...`);
+    
+    // Get the first two sentences for better context
+    const sentences = extract.split(/[.!?]+/).slice(0, 2).join('. ').trim();
+    const textToAnalyze = sentences || extract.substring(0, 300);
+    
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
-          role: "system",
-          content: "You are a classifier that determines if a Wikipedia article is about a PERSON (human being) or not. Respond with only 'YES' if it's about a person, or 'NO' if it's about anything else (places, objects, organizations, concepts, etc.)."
-        },
-        {
           role: "user",
-          content: `Title: ${title}\n\nFirst paragraph: ${extract.substring(0, 500)}`
+          content: `Do these first sentence(s) from the beginning of a Wikipedia entry indicate that the entry is about a named human being, or is it about something else? Say only YES if it is, and NO if it is not, and say nothing else.
+
+"${textToAnalyze}"`
         }
       ],
-      max_tokens: 10,
+      max_tokens: 5,
       temperature: 0
     });
 
     const result = response.choices[0].message.content?.trim().toUpperCase();
-    return result === 'YES';
+    const isPersonResult = result === 'YES';
+    
+    console.log(`🤖 PERSON CHECK RESULT: "${title}" -> ${isPersonResult ? 'CONFIRMED PERSON ✅' : 'NOT A PERSON ❌'} (LLM said: ${result})`);
+    return isPersonResult;
   } catch (error) {
-    console.log(`LLM verification failed for ${title}, defaulting to old logic`);
-    // Fallback to old logic if LLM fails
-    return isProbablyPerson(title, extract);
+    console.log(`🤖 PERSON CHECK ERROR: LLM verification failed for "${title}", using fallback logic`);
+    const fallbackResult = isProbablyPerson(title, extract);
+    console.log(`🤖 FALLBACK RESULT: "${title}" -> ${fallbackResult ? 'PERSON' : 'NOT PERSON'}`);
+    return fallbackResult;
   }
 }
 
