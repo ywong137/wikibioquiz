@@ -154,8 +154,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           pointsEarned = 7; // 7 points for correct without hint
         }
         
-        // Add streak bonus equal to the length of the streak they just finished
-        streakBonus = session.streak;
+        // Add streak bonus equal to the current streak plus this correct answer
+        streakBonus = session.streak + 1;
         pointsEarned += streakBonus;
         
         newStreak = session.streak + 1;
@@ -228,6 +228,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 function normalizeGuess(guess: string): string {
   return guess.toLowerCase().trim().replace(/[^\w\s]/g, '');
+}
+
+function decodeHtmlEntities(text: string): string {
+  // Decode common HTML entities
+  const entities: { [key: string]: string } = {
+    '&lt;': '<',
+    '&gt;': '>',
+    '&amp;': '&',
+    '&quot;': '"',
+    '&apos;': "'",
+    '&nbsp;': ' ',
+  };
+  
+  let decoded = text;
+  Object.keys(entities).forEach(entity => {
+    decoded = decoded.replace(new RegExp(entity, 'g'), entities[entity]);
+  });
+  
+  // Convert HTML italic tags to plain text (for display)
+  decoded = decoded.replace(/<\/?i>/g, '');
+  
+  return decoded;
 }
 
 function isCorrectGuess(guess: string, personName: string): boolean {
@@ -653,7 +675,7 @@ async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
         console.log(`Sections response OK for ${page.title}`);
         sections = sectionsData.parse.sections
           .filter((section: any) => section.toclevel === 1 && section.line)
-          .map((section: any) => section.line)
+          .map((section: any) => decodeHtmlEntities(section.line))
           .filter((title: string) => 
             !title.toLowerCase().includes('reference') && 
             !title.toLowerCase().includes('external') &&

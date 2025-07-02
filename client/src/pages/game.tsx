@@ -474,7 +474,7 @@ export default function Game() {
                       }`}
                     >
                       <Lightbulb className="mr-2" size={16} />
-                      {hintUsed ? 'Hint Used' : 'AI Hint (2 pts)'}
+                      {hintUsed ? 'Hint Used' : 'Hint'}
                     </Button>
                     <Button 
                       onClick={handleGetInitials}
@@ -487,7 +487,7 @@ export default function Game() {
                       }`}
                     >
                       <User className="mr-2" size={16} />
-                      {initialsUsed ? 'Initials Used' : 'Initials (1 pt)'}
+                      {initialsUsed ? 'Initials Used' : 'Initials'}
                     </Button>
                   </div>
 
@@ -496,7 +496,7 @@ export default function Game() {
                     <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
                       <div className="flex items-center text-yellow-800 mb-2">
                         <Lightbulb className="mr-2" size={16} />
-                        <span className="font-semibold">AI Generated Hint:</span>
+                        <span className="font-semibold">Hint:</span>
                       </div>
                       <p className="text-yellow-700">{currentPerson.aiHint || "Additional hint not available"}</p>
                     </div>
