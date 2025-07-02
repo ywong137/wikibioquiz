@@ -492,6 +492,8 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
         if (isProbablyPerson(page.title, page.extract || "")) {
           console.log(`Successfully got person: ${page.title}`);
           return await createPersonFromPage(page);
+        } else {
+          console.log(`Rejected ${page.title} - not detected as person`);
         }
       } catch (error) {
         console.log(`Failed to process member, trying next...`);
@@ -509,33 +511,57 @@ async function getPersonFromWikipediaCategory(categoryName: string): Promise<Wik
 }
 
 async function createPersonFromPage(page: any): Promise<WikipediaPerson> {
-  // Get sections
-  const sectionsUrl = `https://en.wikipedia.org/api/rest_v1/page/sections/${encodeURIComponent(page.title)}`;
-  console.log(`Fetching sections URL: ${sectionsUrl}`);
+  console.log(`Creating person data for: ${page.title}`);
   
-  const sectionsResponse = await fetch(sectionsUrl);
-  
+  // Get sections with timeout
   let sections = [];
-  if (sectionsResponse.ok) {
-    const sectionsData = await sectionsResponse.json();
-    sections = sectionsData
-      .filter((section: any) => section.toclevel === 1 && section.line)
-      .map((section: any) => section.line)
-      .filter((title: string) => 
-        !title.toLowerCase().includes('reference') && 
-        !title.toLowerCase().includes('external') &&
-        !title.toLowerCase().includes('see also') &&
-        !title.toLowerCase().includes('bibliography')
-      )
-      .slice(0, 8);
+  try {
+    const sectionsUrl = `https://en.wikipedia.org/api/rest_v1/page/sections/${encodeURIComponent(page.title)}`;
+    console.log(`Fetching sections URL: ${sectionsUrl}`);
+    
+    const sectionsResponse = await fetch(sectionsUrl);
+    
+    if (sectionsResponse.ok) {
+      console.log(`Sections response OK for ${page.title}`);
+      const sectionsData = await sectionsResponse.json();
+      sections = sectionsData
+        .filter((section: any) => section.toclevel === 1 && section.line)
+        .map((section: any) => section.line)
+        .filter((title: string) => 
+          !title.toLowerCase().includes('reference') && 
+          !title.toLowerCase().includes('external') &&
+          !title.toLowerCase().includes('see also') &&
+          !title.toLowerCase().includes('bibliography')
+        )
+        .slice(0, 8);
+      console.log(`Found ${sections.length} sections for ${page.title}: ${sections.join(', ')}`);
+    } else {
+      console.log(`Sections response failed for ${page.title}, status: ${sectionsResponse.status}`);
+    }
+  } catch (error) {
+    console.log(`Sections fetch failed for ${page.title}: ${error}`);
   }
   
-  return {
+  // Generate hint with fallback
+  console.log(`About to generate hint for ${page.title}`);
+  let hint: string;
+  try {
+    hint = await generateInitialHint(page.extract || "");
+    console.log(`Generated hint successfully for ${page.title}`);
+  } catch (error) {
+    console.log(`OpenAI hint generation failed for ${page.title}, using fallback`);
+    hint = generateSimpleHint(page.extract || "");
+  }
+  
+  const result = {
     name: page.title,
     sections,
-    hint: await generateInitialHint(page.extract || ""),
+    hint,
     url: page.content_urls?.desktop?.page || "",
   };
+  
+  console.log(`Returning person data for ${page.title} with ${sections.length} sections`);
+  return result;
 }
 
 async function getPersonFromCategory(usedPeople: string[]): Promise<WikipediaPerson> {
