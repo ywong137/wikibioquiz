@@ -129,9 +129,16 @@ async function test2PeopleRetry() {
           
           // Generate AI hints
           log(`Generating AI hints for ${person.name}...`);
+          
+          // Limit biography to 1500 characters to reduce prompt complexity
+          const limitedBiography = biography.substring(0, 1500) + (biography.length > 1500 ? '...' : '');
+          log(`Using biography excerpt (${limitedBiography.length} characters)`);
+          
           const prompt = `Generate 3 progressive hints for a Wikipedia guessing game about ${person.name}.
 
 Context: ${person.nationality} ${person.occupation} from the ${person.timeperiod} period
+
+Biography excerpt: ${limitedBiography}
 
 Generate 3 hints that progressively reveal more information:
 1. First hint: Start with "This person was a..." and describe their field of work. DO NOT mention birthplace or birth year.

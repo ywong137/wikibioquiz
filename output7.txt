@@ -1,62 +1,64 @@
-[7/3/2025, 4:45:18 AM] ============================================================
-[7/3/2025, 4:45:18 AM] TEST: 3 PEOPLE WITH RETRY LOGIC
-[7/3/2025, 4:45:18 AM] ============================================================
-[7/3/2025, 4:45:18 AM] 
-[7/3/2025, 4:45:21 AM] Selected 3 people for processing:
-[7/3/2025, 4:45:21 AM]   1. Zsa Zsa Gabor (Hungarian, Actor)
-[7/3/2025, 4:45:21 AM]   2. Peter Sellers (British, Actor)
-[7/3/2025, 4:45:21 AM]   3. John II of Castile (Spanish, Politician)
-[7/3/2025, 4:45:21 AM] 
-[7/3/2025, 4:45:21 AM] ========================================
-[7/3/2025, 4:45:21 AM] PROCESSING PERSON 1/3: Zsa Zsa Gabor
-[7/3/2025, 4:45:21 AM] ========================================
-[7/3/2025, 4:45:21 AM] Attempt 1/3: Fetching Wikipedia sections for Zsa Zsa Gabor...
-[7/3/2025, 4:45:21 AM] Wikipedia returned 14 sections
-[7/3/2025, 4:45:21 AM] ✅ Successfully retrieved 14 sections for Zsa Zsa Gabor
-[7/3/2025, 4:45:21 AM] Wikipedia sections (14 total):
-[7/3/2025, 4:45:21 AM]   1. Early life
-[7/3/2025, 4:45:21 AM]   2. Career
-[7/3/2025, 4:45:21 AM]   3. Personal life
-[7/3/2025, 4:45:21 AM]   4. Legal and financial difficulties
-[7/3/2025, 4:45:21 AM]   5. Later life and health
-[7/3/2025, 4:45:21 AM]   6. Death
-[7/3/2025, 4:45:21 AM]   7. Filmography
-[7/3/2025, 4:45:21 AM]   8. Film
-[7/3/2025, 4:45:21 AM]   9. Television
-[7/3/2025, 4:45:21 AM]   10. Theatre
-[7/3/2025, 4:45:21 AM]   ... and 4 more sections
-[7/3/2025, 4:45:21 AM] 
-[7/3/2025, 4:45:21 AM] ✅ Have sections (14 > 0) - proceeding with LLM calls
-[7/3/2025, 4:45:21 AM] Fetching Wikipedia biography for Zsa Zsa Gabor...
-[7/3/2025, 4:45:21 AM] ✅ Retrieved biography (1284 characters)
-[7/3/2025, 4:45:21 AM] Generating AI hints for Zsa Zsa Gabor...
-[7/3/2025, 4:45:23 AM] ✅ Generated AI hints (292 tokens):
-[7/3/2025, 4:45:23 AM]   Hint 1: This person was a renowned actress and socialite known for her glamorous lifestyle and appearances in both film and television.
-[7/3/2025, 4:45:23 AM]   Hint 2: She gained fame in the 1950s and 1960s, starring in films like 'Moulin Rouge' and 'The Man Who Knew Too Much', and was often recognized for her distinctive voice and style.
-[7/3/2025, 4:45:23 AM]   Hint 3: This person was famous for her multiple marriages, reportedly nine, and her catchphrase, 'Dahling,' became synonymous with her public persona.
-[7/3/2025, 4:45:23 AM] 
-[7/3/2025, 4:45:23 AM] Waiting 1 second before next person...
-[7/3/2025, 4:45:24 AM] 
-[7/3/2025, 4:45:24 AM] ========================================
-[7/3/2025, 4:45:24 AM] PROCESSING PERSON 2/3: Peter Sellers
-[7/3/2025, 4:45:24 AM] ========================================
-[7/3/2025, 4:45:24 AM] Attempt 1/3: Fetching Wikipedia sections for Peter Sellers...
-[7/3/2025, 4:45:24 AM] Wikipedia returned 19 sections
-[7/3/2025, 4:45:24 AM] ✅ Successfully retrieved 19 sections for Peter Sellers
-[7/3/2025, 4:45:24 AM] Wikipedia sections (19 total):
-[7/3/2025, 4:45:24 AM]   1. Biography
-[7/3/2025, 4:45:24 AM]   2. 1925–1939: Early life and career beginnings
-[7/3/2025, 4:45:24 AM]   3. 1939–1945: War years
-[7/3/2025, 4:45:24 AM]   4. 1946–1955: Early post-war work and <i>The Goon Show</i>
-[7/3/2025, 4:45:24 AM]   5. 1956–1959: <i>I'm All Right Jack</i> and early films
-[7/3/2025, 4:45:24 AM]   6. 1960–1963: <i>The Millionairess</i>, <i>Lolita</i>, <i>The Pink Panther</i>, and divorce
-[7/3/2025, 4:45:24 AM]   7. 1964–1969: <i>Dr. Strangelove</i>, health problems, second marriage, and <i>Casino Royale</i>
-[7/3/2025, 4:45:24 AM]   8. 1970–1978: "Period of indifference": two marriages, three <i>Pink Panther</i> films
-[7/3/2025, 4:45:24 AM]   9. 1979–1980: <i>Being There</i>, <i>Fu Manchu</i>, and continued domestic problems
-[7/3/2025, 4:45:24 AM]   10. Death and subsequent family issues
-[7/3/2025, 4:45:24 AM]   ... and 9 more sections
-[7/3/2025, 4:45:24 AM] 
-[7/3/2025, 4:45:24 AM] ✅ Have sections (19 > 0) - proceeding with LLM calls
-[7/3/2025, 4:45:24 AM] Fetching Wikipedia biography for Peter Sellers...
-[7/3/2025, 4:45:25 AM] ✅ Retrieved biography (3420 characters)
-[7/3/2025, 4:45:25 AM] Generating AI hints for Peter Sellers...
+[7/3/2025, 4:52:54 AM] ============================================================
+[7/3/2025, 4:52:54 AM] TEST: 3 PEOPLE WITH RETRY LOGIC
+[7/3/2025, 4:52:54 AM] ============================================================
+[7/3/2025, 4:52:54 AM] 
+[7/3/2025, 4:52:55 AM] Selected 3 people for processing:
+[7/3/2025, 4:52:55 AM]   1. Albert Roussel (French, Composer)
+[7/3/2025, 4:52:55 AM]   2. Matthias, Holy Roman Emperor (Austrian, Politician)
+[7/3/2025, 4:52:55 AM]   3. Svatopluk I of Moravia (International, Politician)
+[7/3/2025, 4:52:55 AM] 
+[7/3/2025, 4:52:55 AM] ========================================
+[7/3/2025, 4:52:55 AM] PROCESSING PERSON 1/3: Albert Roussel
+[7/3/2025, 4:52:55 AM] ========================================
+[7/3/2025, 4:52:55 AM] Attempt 1/3: Fetching Wikipedia sections for Albert Roussel...
+[7/3/2025, 4:52:55 AM] Wikipedia returned 18 sections
+[7/3/2025, 4:52:55 AM] ✅ Successfully retrieved 18 sections for Albert Roussel
+[7/3/2025, 4:52:55 AM] Wikipedia sections (18 total):
+[7/3/2025, 4:52:55 AM]   1. Biography
+[7/3/2025, 4:52:55 AM]   2. Compositions
+[7/3/2025, 4:52:55 AM]   3. Critical reception
+[7/3/2025, 4:52:55 AM]   4. The Albert Roussel Collection
+[7/3/2025, 4:52:55 AM]   5. Works
+[7/3/2025, 4:52:55 AM]   6. Stage
+[7/3/2025, 4:52:55 AM]   7. Orchestral
+[7/3/2025, 4:52:55 AM]   8. Concertante
+[7/3/2025, 4:52:55 AM]   9. Band
+[7/3/2025, 4:52:55 AM]   10. Choral
+[7/3/2025, 4:52:55 AM]   ... and 8 more sections
+[7/3/2025, 4:52:55 AM] 
+[7/3/2025, 4:52:55 AM] ✅ Have sections (18 > 0) - proceeding with LLM calls
+[7/3/2025, 4:52:55 AM] Fetching Wikipedia biography for Albert Roussel...
+[7/3/2025, 4:52:55 AM] ✅ Retrieved biography (412 characters)
+[7/3/2025, 4:52:55 AM] Generating AI hints for Albert Roussel...
+[7/3/2025, 4:52:55 AM] Using biography excerpt (412 characters)
+[7/3/2025, 4:52:57 AM] ✅ Generated AI hints (395 tokens):
+[7/3/2025, 4:52:57 AM]   Hint 1: This person was a prominent French composer known for his contributions to the Modern period of classical music.
+[7/3/2025, 4:52:57 AM]   Hint 2: He is renowned for works such as 'Bacchus et Ariane' and 'Concerto for the Left Hand,' showcasing a transition from Impressionism to neoclassicism.
+[7/3/2025, 4:52:57 AM]   Hint 3: His musical career was preceded by seven years as a midshipman, and he is celebrated for his innovative use of rhythm and orchestration.
+[7/3/2025, 4:52:57 AM] 
+[7/3/2025, 4:52:57 AM] Waiting 1 second before next person...
+[7/3/2025, 4:52:58 AM] 
+[7/3/2025, 4:52:58 AM] ========================================
+[7/3/2025, 4:52:58 AM] PROCESSING PERSON 2/3: Matthias, Holy Roman Emperor
+[7/3/2025, 4:52:58 AM] ========================================
+[7/3/2025, 4:52:58 AM] Attempt 1/3: Fetching Wikipedia sections for Matthias, Holy Roman Emperor...
+[7/3/2025, 4:52:58 AM] Wikipedia returned 15 sections
+[7/3/2025, 4:52:58 AM] ✅ Successfully retrieved 15 sections for Matthias, Holy Roman Emperor
+[7/3/2025, 4:52:58 AM] Wikipedia sections (15 total):
+[7/3/2025, 4:52:58 AM]   1. Biography
+[7/3/2025, 4:52:58 AM]   2. Early life and family
+[7/3/2025, 4:52:58 AM]   3. Governor in Netherlands
+[7/3/2025, 4:52:58 AM]   4. Governor of Austria
+[7/3/2025, 4:52:58 AM]   5. Power struggle among Habsburg brothers
+[7/3/2025, 4:52:58 AM]   6. Sovereign rule
+[7/3/2025, 4:52:58 AM]   7. Burial
+[7/3/2025, 4:52:58 AM]   8. Names
+[7/3/2025, 4:52:58 AM]   9. Ancestry
+[7/3/2025, 4:52:58 AM]   10. Male-line family tree
+[7/3/2025, 4:52:58 AM]   ... and 5 more sections
+[7/3/2025, 4:52:58 AM] 
+[7/3/2025, 4:52:58 AM] ✅ Have sections (15 > 0) - proceeding with LLM calls
+[7/3/2025, 4:52:58 AM] Fetching Wikipedia biography for Matthias, Holy Roman Emperor...
+[7/3/2025, 4:52:58 AM] ✅ Retrieved biography (758 characters)
+[7/3/2025, 4:52:58 AM] Generating AI hints for Matthias, Holy Roman Emperor...
+[7/3/2025, 4:52:58 AM] Using biography excerpt (758 characters)
