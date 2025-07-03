@@ -1,0 +1,267 @@
+WIKIPEDIA SECTION DATA TEST
+10 RANDOM PEOPLE FROM DATABASE
+START TIME: 2:27:59 AM
+
+========== REQUEST 1/10: Georgiana Cavendish, Duchess of Devonshire ==========
+HTTP Status: 200 OK
+Sections Found: 20
+Section Data:
+  1. Early life and family (level 2)
+  2. Marriage and children (level 2)
+  3. Character (level 2)
+  4. Pursuits and fame (level 2)
+  5. Politics (level 3)
+  6. Literature (level 3)
+  7. Music (level 3)
+  8. Science (level 3)
+  9. Gambling (level 3)
+  10. Later life and death (level 2)
+  11. Legacy (level 2)
+  12. In literature (level 3)
+  13. Film portrayals (level 3)
+  14. Opera pasticcio (level 3)
+  15. Works by Georgiana Cavendish (level 2)
+  16. Gallery (level 2)
+  17. References (level 2)
+  18. Works cited (level 3)
+  19. Further reading (level 2)
+  20. External links (level 2)
+
+========== REQUEST 2/10: John Dalton ==========
+HTTP Status: 200 OK
+Sections Found: 22
+Section Data:
+  1. Early life (level 2)
+  2. Early career (level 2)
+  3. Scientific work (level 2)
+  4. Meteorology (level 3)
+  5. Measuring mountains (level 4)
+  6. Colour blindness (level 3)
+  7. Gas laws (level 3)
+  8. Atomic theory (level 3)
+  9. Relative atomic weights (level 3)
+  10. Other investigations (level 3)
+  11. Experimental approach (level 3)
+  12. Other publications (level 2)
+  13. Public life (level 2)
+  14. Personal life (level 2)
+  15. Disability and death (level 2)
+  16. Legacy (level 2)
+  17. Works (level 2)
+  18. See also (level 2)
+  19. Notes (level 2)
+  20. References (level 2)
+  21. Sources (level 2)
+  22. External links (level 2)
+
+========== REQUEST 3/10: Carl Sagan ==========
+HTTP Status: 200 OK
+Sections Found: 30
+Section Data:
+  1. Early life (level 2)
+  2. Childhood (level 3)
+  3. Education (level 3)
+  4. Career and research (level 2)
+  5. Scientific achievements (level 3)
+  6. <i>Cosmos</i>: popularizing science on TV (level 3)
+  7. "Billions and billions" (level 3)
+  8. Sagan's number (level 3)
+  9. Scientific and critical thinking advocacy (level 3)
+  10. Popularizing science (level 3)
+  11. Criticisms (level 3)
+  12. Social concerns (level 3)
+  13. Personal life and beliefs (level 2)
+  14. Naturalism (level 3)
+  15. Marijuana advocacy (level 3)
+  16. UFOs (level 3)
+  17. Death (level 2)
+  18. Awards and honors (level 2)
+  19. Posthumous recognition (level 3)
+  20. Sites named after him (level 4)
+  21. Awards named after him (level 4)
+  22. Awards given him (level 4)
+  23. In popular culture (level 4)
+  24. Books (level 2)
+  25. See also (level 2)
+  26. Explanatory notes (level 2)
+  27. References (level 2)
+  28. Citations (level 3)
+  29. Cited references (level 3)
+  30. External links (level 2)
+
+========== REQUEST 4/10: Freeman Dyson ==========
+HTTP Status: 200 OK
+Sections Found: 35
+Section Data:
+  1. Biography (level 2)
+  2. Early life (level 3)
+  3. Career in the United States (level 3)
+  4. Personal life and death (level 3)
+  5. Concepts (level 2)
+  6. Biotechnology and genetic engineering (level 3)
+  7. <i>The Origin of Life</i> (level 3)
+  8. Dyson sphere (level 3)
+  9. Dyson tree (level 3)
+  10. Space colonies (level 3)
+  11. Space exploration (level 3)
+  12. Dyson's eternal intelligence (level 3)
+  13. Dyson's transform (level 3)
+  14. Dyson series (level 3)
+  15. Quantum physics and prime numbers (level 3)
+  16. Rank of a partition (level 3)
+  17. Crank of a partition (level 3)
+  18. Astrochicken (level 3)
+  19. Lumpers and splitters (level 3)
+  20. Views (level 2)
+  21. Climate change (level 3)
+  22. Warfare and weapons (level 3)
+  23. Science and religion (level 3)
+  24. Named after Dyson (level 2)
+  25. Honors and awards (level 2)
+  26. Publications (level 2)
+  27. Documentaries (level 2)
+  28. References (level 2)
+  29. Notes (level 3)
+  30. Citations (level 3)
+  31. Sources (level 3)
+  32. Further reading (level 3)
+  33. External links (level 2)
+  34. By Dyson (level 3)
+  35. About Dyson (level 3)
+
+========== REQUEST 5/10: Billy Graham ==========
+HTTP Status: 200 OK
+Sections Found: 31
+Section Data:
+  1. Early life (level 2)
+  2. Crusades (level 3)
+  3. Student ministry (level 4)
+  4. Evangelistic association (level 4)
+  5. Civil rights movement (level 4)
+  6. Lausanne Movement (level 4)
+  7. Multiple roles (level 2)
+  8. Later life (level 2)
+  9. Politics (level 2)
+  10. Pastor to presidents (level 3)
+  11. Relationship with Queen Elizabeth II (level 3)
+  12. Foreign policy views (level 3)
+  13. Controversial views (level 2)
+  14. Discussion of Jews with President Nixon (level 3)
+  15. Ecumenism (level 3)
+  16. Views on women (level 3)
+  17. Views on homosexuality (level 3)
+  18. Awards and honors (level 2)
+  19. Honorary doctorates (level 3)
+  20. Other honors (level 3)
+  21. Personal life (level 2)
+  22. Family (level 3)
+  23. Church (level 3)
+  24. Death (level 2)
+  25. Media portrayals (level 2)
+  26. Works (level 2)
+  27. Books (level 3)
+  28. Notes (level 2)
+  29. Bibliography (level 2)
+  30. Further reading (level 2)
+  31. External links (level 2)
+
+========== REQUEST 6/10: Marcelo Bielsa ==========
+HTTP Status: 200 OK
+Sections Found: 21
+Section Data:
+  1. Managerial career (level 2)
+  2. Argentina national team (level 3)
+  3. Chile national team (level 3)
+  4. Athletic Bilbao (level 3)
+  5. Marseille (level 3)
+  6. Lazio (level 3)
+  7. Lille (level 3)
+  8. Leeds United (level 3)
+  9. 2018–19 (level 4)
+  10. 2019–20: Promotion to the Premier League (level 4)
+  11. 2020–21 (level 4)
+  12. 2021–22 (level 4)
+  13. Uruguay national team (level 3)
+  14. Coaching style (level 2)
+  15. Managerial statistics (level 2)
+  16. Honours (level 2)
+  17. Player (level 3)
+  18. Manager (level 3)
+  19. Notes (level 2)
+  20. References (level 2)
+  21. External links (level 2)
+
+========== REQUEST 7/10: James Cronin ==========
+HTTP Status: 200 OK
+Sections Found: 6
+Section Data:
+  1. Education and early life (level 2)
+  2. Research and career (level 2)
+  3. Publications (level 3)
+  4. Personal life (level 2)
+  5. References (level 2)
+  6. External links (level 2)
+
+========== REQUEST 8/10: George I of Greece ==========
+HTTP Status: 200 OK
+Sections Found: 16
+Section Data:
+  1. Family and early life (level 2)
+  2. King of the Hellenes (level 2)
+  3. Early reign (level 2)
+  4. Marriage and children (level 2)
+  5. Territorial expansion (level 2)
+  6. National progress (level 2)
+  7. Later reign and assassination (level 2)
+  8. Honours and arms (level 2)
+  9. Honours (level 3)
+  10. Military appointments (level 4)
+  11. Arms (level 3)
+  12. Ancestry (level 2)
+  13. Notes (level 2)
+  14. References (level 2)
+  15. Sources (level 2)
+  16. External links (level 2)
+
+========== REQUEST 9/10: Raymond III, Count of Tripoli ==========
+HTTP Status: 200 OK
+Sections Found: 24
+Section Data:
+  1. Early life (level 2)
+  2. Count (level 2)
+  3. Minority (level 3)
+  4. First years of majority (level 3)
+  5. Captivity (level 3)
+  6. Count and regent (level 2)
+  7. First regency (level 3)
+  8. Campaigns (level 3)
+  9. Dynastic factions (level 3)
+  10. New conflicts (level 3)
+  11. Second regency (level 3)
+  12. Last years (level 2)
+  13. Sibylla and Guy's accession (level 3)
+  14. Towards Hattin (level 3)
+  15. Hattin and its consequences (level 3)
+  16. Legacy (level 2)
+  17. Genealogical table (level 2)
+  18. See also (level 2)
+  19. Notes (level 2)
+  20. References (level 2)
+  21. Sources (level 2)
+  22. Primary sources (level 3)
+  23. Secondary sources (level 3)
+  24. Further reading (level 2)
+
+========== REQUEST 10/10: Bourvil ==========
+HTTP Status: 200 OK
+Sections Found: 7
+Section Data:
+  1. Biography (level 2)
+  2. Career (level 2)
+  3. Filmography (level 2)
+  4. Songs (level 2)
+  5. References (level 2)
+  6. External links (level 2)
+  7. French links (level 3)
+
+END TIME: 2:28:01 AM
