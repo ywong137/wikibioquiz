@@ -151,7 +151,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Submit guess
   app.post("/api/game/guess", async (req, res) => {
     try {
-      const { guess, sessionId, personName, hintUsed, initialsUsed } = req.body;
+      const { guess, sessionId, personName, hintUsed, initialsUsed, hintsUsedCount } = req.body;
       
       const session = await storage.getGameSession(sessionId);
       if (!session) {
@@ -165,14 +165,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let streakBonus = 0;
 
       if (isCorrect) {
-        // Base points based on hint usage
-        if (initialsUsed) {
-          pointsEarned = 1; // 1 point for correct with initials
-        } else if (hintUsed) {
-          pointsEarned = 2; // 2 points for correct with hint
-        } else {
-          pointsEarned = 7; // 7 points for correct without hint
+        // Progressive scoring: Start with 7 points, lose 1 per hint, lose 2 for initials
+        pointsEarned = 7;
+        if (hintsUsedCount) {
+          pointsEarned -= hintsUsedCount; // Lose 1 point per hint used
         }
+        if (initialsUsed) {
+          pointsEarned -= 2; // Lose 2 points for initials
+        }
+        // Ensure minimum of 1 point
+        pointsEarned = Math.max(1, pointsEarned);
         
         // Add streak bonus only at multiples of 5
         const newStreakValue = session.streak + 1;

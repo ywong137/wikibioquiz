@@ -178,6 +178,7 @@ export default function Game() {
       personName: currentPerson.name,
       hintUsed,
       initialsUsed,
+      hintsUsedCount: hintsClicked,
     });
   };
 
