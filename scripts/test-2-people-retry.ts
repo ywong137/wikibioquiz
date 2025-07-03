@@ -154,7 +154,7 @@ IMPORTANT RULES:
 Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}`;
 
           const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini-2024-07-18",
+            model: "gpt-4.1-nano-2025-04-14",
             messages: [{ role: "user", content: prompt }],
             response_format: { type: "json_object" },
             max_tokens: 500
