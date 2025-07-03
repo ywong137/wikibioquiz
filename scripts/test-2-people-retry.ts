@@ -70,17 +70,17 @@ async function test2PeopleRetry() {
   writeFileSync('output7.txt', '');
   
   log('='.repeat(60));
-  log('TEST: 3 PEOPLE WITH RETRY LOGIC');
+  log('TEST: 4 PEOPLE WITH RETRY LOGIC');
   log('='.repeat(60));
   log('');
   
   try {
-    // Get 3 random people
+    // Get 4 random people
     const people = await db
       .select()
       .from(famousPeople)
       .orderBy(sql`RANDOM()`)
-      .limit(3);
+      .limit(4);
     
     log(`Selected ${people.length} people for processing:`);
     people.forEach((person, i) => {
@@ -92,7 +92,7 @@ async function test2PeopleRetry() {
       const person = people[i];
       
       log(`${'='.repeat(40)}`);
-      log(`PROCESSING PERSON ${i + 1}/3: ${person.name}`);
+      log(`PROCESSING PERSON ${i + 1}/4: ${person.name}`);
       log(`${'='.repeat(40)}`);
       
       // Fetch Wikipedia sections with retry
