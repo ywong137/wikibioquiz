@@ -57,13 +57,14 @@ export const famousPeople = pgTable("famous_people", {
   wikipediaTitle: text("wikipedia_title"), // Exact Wikipedia page title for lookups
   filteredOut: integer("filtered_out").notNull().default(0), // 0 = active, 1 = filtered out
   
-  // Prepopulated Wikipedia data
-  sections: text("sections").array(), // Section headers from Wikipedia
+  // Runtime-populated Wikipedia data
+  sections: text("sections").array(), // Section headers from Wikipedia, or ['WIKI_ERROR'] if failed
   hint: text("hint"), // Primary hint shown at top (nationality • timeperiod • occupation)
-  aiHint1: text("ai_hint_1"), // First AI-generated hint (7→2 points)
-  aiHint2: text("ai_hint_2"), // Second AI-generated hint (2→1 points)  
-  aiHint3: text("ai_hint_3"), // Third AI-generated hint (1→1 points)
+  aiHint1: text("ai_hint_1"), // First AI-generated hint (7→2 points), or 'AI_ERROR' if failed
+  aiHint2: text("ai_hint_2"), // Second AI-generated hint (2→1 points), or 'AI_ERROR' if failed
+  aiHint3: text("ai_hint_3"), // Third AI-generated hint (1→1 points), or 'AI_ERROR' if failed
   initials: text("initials"), // Pre-calculated initials
+  biography: text("biography"), // Wikipedia biography text for AI hint generation
   processedAt: timestamp("processed_at"), // When Wikipedia data was extracted
   
   createdAt: timestamp("created_at").defaultNow().notNull(),

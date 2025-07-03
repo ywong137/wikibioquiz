@@ -488,35 +488,119 @@ Examples:
 
 // New curated approach: Select from famous people database, then fetch from Wikipedia
 async function getFamousPersonFromDatabase(usedPeople: string[], round: number): Promise<WikipediaPerson> {
-  console.log(`\n🎯 ROUND ${round}: Selecting from prepopulated famous people database...`);
+  console.log(`\n🎯 ROUND ${round}: Selecting from famous people database with runtime population...`);
   
   try {
-    // Get random famous person from database with prepopulated data
+    // Get random famous person from database (not filtered out)
     const famousPerson = await storage.getRandomFamousPerson(usedPeople);
     
     if (!famousPerson) {
-      throw new Error("No prepopulated famous people available in database");
+      throw new Error("No famous people available in database");
     }
     
     console.log(`📍 SELECTED: ${famousPerson.name} (${famousPerson.category}, ${famousPerson.timeperiod})`);
     
-    // Create WikipediaPerson directly from prepopulated data - no Wikipedia API calls needed!
-    const wikipediaPerson: WikipediaPerson = {
-      name: famousPerson.name.replace(/ /g, '_'),
-      sections: famousPerson.sections || [],
-      hint: famousPerson.hint || `"${famousPerson.nationality || famousPerson.category} • ${famousPerson.timeperiod} • ${famousPerson.occupation}"`,
-      aiHint: famousPerson.aiHint1 || undefined, // Use first AI hint as default aiHint
-      initials: famousPerson.initials || generateInitials(famousPerson.name),
-      url: `https://en.wikipedia.org/wiki/${encodeURIComponent(famousPerson.wikipediaTitle || famousPerson.name.replace(/ /g, '_'))}`,
-    };
+    // Check if we need to populate data (missing or error states)
+    const needsPopulation = !famousPerson.sections || 
+                           !famousPerson.aiHint1 || 
+                           famousPerson.sections?.includes('WIKI_ERROR') ||
+                           famousPerson.aiHint1 === 'AI_ERROR';
     
-    console.log(`✅ PREPOPULATED: Successfully created WikipediaPerson for ${famousPerson.name}`);
-    return wikipediaPerson;
+    if (needsPopulation) {
+      console.log(`🔄 POPULATING: ${famousPerson.name} needs Wikipedia/AI data...`);
+      
+      // Try to populate the person's data
+      const populatedPerson = await populatePersonData(famousPerson);
+      
+      // Return the populated person
+      return createWikipediaPersonFromDb(populatedPerson);
+    }
+    
+    // Use existing data
+    console.log(`✅ CACHED: Using existing data for ${famousPerson.name}`);
+    return createWikipediaPersonFromDb(famousPerson);
     
   } catch (error) {
-    console.error(`❌ PREPOPULATED: Error fetching famous person: ${error}`);
+    console.error(`❌ DATABASE: Error fetching famous person: ${error}`);
     throw new Error(`Failed to fetch famous person: ${error.message}`);
   }
+}
+
+async function populatePersonData(famousPerson: any): Promise<any> {
+  console.log(`📥 POPULATING: Starting data population for ${famousPerson.name}`);
+  
+  let sections: string[] = [];
+  let biography = '';
+  let aiHint1 = '';
+  let aiHint2 = '';
+  let aiHint3 = '';
+  let initials = '';
+  
+  // Calculate initials
+  initials = generateInitials(famousPerson.name);
+  
+  // Try to fetch Wikipedia data
+  try {
+    const wikipediaTitle = famousPerson.wikipediaTitle || famousPerson.name.replace(/ /g, '_');
+    console.log(`📖 WIKI: Fetching sections for ${wikipediaTitle}`);
+    
+    const wikipediaData = await fetchWikipediaData(wikipediaTitle);
+    sections = wikipediaData.sections;
+    biography = wikipediaData.biography;
+    
+    console.log(`📖 WIKI: Successfully fetched ${sections.length} sections`);
+  } catch (error) {
+    console.error(`❌ WIKI: Failed to fetch Wikipedia data: ${error}`);
+    sections = ['WIKI_ERROR'];
+    biography = 'WIKI_ERROR';
+  }
+  
+  // Try to generate AI hints if Wikipedia succeeded
+  if (sections[0] !== 'WIKI_ERROR') {
+    try {
+      console.log(`🤖 AI: Generating hints for ${famousPerson.name}`);
+      const aiHints = await generateAIHints(famousPerson.name, famousPerson.nationality, famousPerson.timeperiod, famousPerson.occupation, biography);
+      aiHint1 = aiHints[0];
+      aiHint2 = aiHints[1];
+      aiHint3 = aiHints[2];
+      
+      console.log(`🤖 AI: Successfully generated 3 hints`);
+    } catch (error) {
+      console.error(`❌ AI: Failed to generate AI hints: ${error}`);
+      aiHint1 = 'AI_ERROR';
+      aiHint2 = 'AI_ERROR';
+      aiHint3 = 'AI_ERROR';
+    }
+  } else {
+    aiHint1 = 'AI_ERROR';
+    aiHint2 = 'AI_ERROR';
+    aiHint3 = 'AI_ERROR';
+  }
+  
+  // Update database with the populated data
+  const updatedPerson = await storage.updateFamousPerson(famousPerson.id, {
+    sections,
+    aiHint1,
+    aiHint2,
+    aiHint3,
+    initials,
+    biography,
+    processedAt: new Date()
+  });
+  
+  console.log(`✅ POPULATED: Successfully updated ${famousPerson.name} in database`);
+  return updatedPerson;
+}
+
+function createWikipediaPersonFromDb(famousPerson: any): WikipediaPerson {
+  return {
+    name: famousPerson.name.replace(/ /g, '_'),
+    sections: famousPerson.sections || [],
+    hint: famousPerson.hint || `"${famousPerson.nationality || famousPerson.category} • ${famousPerson.timeperiod} • ${famousPerson.occupation}"`,
+    aiHint: famousPerson.aiHint1 && famousPerson.aiHint1 !== 'AI_ERROR' ? famousPerson.aiHint1 : undefined,
+    initials: famousPerson.initials || generateInitials(famousPerson.name),
+    url: `https://en.wikipedia.org/wiki/${encodeURIComponent(famousPerson.wikipediaTitle || famousPerson.name.replace(/ /g, '_'))}`,
+  };
 }
 
 async function createPersonFromWikipediaTitle(title: string): Promise<WikipediaPerson> {
@@ -1044,3 +1128,112 @@ function generateHint(extract: string): string {
 }
 
 
+
+async function fetchWikipediaData(wikipediaTitle: string): Promise<{ sections: string[], biography: string }> {
+  try {
+    console.log(`📖 Fetching Wikipedia data for: ${wikipediaTitle}`);
+    
+    // Get page summary for biography
+    const summaryResponse = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikipediaTitle)}`);
+    if (!summaryResponse.ok) {
+      throw new Error(`Summary API returned ${summaryResponse.status}`);
+    }
+    
+    const summaryData = await summaryResponse.json();
+    const biography = summaryData.extract || '';
+    
+    // Get sections using the parse API
+    const sectionsResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(wikipediaTitle)}&format=json&prop=sections&formatversion=2&origin=*`);
+    if (!sectionsResponse.ok) {
+      throw new Error(`Parse API returned ${sectionsResponse.status}`);
+    }
+    
+    const sectionsData = await sectionsResponse.json();
+    
+    if (sectionsData.error) {
+      throw new Error(`Wikipedia API error: ${sectionsData.error.info}`);
+    }
+    
+    const sections = sectionsData.parse?.sections || [];
+    const sectionTitles = sections
+      .map((section: any) => section.line || section.anchor || 'Unknown')
+      .filter(Boolean)
+      .filter((title: string) => 
+        !title.toLowerCase().includes('reference') && 
+        !title.toLowerCase().includes('external') &&
+        !title.toLowerCase().includes('see also') &&
+        !title.toLowerCase().includes('notes')
+      );
+    
+    console.log(`📖 Successfully fetched ${sectionTitles.length} sections and biography for ${wikipediaTitle}`);
+    
+    return {
+      sections: sectionTitles,
+      biography: biography
+    };
+    
+  } catch (error) {
+    console.error(`❌ Failed to fetch Wikipedia data for ${wikipediaTitle}:`, error);
+    throw new Error(`Wikipedia fetch failed: ${error}`);
+  }
+}
+
+async function generateAIHints(name: string, nationality: string, timeperiod: string, occupation: string, biography: string): Promise<[string, string, string]> {
+  try {
+    console.log(`🤖 Generating AI hints for: ${name}`);
+    
+    const excerpt = biography.substring(0, 1500); // Limit to 1500 chars as per user requirement
+    
+    const prompt = `You are creating hints for a Wikipedia guessing game about ${name}.
+
+Context:
+- Nationality: ${nationality || 'Unknown'}
+- Time period: ${timeperiod || 'Historical'}
+- Occupation: ${occupation || 'Historical Figure'}
+- Biography excerpt: ${excerpt}
+
+Create exactly 3 progressive hints that help players guess this person:
+
+HINT 1 (7→2 points): A subtle, general clue about their field or era. Don't mention birthplace, birth year, or their name.
+HINT 2 (2→1 points): A more specific clue about their major achievement or what they're famous for.
+HINT 3 (1→1 points): A direct clue that clearly identifies them without giving away the name.
+
+Each hint should start with "This person was a..." or "This person is known for..." format.
+Keep each hint under 50 words.
+Be factual and avoid mentioning birthplace, birth year, or the person's name.
+
+Format as JSON:
+{"hint1": "...", "hint2": "...", "hint3": "..."}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // Use gpt-4o-mini for reliability as per user requirement
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert at creating engaging, educational biographical hints for a Wikipedia guessing game."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      response_format: { type: "json_object" },
+      max_tokens: 500,
+      temperature: 0.7
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || '{}');
+    
+    if (!result.hint1 || !result.hint2 || !result.hint3) {
+      throw new Error('Invalid hint response from OpenAI');
+    }
+
+    console.log(`🤖 Successfully generated 3 AI hints for ${name}`);
+    
+    return [result.hint1, result.hint2, result.hint3];
+    
+  } catch (error) {
+    console.error(`❌ AI hint generation failed for ${name}:`, error);
+    throw new Error(`AI hint generation failed: ${error}`);
+  }
+}

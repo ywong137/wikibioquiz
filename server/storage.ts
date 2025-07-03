@@ -37,6 +37,7 @@ export interface IStorage {
   // Famous people database
   getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined>;
   getFamousPersonCount(): Promise<number>;
+  updateFamousPerson(id: number, updates: Partial<InsertFamousPerson>): Promise<FamousPerson | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -133,6 +134,11 @@ export class MemStorage implements IStorage {
     // For MemStorage, return 0 to indicate database storage needed
     return 0;
   }
+
+  async updateFamousPerson(id: number, updates: Partial<InsertFamousPerson>): Promise<FamousPerson | undefined> {
+    // For MemStorage, return undefined to indicate database storage needed
+    return undefined;
+  }
 }
 
 // Database storage implementation with PostgreSQL
@@ -220,10 +226,9 @@ export class DatabaseStorage implements IStorage {
   async getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined> {
     let query = db.select().from(famousPeople);
     
-    // Always filter out entries marked as filtered_out = 1 AND only get prepopulated entries
+    // Always filter out entries marked as filtered_out = 1, but include both populated and unpopulated entries
     const conditions = [
-      eq(famousPeople.filteredOut, 0),
-      isNotNull(famousPeople.processedAt) // Only return prepopulated people
+      eq(famousPeople.filteredOut, 0) // Only return non-filtered people
     ];
     
     if (excludeNames.length > 0) {
@@ -242,6 +247,15 @@ export class DatabaseStorage implements IStorage {
   async getFamousPersonCount(): Promise<number> {
     const [result] = await db.select({ count: sql<number>`count(*)` }).from(famousPeople);
     return result.count;
+  }
+
+  async updateFamousPerson(id: number, updates: Partial<InsertFamousPerson>): Promise<FamousPerson | undefined> {
+    const [person] = await db
+      .update(famousPeople)
+      .set(updates)
+      .where(eq(famousPeople.id, id))
+      .returning();
+    return person || undefined;
   }
 }
 
