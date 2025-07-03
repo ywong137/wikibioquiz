@@ -337,41 +337,39 @@ function isCorrectGuess(guess: string, personName: string): boolean {
 }
 
 function isSurnameMatch(guess: string, nameParts: string[]): boolean {
-  // Single word guess should match surname patterns, not first names
-  if (nameParts.length === 1) {
-    return guess === nameParts[0]; // Single name person
-  }
-  
-  // Common connectors that are part of surnames
   const connectors = new Set(['van', 'von', 'de', 'del', 'della', 'di', 'da', 'du', 'le', 'la', 'el', 'al', 'ibn', 'bin', 'of', 'mac', 'mc', 'o', 'fitz']);
   
-  // Check if guess matches the last name
+  // STEP 1: Reject standalone connectors
+  if (connectors.has(guess)) {
+    return false;
+  }
+  
+  if (nameParts.length === 1) {
+    return guess === nameParts[0];
+  }
+  
+  // STEP 2: Check if matches final surname
   const lastName = nameParts[nameParts.length - 1];
   if (guess === lastName) {
     return true;
   }
   
-  // Check if guess matches a compound surname (e.g., "De Sica" for "Vittorio De Sica")
+  // STEP 3: Check compound surname patterns
   for (let i = 1; i < nameParts.length; i++) {
     const part = nameParts[i];
-    if (connectors.has(part.toLowerCase()) || part.toLowerCase() === guess) {
-      // If this is a connector or matches the guess, check if it's part of a surname
-      // Look for connector + surname pattern
-      if (i < nameParts.length - 1) {
-        const nextPart = nameParts[i + 1];
-        if (guess === part || guess === nextPart) {
-          return true;
-        }
+    if (connectors.has(part.toLowerCase()) && i < nameParts.length - 1) {
+      const nextPart = nameParts[i + 1];
+      if (guess === nextPart) {
+        return true;
       }
     }
   }
   
-  // Reject if guess only matches first name(s)
-  // First names are typically the first 1-2 words before any connectors
+  // STEP 4: Reject first names
   const firstNameEnd = findFirstNameEnd(nameParts);
   for (let i = 0; i < firstNameEnd; i++) {
     if (guess === nameParts[i]) {
-      return false; // Reject first name only matches
+      return false;
     }
   }
   
@@ -399,30 +397,47 @@ function findFirstNameEnd(nameParts: string[]): number {
 }
 
 function isValidSurnameCombo(guessParts: string[], nameParts: string[]): boolean {
-  // For multi-part guesses, check various valid combinations
   const connectors = new Set(['van', 'von', 'de', 'del', 'della', 'di', 'da', 'du', 'le', 'la', 'el', 'al', 'ibn', 'bin', 'of', 'mac', 'mc', 'o', 'fitz']);
   
-  // Check if guess is a substring of the name (all parts must be present)
-  if (guessParts.every(part => nameParts.includes(part))) {
-    // But make sure it's not just first name(s)
-    const firstNameEnd = findFirstNameEnd(nameParts);
-    
-    // If all guess parts are in the first name section, reject
-    if (guessParts.every(part => {
-      const index = nameParts.indexOf(part);
-      return index >= 0 && index < firstNameEnd;
-    })) {
-      return false;
-    }
-    
-    // If at least one part is in the surname section, accept
-    return guessParts.some(part => {
-      const index = nameParts.indexOf(part);
-      return index >= firstNameEnd;
-    });
+  // STEP 1: Check if forms contiguous sequence
+  const contiguousMatch = findContiguousMatch(guessParts, nameParts);
+  if (!contiguousMatch) {
+    return false;
   }
   
-  return false;
+  // STEP 2: Semantic validation
+  const firstNameEnd = findFirstNameEnd(nameParts);
+  const matchStart = contiguousMatch.startIndex;
+  const matchEnd = contiguousMatch.startIndex + guessParts.length - 1;
+  
+  // Reject if entirely in first name section
+  if (matchEnd < firstNameEnd) {
+    return false;
+  }
+  
+  // Reject "first name + connector" patterns (only when ending exactly at connector)
+  if (matchStart < firstNameEnd && matchEnd === firstNameEnd && nameParts[matchEnd] && connectors.has(nameParts[matchEnd].toLowerCase())) {
+    return false;
+  }
+  
+  // Accept if extends into or past surname section
+  return matchEnd >= firstNameEnd;
+}
+
+function findContiguousMatch(guessParts: string[], nameParts: string[]): { startIndex: number } | null {
+  for (let i = 0; i <= nameParts.length - guessParts.length; i++) {
+    let matches = true;
+    for (let j = 0; j < guessParts.length; j++) {
+      if (guessParts[j] !== nameParts[i + j]) {
+        matches = false;
+        break;
+      }
+    }
+    if (matches) {
+      return { startIndex: i };
+    }
+  }
+  return null;
 }
 
 async function getAdditionalHint(personName: string): Promise<string> {
