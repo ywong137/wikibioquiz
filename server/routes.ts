@@ -85,9 +85,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const person = await wikipediaFetchLock;
         console.log(`🔓 REQUEST [${requestId}]: Reusing person from existing fetch: ${person.name}`);
         
-        // Update session with the new person
+        // Update session with the new person AND increment round
         await storage.updateGameSession(sessionId, {
           usedPeople: [...session.usedPeople, person.name],
+          round: session.round + 1,
         });
 
         console.log(`✅ REQUEST END [${requestId}]: Returning person ${person.name}`);
@@ -102,9 +103,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const person = await wikipediaFetchLock;
         console.log(`🔓 REQUEST [${requestId}]: Famous person fetch completed: ${person.name}`);
         
-        // Update session with the new person
+        // Update session with the new person AND increment round
         await storage.updateGameSession(sessionId, {
           usedPeople: [...session.usedPeople, person.name],
+          round: session.round + 1,
         });
 
         console.log(`✅ REQUEST END [${requestId}]: Returning person ${person.name}`);
@@ -202,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updatedSession = await storage.updateGameSession(sessionId, {
         score: newScore,
         streak: newStreak,
-        round: session.round + 1,
+        // Round should NOT increment on guess - only when new person is loaded
         totalGuesses: session.totalGuesses + 1,
         correctGuesses: session.correctGuesses + (isCorrect ? 1 : 0),
         bestStreak: Math.max(session.bestStreak, newStreak),
@@ -395,6 +397,30 @@ function isOfNameMatch(guess: string, fullName: string): boolean {
   return false;
 }
 
+function isTheTitleMatch(guess: string, fullName: string): boolean {
+  // For "the [Title]" names, use restrictive matching
+  // Only accept: "first name" and "the whole thing"
+  
+  // Check for exact match (already handled in caller, but include for completeness)
+  if (guess === fullName) {
+    return true;
+  }
+  
+  // Standard "the [Title]" pattern: "Alfonso the Battler", "William the Conqueror"
+  const theIndex = fullName.indexOf(' the ');
+  if (theIndex > 0) {
+    const beforeThe = fullName.substring(0, theIndex).trim();
+    
+    // Only accept "everything before the"
+    if (guess === beforeThe) {
+      return true;
+    }
+  }
+  
+  // Block all other matches for "the [Title]" names
+  return false;
+}
+
 function isCorrectGuess(guess: string, personName: string): boolean {
   const normalizedGuess = normalizeGuess(guess);
   const normalizedName = normalizeGuess(personName);
@@ -409,7 +435,12 @@ function isCorrectGuess(guess: string, personName: string): boolean {
     return isOfNameMatch(normalizedGuess, normalizedName);
   }
   
-  // Split name into parts for non-"of" names
+  // Special handling for "the [Title]" names - use restrictive matching
+  if (normalizedName.includes(' the ')) {
+    return isTheTitleMatch(normalizedGuess, normalizedName);
+  }
+  
+  // Split name into parts for regular names
   const nameParts = normalizedName.split(/\s+/);
   const guessParts = normalizedGuess.split(/\s+/);
   

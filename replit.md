@@ -98,6 +98,13 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 03, 2025. RESTRICTIVE HISTORICAL NAME MATCHING: Revolutionary location and title-aware validation system
+  - RESTRICTIVE "OF" LOGIC: "Ivan V of Russia" accepts ONLY "Ivan V" and "Ivan V of Russia" (blocks "Russia")
+  - RESTRICTIVE "THE" LOGIC: "Alfonso the Battler" accepts ONLY "Alfonso" and "Alfonso the Battler" (blocks "Battler") 
+  - ROYAL NAME SUPPORT: "Diana, Princess of Wales" accepts "Diana", "Princess Diana", and full name only
+  - LOCATION BLOCKING: Standalone location names like "Russia", "Aragon", "Wales" completely rejected
+  - TITLE BLOCKING: Standalone titles like "Battler", "Conqueror", "Great" completely rejected
+  - ROUND/GUESS SEPARATION: Fixed counting - Round advances only on "Next Person", Guesses advance on each attempt
 - July 03, 2025. ADVANCED NAME MATCHING SYSTEM: Implemented comprehensive contiguity-based surname validation
   - Created sophisticated name parsing with contiguous sequence validation and semantic filtering
   - CONNECTOR REJECTION: Blocks standalone connectors ("von", "de", "ibn" all rejected as non-identifying)  
