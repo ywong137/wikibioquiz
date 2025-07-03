@@ -27,25 +27,34 @@ IMPORTANT RULES:
 
 Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}`;
 
-async function test1Person() {
+async function test2People() {
   const output: string[] = [];
-  output.push('SINGLE PERSON PROCESSING TEST');
+  output.push('TWO PEOPLE PROCESSING TEST');
   output.push(`START TIME: ${new Date().toLocaleString()}`);
   output.push('');
 
   try {
-    // Get 1 random person from database
-    const [person] = await db
+    // Get 2 random people from database
+    const people = await db
       .select()
       .from(famousPeople)
       .orderBy(sql`RANDOM()`)
-      .limit(1);
+      .limit(2);
 
-    if (!person) {
-      output.push('❌ ERROR: No person found in database');
-      writeFileSync('output5.txt', output.join('\n'));
+    if (people.length === 0) {
+      output.push('❌ ERROR: No people found in database');
+      writeFileSync('output6.txt', output.join('\n'));
       return;
     }
+
+    output.push(`Found ${people.length} people to process`);
+    output.push('');
+
+    for (let i = 0; i < people.length; i++) {
+      const person = people[i];
+      
+      output.push(`==================== PERSON ${i + 1}/${people.length}: ${person.name} ====================`);
+      output.push('');
 
     output.push(`SELECTED PERSON: ${person.name}`);
     output.push(`Database info:`);
@@ -164,13 +173,16 @@ async function test1Person() {
       
     } catch (error) {
       output.push(`❌ AI HINTS FAILED: ${error}`);
-      writeFileSync('output5.txt', output.join('\n'));
-      return;
+      output.push('Continuing to next person...');
     }
     output.push('');
 
     output.push('🎉 COMPLETE: Successfully processed all steps for ' + person.name);
     output.push('NOTE: Database was NOT updated (test mode)');
+    output.push('');
+    output.push('================================================================================');
+    output.push('');
+    }
 
   } catch (error) {
     output.push(`❌ UNEXPECTED ERROR: ${error}`);
@@ -179,8 +191,8 @@ async function test1Person() {
   output.push('');
   output.push(`END TIME: ${new Date().toLocaleString()}`);
 
-  writeFileSync('output5.txt', output.join('\n'));
-  console.log('✅ Test complete - Results written to output5.txt');
+  writeFileSync('output6.txt', output.join('\n'));
+  console.log('✅ Test complete - Results written to output6.txt');
 }
 
-test1Person().catch(console.error);
+test2People().catch(console.error);
