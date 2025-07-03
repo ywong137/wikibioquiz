@@ -312,7 +312,25 @@ function decodeHtmlEntities(text: string): string {
   return decoded;
 }
 
-
+function removeMiddleInitials(nameParts: string[]): string[] {
+  const result: string[] = [];
+  for (let i = 0; i < nameParts.length; i++) {
+    const part = nameParts[i];
+    // Check if it's a middle initial (single letter with optional period)
+    const isMiddleInitial = (part.length === 1 || (part.length === 2 && part.endsWith('.')));
+    
+    if (isMiddleInitial) {
+      // Keep if it's the first or last part (could be first name or last name)
+      if (i === 0 || i === nameParts.length - 1) {
+        result.push(part);
+      }
+      // Skip middle initials (positions 1 to length-2)
+    } else {
+      result.push(part);
+    }
+  }
+  return result;
+}
 
 function isCorrectGuess(guess: string, personName: string): boolean {
   const normalizedGuess = normalizeGuess(guess);
@@ -326,6 +344,14 @@ function isCorrectGuess(guess: string, personName: string): boolean {
   // Split name into parts
   const nameParts = normalizedName.split(/\s+/);
   const guessParts = normalizedGuess.split(/\s+/);
+  
+  // Check if guess matches name with middle initials removed
+  const guessWithoutMiddleInitials = removeMiddleInitials(guessParts);
+  const nameWithoutMiddleInitials = removeMiddleInitials(nameParts);
+  
+  if (guessWithoutMiddleInitials.join(' ') === nameWithoutMiddleInitials.join(' ')) {
+    return true;
+  }
   
   // If only one part, check if it's a valid surname match
   if (guessParts.length === 1) {
