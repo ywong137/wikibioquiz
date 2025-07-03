@@ -1,0 +1,105 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="card-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8fafc;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-gradient)"/>
+  
+  <!-- Main card -->
+  <rect x="80" y="80" width="1040" height="470" rx="20" fill="url(#card-gradient)" stroke="#e2e8f0" stroke-width="2"/>
+  
+  <!-- Brain icon -->
+  <g transform="translate(120, 130)">
+    <path d="M24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0C18.6274 0 24 5.37258 24 12Z" fill="#4f46e5" opacity="0.1"/>
+    <path d="M9.5 2C7.01472 2 5 4.01472 5 6.5C5 6.87059 5.05513 7.22833 5.15767 7.56651C3.86307 8.4509 3 9.889 3 11.5C3 12.3284 3.22671 13.0992 3.61807 13.7615C2.66081 14.6926 2 16.0179 2 17.5C2 19.9853 4.01472 22 6.5 22H17.5C19.9853 22 22 19.9853 22 17.5C22 16.0179 21.3392 14.6926 20.3819 13.7615C20.7733 13.0992 21 12.3284 21 11.5C21 9.889 20.1369 8.4509 18.8423 7.56651C18.9449 7.22833 19 6.87059 19 6.5C19 4.01472 16.9853 2 14.5 2C13.3581 2 12.3138 2.46063 11.5546 3.21533C10.7954 2.46063 9.75106 2 8.5 2" stroke="#4f46e5" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="200" y="190" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#1e293b">
+    Super Fun Wiki Bio Quiz
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="200" y="240" font-family="Arial, sans-serif" font-size="24" fill="#64748b">
+    Guess Famous People from Wikipedia Sections
+  </text>
+  
+  <!-- Sample sections display -->
+  <g transform="translate(200, 280)">
+    <!-- Section header -->
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#4f46e5">
+      Wikipedia Sections:
+    </text>
+    
+    <!-- Sample sections -->
+    <g fill="#374151" font-family="Arial, sans-serif" font-size="16">
+      <text x="20" y="50">• Early life and education</text>
+      <text x="20" y="75">• Scientific career</text>
+      <text x="20" y="100">• Theory of relativity</text>
+      <text x="20" y="125">• Nobel Prize</text>
+      <text x="20" y="150">• Personal life</text>
+    </g>
+    
+    <!-- Hint box -->
+    <rect x="350" y="30" width="300" height="80" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+    <text x="370" y="50" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#92400e">
+      💡 AI Hint:
+    </text>
+    <text x="370" y="70" font-family="Arial, sans-serif" font-size="14" fill="#92400e">
+      German-born physicist known for
+    </text>
+    <text x="370" y="88" font-family="Arial, sans-serif" font-size="14" fill="#92400e">
+      groundbreaking theories
+    </text>
+  </g>
+  
+  <!-- Features list -->
+  <g transform="translate(200, 450)" fill="#64748b" font-family="Arial, sans-serif" font-size="16">
+    <text x="0" y="0">🧠 AI-Generated Hints</text>
+    <text x="200" y="0">📊 Progressive Scoring</text>
+    <text x="400" y="0">🌍 9,000+ Historical Figures</text>
+  </g>
+  
+  <!-- Quiz element on the right -->
+  <g transform="translate(750, 300)">
+    <rect x="0" y="0" width="320" height="180" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+    <text x="20" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1e293b">
+      Can you guess who this is?
+    </text>
+    <rect x="20" y="45" width="280" height="35" rx="6" fill="white" stroke="#d1d5db" stroke-width="1"/>
+    <text x="30" y="67" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af">
+      Type your answer...
+    </text>
+    <rect x="20" y="95" width="100" height="30" rx="6" fill="#4f46e5"/>
+    <text x="45" y="115" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">
+      Submit
+    </text>
+    <rect x="130" y="95" width="80" height="30" rx="6" fill="#f59e0b"/>
+    <text x="155" y="115" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">
+      Hint
+    </text>
+    <rect x="220" y="95" width="80" height="30" rx="6" fill="#0ea5e9"/>
+    <text x="240" y="115" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">
+      Initials
+    </text>
+    
+    <!-- Score display -->
+    <text x="20" y="155" font-family="Arial, sans-serif" font-size="14" fill="#64748b">
+      Score: 42 | Streak: 3 | Round: 7
+    </text>
+  </g>
+  
+  <!-- Decorative elements -->
+  <circle cx="950" cy="150" r="30" fill="#4f46e5" opacity="0.1"/>
+  <circle cx="1000" cy="200" r="20" fill="#7c3aed" opacity="0.1"/>
+  <circle cx="900" cy="180" r="15" fill="#f59e0b" opacity="0.2"/>
+</svg>
