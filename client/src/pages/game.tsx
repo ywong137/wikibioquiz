@@ -183,18 +183,32 @@ export default function Game() {
   };
 
   const handleNextPerson = async () => {
-    // Reset all state for new round
-    setShowFeedback(false);
-    setGuess('');
-    setHintUsed(false);
-    setInitialsUsed(false);
-    setShowHint(false);
-    setShowInitials(false);
-    setHintsClicked(0);
-    setCurrentPoints(7);
+    if (!sessionId) return;
     
-    // Increment round number to trigger new fetch
-    setRoundNumber(prev => prev + 1);
+    try {
+      // First, increment the round in the backend
+      await apiRequest('POST', `/api/game/session/${sessionId}/next-round`, {});
+      
+      // Reset all state for new round
+      setShowFeedback(false);
+      setGuess('');
+      setHintUsed(false);
+      setInitialsUsed(false);
+      setShowHint(false);
+      setShowInitials(false);
+      setHintsClicked(0);
+      setCurrentPoints(7);
+      
+      // Increment round number to trigger new fetch
+      setRoundNumber(prev => prev + 1);
+    } catch (error) {
+      console.error('Error incrementing round:', error);
+      toast({
+        title: "Error",
+        description: "Failed to advance to next person",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleGetHint = () => {

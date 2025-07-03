@@ -59,6 +59,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Increment round (called when "Next Person" is clicked)
+  app.post("/api/game/session/:id/next-round", async (req, res) => {
+    try {
+      const sessionId = parseInt(req.params.id);
+      
+      const session = await storage.getGameSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      const updatedSession = await storage.updateGameSession(sessionId, {
+        round: session.round + 1,
+      });
+
+      res.json(updatedSession);
+    } catch (error) {
+      console.error("Error incrementing round:", error);
+      res.status(500).json({ error: "Failed to increment round" });
+    }
+  });
+
   // Get random Wikipedia person
   app.get("/api/game/person", async (req, res) => {
     const sessionId = parseInt(req.query.sessionId as string);
@@ -85,10 +106,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const person = await wikipediaFetchLock;
         console.log(`🔓 REQUEST [${requestId}]: Reusing person from existing fetch: ${person.name}`);
         
-        // Update session with the new person AND increment round
+        // Update session with the new person (round increments only on "Next Person" click)
         await storage.updateGameSession(sessionId, {
           usedPeople: [...session.usedPeople, person.name],
-          round: session.round + 1,
         });
 
         console.log(`✅ REQUEST END [${requestId}]: Returning person ${person.name}`);
@@ -103,10 +123,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const person = await wikipediaFetchLock;
         console.log(`🔓 REQUEST [${requestId}]: Famous person fetch completed: ${person.name}`);
         
-        // Update session with the new person AND increment round
+        // Update session with the new person (round increments only on "Next Person" click)
         await storage.updateGameSession(sessionId, {
           usedPeople: [...session.usedPeople, person.name],
-          round: session.round + 1,
         });
 
         console.log(`✅ REQUEST END [${requestId}]: Returning person ${person.name}`);
