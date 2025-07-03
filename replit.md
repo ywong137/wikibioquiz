@@ -98,6 +98,12 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 03, 2025. UI CLEANUP: Streamlined interface by removing unnecessary features
+  - Removed player name input section (no longer requiring user names)
+  - Deleted action buttons row (Reset Game, Share Score, Leaderboard)
+  - Added disclaimer box with playful message about vibe-coding and limitations
+  - Cleaned up unused imports (RotateCcw, Share icons and updatePlayerName mutation)
+  - Maintained Wikipedia attribution and "Made with ❤️" footer
 - July 03, 2025. ACCURACY CALCULATION FIX: Fixed stuck accuracy percentage using real session data instead of mock data
   - Replaced hardcoded mock accuracy calculation (57%) with dynamic calculation from gameSession data
   - Added proper session invalidation after guess mutations to ensure UI reflects latest statistics

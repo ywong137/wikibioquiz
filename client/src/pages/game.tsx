@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Brain, List, User, Lightbulb, Trophy, RotateCcw, Share, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, Brain, List, User, Lightbulb, Trophy, ChevronDown, ChevronUp } from 'lucide-react';
 import type { GameSession, WikipediaPerson } from '@shared/schema';
 
 interface GuessResponse {
@@ -240,23 +240,6 @@ export default function Game() {
     }
   };
 
-  const updatePlayerName = useMutation({
-    mutationFn: async (name: string) => {
-      const response = await apiRequest('PATCH', `/api/game/session/${sessionId}/player`, {
-        playerName: name
-      });
-      return response.json();
-    },
-    onSuccess: (session: GameSession) => {
-      setGameSession(session);
-      toast({
-        title: "Name updated!",
-        description: `Welcome, ${session.playerName}!`,
-      });
-    },
-  });
-
-
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !showFeedback) {
@@ -291,35 +274,7 @@ export default function Game() {
             <p className="text-slate-600 text-lg font-medium">Can you guess the famous person from their biography sections?</p>
           </div>
           
-          {/* Player Name Input */}
-          {!gameSession?.playerName && (
-            <div className="mb-6 bg-white rounded-xl p-4 shadow-sm border border-slate-200">
-              <div className="flex items-center justify-center space-x-3">
-                <User className="text-slate-500" size={20} />
-                <input
-                  type="text"
-                  placeholder="Enter your name (optional)"
-                  className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && e.currentTarget.value.trim()) {
-                      updatePlayerName.mutate(e.currentTarget.value.trim());
-                      e.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <span className="text-sm text-slate-500">Press Enter to save</span>
-              </div>
-            </div>
-          )}
 
-          {/* Player Greeting */}
-          {gameSession?.playerName && (
-            <div className="mb-4 text-center">
-              <p className="text-slate-600">
-                Welcome back, <span className="font-semibold text-indigo-600">{gameSession.playerName}</span>!
-              </p>
-            </div>
-          )}
         </header>
 
         {/* Game Instructions */}
@@ -641,21 +596,12 @@ export default function Game() {
 
         {/* Game Footer */}
         <footer className="text-center text-slate-600 space-y-4">
-          <div className="flex justify-center space-x-6">
-            <button className="hover:text-indigo-600 transition-colors duration-200 flex items-center">
-              <RotateCcw className="mr-1" size={16} />
-              Reset Game
-            </button>
-            <button className="hover:text-indigo-600 transition-colors duration-200 flex items-center">
-              <Share className="mr-1" size={16} />
-              Share Score
-            </button>
-            <button className="hover:text-indigo-600 transition-colors duration-200 flex items-center">
-              <Trophy className="mr-1" size={16} />
-              Leaderboard
-            </button>
-          </div>
           <p className="text-sm">Powered by Wikipedia API • Made with ❤️ for trivia lovers</p>
+          <div className="bg-slate-100 border border-slate-200 rounded-lg p-3">
+            <p className="text-xs text-slate-500">
+              Disclaimer: This was vibe-coded so there are errors. The robot 🤖 is not that great and the human has a day job 🌳. Just have fun and try not to sweat the details.
+            </p>
+          </div>
         </footer>
       </div>
     </div>
