@@ -27,23 +27,23 @@ IMPORTANT RULES:
 
 Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}`;
 
-async function test2People() {
+async function test5People() {
   const output: string[] = [];
-  output.push('TWO PEOPLE PROCESSING TEST');
+  output.push('FIVE PEOPLE PROCESSING TEST');
   output.push(`START TIME: ${new Date().toLocaleString()}`);
   output.push('');
 
   try {
-    // Get 2 random people from database
+    // Get 5 random people from database
     const people = await db
       .select()
       .from(famousPeople)
       .orderBy(sql`RANDOM()`)
-      .limit(2);
+      .limit(5);
 
     if (people.length === 0) {
       output.push('❌ ERROR: No people found in database');
-      writeFileSync('output6.txt', output.join('\n'));
+      writeFileSync('output7.txt', output.join('\n'));
       return;
     }
 
@@ -191,8 +191,8 @@ async function test2People() {
   output.push('');
   output.push(`END TIME: ${new Date().toLocaleString()}`);
 
-  writeFileSync('output6.txt', output.join('\n'));
-  console.log('✅ Test complete - Results written to output6.txt');
+  writeFileSync('output7.txt', output.join('\n'));
+  console.log('✅ Test complete - Results written to output7.txt');
 }
 
-test2People().catch(console.error);
+test5People().catch(console.error);

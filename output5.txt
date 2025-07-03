@@ -1,48 +1,137 @@
-SINGLE PERSON PROCESSING TEST
-START TIME: 7/3/2025, 4:23:36 AM
+FIVE PEOPLE PROCESSING TEST
+START TIME: 7/3/2025, 4:29:05 AM
 
-SELECTED PERSON: Emmerich Kálmán
+Found 5 people to process
+
+==================== PERSON 1/5: Claudian ====================
+
+SELECTED PERSON: Claudian
 Database info:
-  ID: 9029
-  Name: Emmerich Kálmán
-  Nationality: Hungarian
-  Occupation: Composer
-  Time Period: Modern
-  Wikipedia Title: Emmerich_Kálmán
+  ID: 12085
+  Name: Claudian
+  Nationality: Egyptian
+  Occupation: Writer
+  Time Period: Ancient
+  Wikipedia Title: Claudian
 
 STEP 1: GENERATING BASIC HINT...
-✅ Basic Hint: Modern - Hungarian - Composer
+✅ Basic Hint: Ancient - Egyptian - Writer
 
 STEP 2: FETCHING WIKIPEDIA SECTIONS...
-Using Wikipedia title: Emmerich_Kálmán
-✅ SUCCESS: Retrieved 7 sections
+Using Wikipedia title: Claudian
+✅ SUCCESS: Retrieved 8 sections
 All Section Headers:
-  1. Biography
-  2. Last years and death
-  3. Popular culture
-  4. Operettas
-  5. References
-  6. Further reading
-  7. External links
+  1. Life
+  2. As poet
+  3. Works
+  4. Editions and translations
+  5. See also
+  6. References
+  7. Further reading
+  8. External links
 
 STEP 3: FETCHING WIKIPEDIA BIOGRAPHY...
-✅ SUCCESS: Retrieved biography (671 characters)
+✅ SUCCESS: Retrieved biography (396 characters)
 Biography Excerpt (first 300 chars):
-"Emmerich Kálmán (Hungarian: Kálmán Imre [ˈkaːlmaːn ˈimrɛ]; 24 October 1882 – 30 October 1953) was a Hungarian composer of operettas and a prominent figure in the development of Viennese operetta in the 20th century. Among his most popular works are Die Csárdásfürstin (1915) and Gräfin Mariza (1924)...."
+"Claudius Claudianus, known in English as Claudian (Greek: Κλαυδιανός; c. 370 – c. 404 AD), was a Latin poet associated with the court of the Roman emperor Honorius at Mediolanum (Milan), and particularly with the general Stilicho. His work, written almost entirely in hexameters or elegiac couplets, ..."
 
 STEP 4: GENERATING AI HINTS...
 Sending prompt to OpenAI...
 Model: gpt-4o-mini
 
 ✅ SUCCESS: Generated 3 AI hints
-Tokens used: 416
+Tokens used: 400
 
 GENERATED HINTS:
-AI Hint 1: This person was a composer known for his contributions to operettas during the Modern period.
-AI Hint 2: He is celebrated for creating popular works such as 'Die Csárdásfürstin' and 'Gräfin Mariza', which are key pieces in the Viennese operetta repertoire.
-AI Hint 3: His music often features lively melodies and a blend of Hungarian folk influences, making him a significant figure in the evolution of 20th-century operetta.
+AI Hint 1: This person was a Latin poet renowned for his eloquent verses and association with the Roman imperial court.
+AI Hint 2: He is known for his epic poetry that often celebrated military victories and the deeds of prominent figures of his time, including a famous poem about the Gothic Wars.
+AI Hint 3: His works are characterized by their mastery of hexameter and elegiac couplets, and he was particularly favored by the emperor Honorius and the general Stilicho, making him a significant literary figure of the late Roman Empire.
 
-🎉 COMPLETE: Successfully processed all steps for Emmerich Kálmán
+🎉 COMPLETE: Successfully processed all steps for Claudian
 NOTE: Database was NOT updated (test mode)
 
-END TIME: 7/3/2025, 4:23:39 AM
+================================================================================
+
+==================== PERSON 2/5: Roger II of Sicily ====================
+
+SELECTED PERSON: Roger II of Sicily
+Database info:
+  ID: 7703
+  Name: Roger II of Sicily
+  Nationality: Italian
+  Occupation: Politician
+  Time Period: Medieval
+  Wikipedia Title: Roger_II_of_Sicily
+
+STEP 1: GENERATING BASIC HINT...
+✅ Basic Hint: Medieval - Italian - Politician
+
+STEP 2: FETCHING WIKIPEDIA SECTIONS...
+Using Wikipedia title: Roger_II_of_Sicily
+✅ SUCCESS: Retrieved 19 sections
+All Section Headers:
+  1. Background
+  2. Reign
+  3. Rise to power in Sicily
+  4. Rise to power in southern Italy
+  5. Royal investiture
+  6. The Royal Mantle of Roger II
+  7. Peninsular rebellions
+  8. Imperial invasion
+  9. Consolidation of kingship
+  10. Economy
+  11. Later reign
+  12. Modern legacy
+  13. Family
+  14. See also
+  15. Notes
+  16. References
+  17. Works cited
+  18. General references
+  19. External links
+
+STEP 3: FETCHING WIKIPEDIA BIOGRAPHY...
+✅ SUCCESS: Retrieved biography (363 characters)
+Biography Excerpt (first 300 chars):
+"Roger II or Roger the Great (Italian: Ruggero II, Sicilian: Ruggeru II, Greek: Ρογέριος; 22 December 1095 – 26 February 1154) was King of Sicily and Africa, son of Roger I of Sicily and successor to his brother Simon. He began his rule as Count of Sicily in 1105, became Duke of Apulia and Calabria i..."
+
+STEP 4: GENERATING AI HINTS...
+Sending prompt to OpenAI...
+Model: gpt-4o-mini
+
+✅ SUCCESS: Generated 3 AI hints
+Tokens used: 393
+
+GENERATED HINTS:
+AI Hint 1: This person was a prominent ruler during the Medieval period, known for his leadership in the realm of politics and governance.
+AI Hint 2: He is credited with unifying the Kingdom of Sicily and establishing a multicultural court that blended Norman, Arab, and Byzantine influences.
+AI Hint 3: This individual was the first king of Sicily, crowned in 1130, and was known for his ambitious military campaigns, including the conquest of parts of North Africa.
+
+🎉 COMPLETE: Successfully processed all steps for Roger II of Sicily
+NOTE: Database was NOT updated (test mode)
+
+================================================================================
+
+==================== PERSON 3/5: Razia Sultana ====================
+
+SELECTED PERSON: Razia Sultana
+Database info:
+  ID: 13184
+  Name: Razia Sultana
+  Nationality: Indian
+  Occupation: Politician
+  Time Period: Medieval
+  Wikipedia Title: Razia_Sultana
+
+STEP 1: GENERATING BASIC HINT...
+✅ Basic Hint: Medieval - Indian - Politician
+
+STEP 2: FETCHING WIKIPEDIA SECTIONS...
+Using Wikipedia title: Razia_Sultana
+✅ SUCCESS: Retrieved 0 sections
+⚠️ WARNING: Only 0 sections (minimum 6 recommended)
+All Section Headers:
+
+STEP 3: FETCHING WIKIPEDIA BIOGRAPHY...
+❌ WIKIPEDIA BIOGRAPHY FAILED: Error: No Wikipedia biography found
+Cannot continue without biography data
