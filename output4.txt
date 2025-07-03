@@ -1,11 +1,12 @@
 INITIALS ALGORITHM TEST
 200 RANDOM NAMES FROM DATABASE
-TEST TIME: 7/3/2025, 3:36:34 AM
+TEST TIME: 7/3/2025, 3:41:16 AM
 
 ALGORITHM RULES:
 - Two words: first initial, last initial (John Smith → J. S.)
 - Three words: first, middle, last (John Michael Smith → J. M. S.)
-- Lowercase components preserved: Musa ibn Nusayr → M. i. N.
+- "of" and "the" preserved as full words: William of Orange → W. of O.
+- Other lowercase components as initials: Musa ibn Nusayr → M. i. N.
 - Multiple lowercase: Rogier van der Weyden → R. v. d. W.
 - Roman numerals converted: Louis XVII → L. 17, Henry VIII → H. 8
 - "Jr" preserved: Martin Luther King Jr → M. L. K. Jr.
@@ -13,207 +14,207 @@ ALGORITHM RULES:
 FORMAT: Original Name → Calculated Initials
 ================================================================================
 
-  1. Prokopis Pavlopoulos → P. P.
-  2. Richard II, Duke of Normandy → R. I. D. o. N.
-  3. Henri Lefebvre → H. L.
-  4. Vitruvius → V.
-  5. Gad → G.
-  6. Maron → M.
-  7. Ernst Kaltenbrunner → E. K.
-  8. Anastasia of Sirmium → A. o. S.
-  9. Georges Méliès → G. M.
- 10. Scipione del Ferro → S. d. F.
- 11. Bartolomeo Colleoni → B. C.
- 12. Alexander of Greece → A. o. G.
- 13. Naser al-Din Shah Qajar → N. A. S. Q.
- 14. Édouard Manet → É. M.
- 15. Max Müller → M. M.
- 16. Pope John IV → P. J. 4
- 17. Isabella II of Jerusalem → I. 2 o. J.
- 18. Markus Wolf → M. W.
- 19. Damdin Sükhbaatar → D. S.
- 20. Hippias → H.
- 21. Eric VI of Denmark → E. 6 o. D.
- 22. Alfred Rosenberg → A. R.
- 23. Roman von Ungern-Sternberg → R. v. U.
- 24. Charles Martel of Anjou → C. M. o. A.
- 25. Silvana Mangano → S. M.
- 26. Vavá → V.
- 27. Lino Ventura → L. V.
- 28. Natalia Goncharova → N. G.
- 29. Irving Fisher → I. F.
- 30. Roland Freisler → R. F.
- 31. Nina Simone → N. S.
- 32. Ken Follett → K. F.
- 33. José Saramago → J. S.
- 34. Frederick Cook → F. C.
- 35. Henry Every → H. E.
- 36. Pablo de Sarasate → P. d. S.
- 37. Sigurd the Crusader → S. t. C.
- 38. Claude Joseph Vernet → C. J. V.
- 39. Elisabeth of Valois → E. o. V.
- 40. Timothy Leary → T. L.
- 41. Ragnar Granit → R. G.
- 42. Ieng Sary → I. S.
- 43. Terence → T.
- 44. Paul Simon → P. S.
- 45. Cosimo II de' Medici, Grand Duke of Tuscany → C. 2 D. M. G. D. o. T.
- 46. William Kemmler → W. K.
- 47. Rastislav of Moravia → R. o. M.
- 48. William John Macquorn Rankine → W. J. M. R.
- 49. Meton of Athens → M. o. A.
- 50. Pope Stephen I → P. S. 1
- 51. Karl von Frisch → K. v. F.
- 52. Diana, Princess of Wales → D. P. o. W.
- 53. Bette Davis → B. D.
- 54. Clement Attlee → C. A.
- 55. G. E. Moore → G. E. M.
- 56. Godfrey Hounsfield → G. H.
- 57. Emperor Higashiyama → E. H.
- 58. Saint Joseph → S. J.
- 59. Jean-Baptiste Say → J. S.
- 60. Anne Bancroft → A. B.
- 61. Chaim Soutine → C. S.
- 62. William II of England → W. 2 o. E.
- 63. Thomas Andrews → T. A.
- 64. James Hutton → J. H.
- 65. Alexis de Tocqueville → A. d. T.
- 66. Andrew I of Hungary → A. 1 o. H.
- 67. Agesilaus II → A. 2
- 68. Vladimir Komarov → V. K.
- 69. Charles the Younger → C. t. Y.
- 70. Francis II, Holy Roman Emperor → F. I. H. R. E.
- 71. Victoria Eugenie of Battenberg → V. E. o. B.
- 72. Musa ibn Nusayr → M. i. N.
- 73. Thomas Newcomen → T. N.
- 74. Theuderic III → T. 3
- 75. Nadezhda Krupskaya → N. K.
- 76. Giovanni Battista Martini → G. B. M.
- 77. Alfred the Great → A. t. G.
- 78. Sophocles → S.
- 79. Margaret of Provence → M. o. P.
- 80. 5th Dalai Lama → 5. D. L.
- 81. Nexhmije Hoxha → N. H.
- 82. Syagrius → S.
- 83. Kamehameha I → K. 1
- 84. Louis de Montfort → L. d. M.
- 85. Susan Boyle → S. B.
- 86. Henry Fielding → H. F.
- 87. Elena Cornaro Piscopia → E. C. P.
- 88. Huáscar → H.
- 89. Hideki Tojo → H. T.
- 90. Arturo Benedetti Michelangeli → A. B. M.
- 91. Lee Myung-bak → L. M.
- 92. Peter the Hermit → P. t. H.
- 93. Constance, Queen of Sicily → C. Q. o. S.
- 94. Robert Wadlow → R. W.
- 95. Octavia the Younger → O. t. Y.
- 96. Deiphobus → D.
- 97. Zacchaeus → Z.
- 98. Jennifer Aniston → J. A.
- 99. Maria Montessori → M. M.
-100. Tughril → T.
-101. Pope Benedict II → P. B. 2
-102. Boris Godunov → B. G.
-103. Jean Webster → J. W.
-104. Conrad IV of Germany → C. 4 o. G.
-105. Benny Andersson → B. A.
-106. Gérard de Nerval → G. d. N.
-107. Colin Powell → C. P.
-108. Blanche of Castile → B. o. C.
-109. George Best → G. B.
-110. Courteney Cox → C. C.
-111. Ladislaus III of Hungary → L. 3 o. H.
-112. Paramahansa Yogananda → P. Y.
-113. Nicola Porpora → N. P.
-114. Ivan Krylov → I. K.
-115. John of Saxony → J. o. S.
-116. Charles II, Duke of Parma → C. I. D. o. P.
-117. Carmen Amaya → C. A.
-118. Joseph de Maistre → J. d. M.
-119. Sigrid Undset → S. U.
-120. Maj Sjöwall → M. S.
-121. Erasmus → E.
-122. Rama → R.
-123. Brahmagupta → B.
-124. John Adams → J. A.
-125. Hassanal Bolkiah → H. B.
-126. Tariq ibn Ziyad → T. i. Z.
-127. Pérotin → P.
-128. Dido → D.
-129. Henry IV of France → H. 4 o. F.
-130. Jane Addams → J. A.
-131. Kim Kardashian → K. K.
-132. Ankhesenamun → A.
-133. Theo Angelopoulos → T. A.
-134. Emmanuel Philibert, Duke of Savoy → E. P. D. o. S.
-135. Khosrow II → K. 2
-136. Chow Yun-fat → C. Y.
-137. Garrincha → G.
-138. Adam Smith → A. S.
-139. Dong Zhuo → D. Z.
-140. Pliny the Younger → P. t. Y.
-141. Prince Claus of the Netherlands → P. C. o. t. N.
-142. Mstislav Rostropovich → M. R.
-143. Sun Quan → S. Q.
-144. Strato of Lampsacus → S. o. L.
-145. Cao Huan → C. H.
-146. Baldwin V of Jerusalem → B. 5 o. J.
-147. Yves Montand → Y. M.
-148. Samuel Colt → S. C.
-149. Senedj → S.
-150. Marshall Warren Nirenberg → M. W. N.
-151. Catiline → C.
-152. Rajneesh → R.
-153. Richard II of England → R. 2 o. E.
-154. Astyages → A.
-155. Francis II Rákóczi → F. 2 R.
-156. Nikola Pašić → N. P.
-157. Gerd Müller → G. M.
-158. Stepan Bandera → S. B.
-159. Stanislav Petrov → S. P.
-160. Giovanni Pisano → G. P.
-161. Hans-Valentin Hube → H. H.
-162. Lorenzo Da Ponte → L. d. P.
-163. Peter Handke → P. H.
-164. János Bolyai → J. B.
-165. Angela Merici → A. M.
-166. Milan I of Serbia → M. 1 o. S.
-167. Napoléon, Prince Imperial → N. P. I.
-168. Douglas Engelbart → D. E.
-169. Inês de Castro → I. d. C.
-170. Commodus → C.
-171. Zaynab bint Jahsh → Z. B. J.
-172. Amon of Judah → A. o. J.
-173. Eber → E.
-174. Corneille Heymans → C. H.
-175. Julia of Corsica → J. o. C.
-176. Caterina Valente → C. V.
-177. Robert I, Duke of Normandy → R. I. D. o. N.
-178. Gena Rowlands → G. R.
-179. Valéry Giscard d'Estaing → V. G. D.
-180. Alaeddin Pasha → A. P.
-181. Rudolf Diesel → R. D.
-182. Gottlieb Daimler → G. D.
-183. Pope Anastasius II → P. A. 2
-184. Gerard de Ridefort → G. d. R.
-185. Junichiro Koizumi → J. K.
-186. Arminius → A.
-187. Odilon Redon → O. R.
-188. Heinrich Wölfflin → H. W.
-189. Osman II → O. 2
-190. Karl Kraus → K. K.
-191. Groucho Marx → G. M.
-192. Mausolus → M.
-193. Janusz Korczak → J. K.
-194. David Ricardo → D. R.
-195. Ze'ev Jabotinsky → Z. J.
-196. Hans Krebs → H. K.
-197. Hasekura Tsunenaga → H. T.
-198. Julia → J.
-199. Friedrich Wilhelm Joseph Schelling → F. W. J. S.
-200. Paul Bocuse → P. B.
+  1. William of Tyre → W. of T.
+  2. Chaim Soutine → C. S.
+  3. Kaspar Hauser → K. H.
+  4. Gottlob Berger → G. B.
+  5. Gilles de Rais → G. d. R.
+  6. Baudouin of Belgium → B. of B.
+  7. Paul Gauguin → P. G.
+  8. Michel Foucault → M. F.
+  9. Irene Papas → I. P.
+ 10. Alexander the Great → A. the G.
+ 11. Gentile Bellini → G. B.
+ 12. Ferdinand I of Austria → F. 1 of A.
+ 13. Pope Benedict XI → P. B. 11
+ 14. Abu Mansur al-Maturidi → A. M. A.
+ 15. Max Wertheimer → M. W.
+ 16. Eulalia of Mérida → E. of M.
+ 17. Ibrahim Boubacar Keïta → I. B. K.
+ 18. Henry Morton Stanley → H. M. S.
+ 19. Zinedine Zidane → Z. Z.
+ 20. J. Hans D. Jensen → J. H. D. J.
+ 21. Sergey Prokudin-Gorsky → S. P.
+ 22. Elijah → E.
+ 23. Erich von Manstein → E. v. M.
+ 24. Heinz Fischer → H. F.
+ 25. Émile Benveniste → É. B.
+ 26. Joanna of Bourbon → J. of B.
+ 27. Mary of Bethany → M. of B.
+ 28. Michael Caine → M. C.
+ 29. Mario Monti → M. M.
+ 30. Öz Beg Khan → Ö. B. K.
+ 31. Senedj → S.
+ 32. Anthony Fokker → A. F.
+ 33. Wanli Emperor → W. E.
+ 34. Halimah bint Abi Dhuayb → H. B. A. D.
+ 35. Abdul Qadir Gilani → A. Q. G.
+ 36. Nikolai Ostrovsky → N. O.
+ 37. Luigi Russolo → L. R.
+ 38. Murray Rothbard → M. R.
+ 39. Henry James → H. J.
+ 40. Archduke Maximilian Francis of Austria → A. M. F. of A.
+ 41. Johann Wolfgang von Goethe → J. W. v. G.
+ 42. Luiz Inácio Lula da Silva → L. I. L. d. S.
+ 43. Eli Wallach → E. W.
+ 44. George Herbert Mead → G. H. M.
+ 45. Léopold Sédar Senghor → L. S. S.
+ 46. Mago Barca → M. B.
+ 47. Pope Constantine → P. C.
+ 48. Emperor Jing of Han → E. J. of H.
+ 49. Augusto César Sandino → A. C. S.
+ 50. Hannibal → H.
+ 51. Bartolomé Esteban Murillo → B. E. M.
+ 52. Christian IX of Denmark → C. 9 of D.
+ 53. Steve Jobs → S. J.
+ 54. Frontinus → F.
+ 55. Baal Shem Tov → B. S. T.
+ 56. Samson → S.
+ 57. Jean-Antoine Watteau → J. W.
+ 58. Ernest, Duke of Austria → E. D. of A.
+ 59. John Singer Sargent → J. S. S.
+ 60. Gustav Meyrink → G. M.
+ 61. Björk → B.
+ 62. André Bazin → A. B.
+ 63. Sophia Alekseyevna of Russia → S. A. of R.
+ 64. Gustave Moreau → G. M.
+ 65. Leonhard Euler → L. E.
+ 66. Josef Breuer → J. B.
+ 67. Maria Mandl → M. M.
+ 68. Lothar Rendulic → L. R.
+ 69. Géza I of Hungary → G. 1 of H.
+ 70. Pieter Brueghel the Younger → P. B. the Y.
+ 71. Charles de Gaulle → C. d. G.
+ 72. Catherine Labouré → C. L.
+ 73. Frank Whittle → F. W.
+ 74. Robert De Niro → R. d. N.
+ 75. Walter Houser Brattain → W. H. B.
+ 76. Giovanni Gabrieli → G. G.
+ 77. Philolaus → P.
+ 78. Gaius Lucilius → G. L.
+ 79. Letizia Ramolino → L. R.
+ 80. Andronikos I Komnenos → A. 1 K.
+ 81. Charles V, Duke of Lorraine → C. V. D. of L.
+ 82. Vladimir Mayakovsky → V. M.
+ 83. Pope Stephen IV → P. S. 4
+ 84. Philippe of Belgium → P. of B.
+ 85. Haakon IV of Norway → H. 4 of N.
+ 86. Khieu Samphan → K. S.
+ 87. Li Bai → L. B.
+ 88. Kurt Eisner → K. E.
+ 89. Daji → D.
+ 90. Akechi Mitsuhide → A. M.
+ 91. George Cukor → G. C.
+ 92. Fabian Gottlieb von Bellingshausen → F. G. v. B.
+ 93. Jusepe de Ribera → J. d. R.
+ 94. Marie Louise d’Orléans → M. L. D.
+ 95. Carlo Maderno → C. M.
+ 96. Dihya → D.
+ 97. Fanny Kaplan → F. K.
+ 98. Vlad II Dracul → V. 2 D.
+ 99. Thābit ibn Qurra → T. i. Q.
+100. Parmenides → P.
+101. Michael J. Fox → M. J. F.
+102. Vasco da Gama → V. d. G.
+103. Stefan Milutin → S. M.
+104. Ferdinand von Richthofen → F. v. R.
+105. Cornelia, mother of the Gracchi → C. M. of the G.
+106. Nicole Oresme → N. O.
+107. Jacques Brel → J. B.
+108. Joe Cocker → J. C.
+109. Marwan I → M. 1
+110. Maurice, Prince of Orange → M. P. of O.
+111. E. H. Carr → E. H. C.
+112. John Goodman → J. G.
+113. Saint Ursula → S. U.
+114. Kurt Daluege → K. D.
+115. George II of Great Britain → G. 2 of G. B.
+116. Nikolai Lobachevsky → N. L.
+117. Kenji Mizoguchi → K. M.
+118. Charles Dance → C. D.
+119. Pope Paul II → P. P. 2
+120. Karlheinz Stockhausen → K. S.
+121. Khasekhemwy → K.
+122. Khufu → K.
+123. Vladimir Vysotsky → V. V.
+124. Gnaeus Domitius Corbulo → G. D. C.
+125. Joaquín Rodrigo → J. R.
+126. Rashi → R.
+127. Paulette Goddard → P. G.
+128. Aesop → A.
+129. Henryk Górecki → H. G.
+130. Soichiro Honda → S. H.
+131. Élisabeth Vigée Le Brun → É. V. l. B.
+132. Carlo Crivelli → C. C.
+133. Hugues Felicité Robert de Lamennais → H. F. R. d. L.
+134. Josiah → J.
+135. Alexander of Aphrodisias → A. of A.
+136. Theodosius I → T. 1
+137. Veronica Franco → V. F.
+138. René of Anjou → R. of A.
+139. Shams Tabrizi → S. T.
+140. Filippo Inzaghi → F. I.
+141. Stephen Hillenburg → S. H.
+142. Marcel Breuer → M. B.
+143. Phidias → P.
+144. Françoise Hardy → F. H.
+145. Jennifer Lopez → J. L.
+146. William Makepeace Thackeray → W. M. T.
+147. Maria Teresa Rafaela of Spain → M. T. R. of S.
+148. Stephen Covey → S. C.
+149. Titus → T.
+150. Pietro Aretino → P. A.
+151. Marie Louise Gonzaga → M. L. G.
+152. Victor Borge → V. B.
+153. G. Stanley Hall → G. S. H.
+154. Alcibiades → A.
+155. Edmond James de Rothschild → E. J. d. R.
+156. Michal → M.
+157. Leopoldo Galtieri → L. G.
+158. Ronald Ross → R. R.
+159. Sean Penn → S. P.
+160. Maria Amalia of Saxony → M. A. of S.
+161. Ziryab → Z.
+162. Ambrose → A.
+163. Takeda Shingen → T. S.
+164. Heinz Guderian → H. G.
+165. Saint Florian → S. F.
+166. Heinrich Müller → H. M.
+167. Geoffrey Rush → G. R.
+168. Voltaire → V.
+169. Pope John Paul II → P. J. P. 2
+170. M. C. Escher → M. C. E.
+171. Mstislav I of Kiev → M. 1 of K.
+172. Gerard van Honthorst → G. v. H.
+173. Béla I of Hungary → B. 1 of H.
+174. Orestes → O.
+175. Longinus → L.
+176. Dmitry Yazov → D. Y.
+177. Philip Glass → P. G.
+178. László Bíró → L. B.
+179. John III Doukas Vatatzes → J. 3 D. V.
+180. Ismail al-Jazari → I. A.
+181. Setnakhte → S.
+182. Anthony the Great → A. the G.
+183. T. E. Lawrence → T. E. L.
+184. James I of Aragon → J. 1 of A.
+185. David → D.
+186. Robert Musil → R. M.
+187. Emperor Dezong of Tang → E. D. of T.
+188. Salvador Dalí → S. D.
+189. Louisa May Alcott → L. M. A.
+190. Pierre Janssen → P. J.
+191. Prince Eugene of Savoy → P. E. of S.
+192. Francesco Borromini → F. B.
+193. Pope Benedict IX → P. B. 9
+194. Michel Ney → M. N.
+195. Martin Seligman → M. S.
+196. Léo Delibes → L. D.
+197. Kurt Schwitters → K. S.
+198. Guillaume Du Fay → G. d. F.
+199. Fredrik Bajer → F. B.
+200. Nicola Pisano → N. P.
 
 ================================================================================
-COMPLETED: 7/3/2025, 3:36:34 AM
+COMPLETED: 7/3/2025, 3:41:17 AM
 TOTAL NAMES PROCESSED: 200
