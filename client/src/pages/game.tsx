@@ -343,40 +343,18 @@ export default function Game() {
         </div>
 
         {/* Score Display */}
-        <div className="flex justify-center space-x-4 mb-4">
-          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg">
+        <div className="flex justify-center space-x-4 mb-8">
+          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-center">
             <div className="text-sm font-medium opacity-90">Score</div>
             <div className="text-2xl font-bold">{gameSession?.score || 0}</div>
           </div>
-          <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg">
+          <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg text-center">
             <div className="text-sm font-medium opacity-90">Streak</div>
             <div className="text-2xl font-bold">{gameSession?.streak || 0}</div>
           </div>
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg">
+          <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg text-center">
             <div className="text-sm font-medium opacity-90">Round</div>
             <div className="text-2xl font-bold">{gameSession?.round || 1}</div>
-          </div>
-        </div>
-
-        {/* Session Statistics */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-              <div className="text-sm text-slate-500">Total Guesses</div>
-              <div className="text-lg font-semibold text-slate-700">{gameSession?.totalGuesses || 0}</div>
-            </div>
-            <div>
-              <div className="text-sm text-slate-500">Correct</div>
-              <div className="text-lg font-semibold text-green-600">{gameSession?.correctGuesses || 0}</div>
-            </div>
-            <div>
-              <div className="text-sm text-slate-500">Accuracy</div>
-              <div className="text-lg font-semibold text-blue-600">{calculateAccuracy()}%</div>
-            </div>
-            <div>
-              <div className="text-sm text-slate-500">Best Streak</div>
-              <div className="text-lg font-semibold text-purple-600">{gameSession?.bestStreak || 0}</div>
-            </div>
           </div>
         </div>
 
@@ -442,7 +420,10 @@ export default function Game() {
                     >
                       <div className="flex items-center">
                         <div className="w-2 h-2 bg-indigo-400 rounded-full mr-3"></div>
-                        <span className="font-medium text-slate-700">{section}</span>
+                        <span 
+                          className="font-medium text-slate-700"
+                          dangerouslySetInnerHTML={{ __html: section.replace(/<i>/g, '<em>').replace(/<\/i>/g, '</em>') }}
+                        />
                       </div>
                     </div>
                   ))}
@@ -621,11 +602,11 @@ export default function Game() {
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div className="bg-slate-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-slate-800">7</div>
+                <div className="text-2xl font-bold text-slate-800">{gameSession?.totalGuesses || 0}</div>
                 <div className="text-sm text-slate-600 font-medium">Total Guesses</div>
               </div>
               <div className="bg-slate-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-emerald-600">4</div>
+                <div className="text-2xl font-bold text-emerald-600">{gameSession?.correctGuesses || 0}</div>
                 <div className="text-sm text-slate-600 font-medium">Correct</div>
               </div>
               <div className="bg-slate-50 rounded-lg p-4">
@@ -633,7 +614,7 @@ export default function Game() {
                 <div className="text-sm text-slate-600 font-medium">Accuracy</div>
               </div>
               <div className="bg-slate-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-purple-600">3</div>
+                <div className="text-2xl font-bold text-purple-600">{gameSession?.bestStreak || 0}</div>
                 <div className="text-sm text-slate-600 font-medium">Best Streak</div>
               </div>
             </div>
