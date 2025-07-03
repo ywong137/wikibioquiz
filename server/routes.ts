@@ -327,17 +327,99 @@ function isCorrectGuess(guess: string, personName: string): boolean {
   const nameParts = normalizedName.split(/\s+/);
   const guessParts = normalizedGuess.split(/\s+/);
   
+  // If only one part, check if it's a valid surname match
+  if (guessParts.length === 1) {
+    return isSurnameMatch(guessParts[0], nameParts);
+  }
+  
+  // For multi-part guesses, check if it contains valid surname combinations
+  return isValidSurnameCombo(guessParts, nameParts);
+}
+
+function isSurnameMatch(guess: string, nameParts: string[]): boolean {
+  // Single word guess should match surname patterns, not first names
+  if (nameParts.length === 1) {
+    return guess === nameParts[0]; // Single name person
+  }
+  
+  // Common connectors that are part of surnames
+  const connectors = new Set(['van', 'von', 'de', 'del', 'della', 'di', 'da', 'du', 'le', 'la', 'el', 'al', 'ibn', 'bin', 'of', 'mac', 'mc', 'o', 'fitz']);
+  
   // Check if guess matches the last name
-  if (guessParts.length === 1 && nameParts.length > 1) {
-    const lastName = nameParts[nameParts.length - 1];
-    if (guessParts[0] === lastName) {
-      return true;
+  const lastName = nameParts[nameParts.length - 1];
+  if (guess === lastName) {
+    return true;
+  }
+  
+  // Check if guess matches a compound surname (e.g., "De Sica" for "Vittorio De Sica")
+  for (let i = 1; i < nameParts.length; i++) {
+    const part = nameParts[i];
+    if (connectors.has(part.toLowerCase()) || part.toLowerCase() === guess) {
+      // If this is a connector or matches the guess, check if it's part of a surname
+      // Look for connector + surname pattern
+      if (i < nameParts.length - 1) {
+        const nextPart = nameParts[i + 1];
+        if (guess === part || guess === nextPart) {
+          return true;
+        }
+      }
     }
   }
   
-  // Check if all parts of the guess are in the name
+  // Reject if guess only matches first name(s)
+  // First names are typically the first 1-2 words before any connectors
+  const firstNameEnd = findFirstNameEnd(nameParts);
+  for (let i = 0; i < firstNameEnd; i++) {
+    if (guess === nameParts[i]) {
+      return false; // Reject first name only matches
+    }
+  }
+  
+  return false;
+}
+
+function findFirstNameEnd(nameParts: string[]): number {
+  const connectors = new Set(['van', 'von', 'de', 'del', 'della', 'di', 'da', 'du', 'le', 'la', 'el', 'al', 'ibn', 'bin', 'of', 'mac', 'mc', 'o', 'fitz']);
+  
+  // Find the first connector, everything before it is likely first name(s)
+  for (let i = 0; i < nameParts.length; i++) {
+    if (connectors.has(nameParts[i].toLowerCase())) {
+      return i;
+    }
+  }
+  
+  // If no connector found, assume first 1-2 words are first names
+  if (nameParts.length >= 3) {
+    return 2; // First two words are likely first names
+  } else if (nameParts.length === 2) {
+    return 1; // First word is likely first name
+  }
+  
+  return 0; // Single name
+}
+
+function isValidSurnameCombo(guessParts: string[], nameParts: string[]): boolean {
+  // For multi-part guesses, check various valid combinations
+  const connectors = new Set(['van', 'von', 'de', 'del', 'della', 'di', 'da', 'du', 'le', 'la', 'el', 'al', 'ibn', 'bin', 'of', 'mac', 'mc', 'o', 'fitz']);
+  
+  // Check if guess is a substring of the name (all parts must be present)
   if (guessParts.every(part => nameParts.includes(part))) {
-    return true;
+    // But make sure it's not just first name(s)
+    const firstNameEnd = findFirstNameEnd(nameParts);
+    
+    // If all guess parts are in the first name section, reject
+    if (guessParts.every(part => {
+      const index = nameParts.indexOf(part);
+      return index >= 0 && index < firstNameEnd;
+    })) {
+      return false;
+    }
+    
+    // If at least one part is in the surname section, accept
+    return guessParts.some(part => {
+      const index = nameParts.indexOf(part);
+      return index >= firstNameEnd;
+    });
   }
   
   return false;

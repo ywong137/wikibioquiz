@@ -98,6 +98,13 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 03, 2025. SOPHISTICATED NAME MATCHING: Implemented intelligent surname-based guess validation
+  - Created advanced name parsing that allows last names but rejects first names only
+  - Added support for compound surnames (e.g., "De Sica", "van Beethoven") and international name patterns  
+  - Recognizes 20+ surname connectors: van, von, de, del, della, di, da, du, le, la, el, al, ibn, bin, of, mac, mc, o, fitz
+  - EXAMPLES: "Beethoven" ✅, "van Beethoven" ✅, "Ludwig" ❌ for "Ludwig van Beethoven"
+  - Maintains existing bidirectional accent normalization for international names
+  - Fixed interface issues: centered score numbers, removed duplicate session stats, proper italics in section headings
 - July 03, 2025. UI IMPROVEMENTS & SESSION STATISTICS: Enhanced interface layout and comprehensive statistics tracking
   - Moved "How to Play" section above score boxes for better user experience flow
   - Updated scoring system description to match progressive scoring (7 points start, -1 per hint, -2 for initials)
