@@ -1,68 +1,89 @@
-[7/3/2025, 4:40:50 AM] ============================================================
-[7/3/2025, 4:40:50 AM] TEST: 2 PEOPLE WITH RETRY LOGIC
-[7/3/2025, 4:40:50 AM] ============================================================
-[7/3/2025, 4:40:50 AM] 
-[7/3/2025, 4:40:51 AM] Selected 2 people for processing:
-[7/3/2025, 4:40:51 AM]   1. Maimonides (Spanish, Religious Figure)
-[7/3/2025, 4:40:51 AM]   2. Robert Wadlow (American, Celebrity)
-[7/3/2025, 4:40:51 AM] 
-[7/3/2025, 4:40:51 AM] ========================================
-[7/3/2025, 4:40:51 AM] PROCESSING PERSON 1/2: Maimonides
-[7/3/2025, 4:40:51 AM] ========================================
-[7/3/2025, 4:40:51 AM] Attempt 1/3: Fetching Wikipedia sections for Maimonides...
-[7/3/2025, 4:40:51 AM] Wikipedia returned 38 sections
-[7/3/2025, 4:40:51 AM] ✅ Successfully retrieved 38 sections for Maimonides
-[7/3/2025, 4:40:51 AM] Wikipedia sections (38 total):
-[7/3/2025, 4:40:51 AM]   1. Name
-[7/3/2025, 4:40:51 AM]   2. Biography
-[7/3/2025, 4:40:51 AM]   3. Early years
-[7/3/2025, 4:40:51 AM]   4. Exile
-[7/3/2025, 4:40:51 AM]   5. Death of his brother
-[7/3/2025, 4:40:51 AM]   6. Nagid
-[7/3/2025, 4:40:51 AM]   7. Physician
-[7/3/2025, 4:40:51 AM]   8. Death
-[7/3/2025, 4:40:51 AM]   9. Works
-[7/3/2025, 4:40:51 AM]   10. Mishneh Torah
-[7/3/2025, 4:40:51 AM]   ... and 28 more sections
-[7/3/2025, 4:40:51 AM] 
-[7/3/2025, 4:40:51 AM] ✅ Sufficient sections (38 >= 6) - proceeding with LLM calls
-[7/3/2025, 4:40:51 AM] Fetching Wikipedia biography for Maimonides...
-[7/3/2025, 4:40:51 AM] ✅ Retrieved biography (1686 characters)
-[7/3/2025, 4:40:51 AM] Generating AI hints for Maimonides...
-[7/3/2025, 4:40:53 AM] ✅ Generated AI hints (286 tokens):
-[7/3/2025, 4:40:53 AM]   Hint 1: This person was a prominent philosopher and physician during the medieval period, known for merging Jewish law with Aristotelian philosophy.
-[7/3/2025, 4:40:53 AM]   Hint 2: He authored a significant work titled 'The Guide for the Perplexed,' which addresses philosophical questions and Jewish theology, and also wrote foundational texts on Jewish law.
-[7/3/2025, 4:40:53 AM]   Hint 3: He is often referred to as 'the great rabbi' and was influential in both Jewish and Islamic thought; his writings have shaped centuries of Jewish scholarship and are still studied today.
-[7/3/2025, 4:40:53 AM] 
-[7/3/2025, 4:40:53 AM] Waiting 1 second before next person...
-[7/3/2025, 4:40:54 AM] 
-[7/3/2025, 4:40:54 AM] ========================================
-[7/3/2025, 4:40:54 AM] PROCESSING PERSON 2/2: Robert Wadlow
-[7/3/2025, 4:40:54 AM] ========================================
-[7/3/2025, 4:40:54 AM] Attempt 1/3: Fetching Wikipedia sections for Robert Wadlow...
-[7/3/2025, 4:40:54 AM] Wikipedia returned 9 sections
-[7/3/2025, 4:40:54 AM] ✅ Successfully retrieved 9 sections for Robert Wadlow
-[7/3/2025, 4:40:54 AM] Wikipedia sections (9 total):
-[7/3/2025, 4:40:54 AM]   1. Early life
-[7/3/2025, 4:40:54 AM]   2. Adulthood
-[7/3/2025, 4:40:54 AM]   3. Death
-[7/3/2025, 4:40:54 AM]   4. Legacy
-[7/3/2025, 4:40:54 AM]   5. Height chart
-[7/3/2025, 4:40:54 AM]   6. See also
-[7/3/2025, 4:40:54 AM]   7. References
-[7/3/2025, 4:40:54 AM]   8. Further reading
-[7/3/2025, 4:40:54 AM]   9. External links
-[7/3/2025, 4:40:54 AM] 
-[7/3/2025, 4:40:54 AM] ✅ Sufficient sections (9 >= 6) - proceeding with LLM calls
-[7/3/2025, 4:40:54 AM] Fetching Wikipedia biography for Robert Wadlow...
-[7/3/2025, 4:40:54 AM] ✅ Retrieved biography (589 characters)
-[7/3/2025, 4:40:54 AM] Generating AI hints for Robert Wadlow...
-[7/3/2025, 4:40:57 AM] ✅ Generated AI hints (295 tokens):
-[7/3/2025, 4:40:57 AM]   Hint 1: This person was a celebrated figure known for his extraordinary height, making him a prominent performer in various exhibitions and events.
-[7/3/2025, 4:40:57 AM]   Hint 2: He gained fame as the tallest person in recorded history, reaching a height of 8 feet 11 inches, and became a well-known figure in the circus and sideshow circuits during his lifetime.
-[7/3/2025, 4:40:57 AM]   Hint 3: Often referred to as the 'Giant of Illinois,' he had to wear specially made shoes and used leg braces to assist with mobility, and his immense stature was due to an overactive pituitary gland.
-[7/3/2025, 4:40:57 AM] 
-[7/3/2025, 4:40:57 AM] ============================================================
-[7/3/2025, 4:40:57 AM] ✅ SCRIPT COMPLETED SUCCESSFULLY
-[7/3/2025, 4:40:57 AM] ============================================================
-[7/3/2025, 4:40:57 AM] Script finished at 7/3/2025, 4:40:57 AM
+[7/3/2025, 4:43:34 AM] ============================================================
+[7/3/2025, 4:43:34 AM] TEST: 3 PEOPLE WITH RETRY LOGIC
+[7/3/2025, 4:43:34 AM] ============================================================
+[7/3/2025, 4:43:34 AM] 
+[7/3/2025, 4:43:35 AM] Selected 3 people for processing:
+[7/3/2025, 4:43:35 AM]   1. Timon of Phlius (Greek, Philosopher)
+[7/3/2025, 4:43:35 AM]   2. Philip the Good (French, Politician)
+[7/3/2025, 4:43:35 AM]   3. Stan Laurel (British, Actor)
+[7/3/2025, 4:43:35 AM] 
+[7/3/2025, 4:43:35 AM] ========================================
+[7/3/2025, 4:43:35 AM] PROCESSING PERSON 1/3: Timon of Phlius
+[7/3/2025, 4:43:35 AM] ========================================
+[7/3/2025, 4:43:35 AM] Attempt 1/3: Fetching Wikipedia sections for Timon of Phlius...
+[7/3/2025, 4:43:35 AM] Wikipedia returned 8 sections
+[7/3/2025, 4:43:35 AM] ✅ Successfully retrieved 8 sections for Timon of Phlius
+[7/3/2025, 4:43:35 AM] Wikipedia sections (8 total):
+[7/3/2025, 4:43:35 AM]   1. Life
+[7/3/2025, 4:43:35 AM]   2. Writings
+[7/3/2025, 4:43:35 AM]   3. Silloi
+[7/3/2025, 4:43:35 AM]   4. Poetry
+[7/3/2025, 4:43:35 AM]   5. Prose works
+[7/3/2025, 4:43:35 AM]   6. Notes
+[7/3/2025, 4:43:35 AM]   7. References
+[7/3/2025, 4:43:35 AM]   8. Further reading
+[7/3/2025, 4:43:35 AM] 
+[7/3/2025, 4:43:35 AM] ✅ Have sections (8 > 0) - proceeding with LLM calls
+[7/3/2025, 4:43:35 AM] Fetching Wikipedia biography for Timon of Phlius...
+[7/3/2025, 4:43:35 AM] ✅ Retrieved biography (485 characters)
+[7/3/2025, 4:43:35 AM] Generating AI hints for Timon of Phlius...
+[7/3/2025, 4:43:36 AM] ✅ Generated AI hints (271 tokens):
+[7/3/2025, 4:43:36 AM]   Hint 1: This person was a philosopher known for his skepticism, particularly regarding the possibility of certain knowledge.
+[7/3/2025, 4:43:36 AM]   Hint 2: He is best known for his work in developing a form of Pyrrhonism and for his critical stance against the dogmatic philosophies of his time.
+[7/3/2025, 4:43:36 AM]   Hint 3: He famously argued that one should suspend judgment to achieve tranquility, and his teachings often emphasized living according to nature and the importance of personal autonomy.
+[7/3/2025, 4:43:36 AM] 
+[7/3/2025, 4:43:36 AM] Waiting 1 second before next person...
+[7/3/2025, 4:43:37 AM] 
+[7/3/2025, 4:43:37 AM] ========================================
+[7/3/2025, 4:43:37 AM] PROCESSING PERSON 2/3: Philip the Good
+[7/3/2025, 4:43:37 AM] ========================================
+[7/3/2025, 4:43:37 AM] Attempt 1/3: Fetching Wikipedia sections for Philip the Good...
+[7/3/2025, 4:43:38 AM] Wikipedia returned 14 sections
+[7/3/2025, 4:43:38 AM] ✅ Successfully retrieved 14 sections for Philip the Good
+[7/3/2025, 4:43:38 AM] Wikipedia sections (14 total):
+[7/3/2025, 4:43:38 AM]   1. Early life
+[7/3/2025, 4:43:38 AM]   2. Early rule and alliance with England
+[7/3/2025, 4:43:38 AM]   3. Geographic expansion
+[7/3/2025, 4:43:38 AM]   4. Court life and patron of the arts
+[7/3/2025, 4:43:38 AM]   5. Family and issue
+[7/3/2025, 4:43:38 AM]   6. Marriages and legitimate children
+[7/3/2025, 4:43:38 AM]   7. Mistresses and illegitimate children
+[7/3/2025, 4:43:38 AM]   8. Ancestry
+[7/3/2025, 4:43:38 AM]   9. Honours
+[7/3/2025, 4:43:38 AM]   10. Refused honours
+[7/3/2025, 4:43:38 AM]   ... and 4 more sections
+[7/3/2025, 4:43:38 AM] 
+[7/3/2025, 4:43:38 AM] ✅ Have sections (14 > 0) - proceeding with LLM calls
+[7/3/2025, 4:43:38 AM] Fetching Wikipedia biography for Philip the Good...
+[7/3/2025, 4:43:38 AM] ✅ Retrieved biography (1280 characters)
+[7/3/2025, 4:43:38 AM] Generating AI hints for Philip the Good...
+[7/3/2025, 4:43:40 AM] ✅ Generated AI hints (284 tokens):
+[7/3/2025, 4:43:40 AM]   Hint 1: This person was a prominent leader during the medieval period, known for his role as a duke and patron of the arts.
+[7/3/2025, 4:43:40 AM]   Hint 2: He played a significant role in the politics of the Burgundian State, expanding its territory and influence through strategic marriages and alliances.
+[7/3/2025, 4:43:40 AM]   Hint 3: He is particularly remembered for commissioning the creation of sumptuous manuscripts such as the famous 'Book of Hours', and he ruled over an illustrious court that attracted some of the greatest artists and scholars of his time.
+[7/3/2025, 4:43:40 AM] 
+[7/3/2025, 4:43:40 AM] Waiting 1 second before next person...
+[7/3/2025, 4:43:41 AM] 
+[7/3/2025, 4:43:41 AM] ========================================
+[7/3/2025, 4:43:41 AM] PROCESSING PERSON 3/3: Stan Laurel
+[7/3/2025, 4:43:41 AM] ========================================
+[7/3/2025, 4:43:41 AM] Attempt 1/3: Fetching Wikipedia sections for Stan Laurel...
+[7/3/2025, 4:43:41 AM] Wikipedia returned 16 sections
+[7/3/2025, 4:43:41 AM] ✅ Successfully retrieved 16 sections for Stan Laurel
+[7/3/2025, 4:43:41 AM] Wikipedia sections (16 total):
+[7/3/2025, 4:43:41 AM]   1. Early life
+[7/3/2025, 4:43:41 AM]   2. Laurel and Hardy
+[7/3/2025, 4:43:41 AM]   3. Trouble at Roach Studio
+[7/3/2025, 4:43:41 AM]   4. Second World War
+[7/3/2025, 4:43:41 AM]   5. Hardy's death
+[7/3/2025, 4:43:41 AM]   6. After Laurel and Hardy
+[7/3/2025, 4:43:41 AM]   7. Personal life
+[7/3/2025, 4:43:41 AM]   8. Death
+[7/3/2025, 4:43:41 AM]   9. Legacy and honours
+[7/3/2025, 4:43:41 AM]   10. Filmography
+[7/3/2025, 4:43:41 AM]   ... and 6 more sections
+[7/3/2025, 4:43:41 AM] 
+[7/3/2025, 4:43:41 AM] ✅ Have sections (16 > 0) - proceeding with LLM calls
+[7/3/2025, 4:43:41 AM] Fetching Wikipedia biography for Stan Laurel...
+[7/3/2025, 4:43:41 AM] ✅ Retrieved biography (1578 characters)
+[7/3/2025, 4:43:41 AM] Generating AI hints for Stan Laurel...

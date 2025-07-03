@@ -70,17 +70,17 @@ async function test2PeopleRetry() {
   writeFileSync('output7.txt', '');
   
   log('='.repeat(60));
-  log('TEST: 2 PEOPLE WITH RETRY LOGIC');
+  log('TEST: 3 PEOPLE WITH RETRY LOGIC');
   log('='.repeat(60));
   log('');
   
   try {
-    // Get 2 random people
+    // Get 3 random people
     const people = await db
       .select()
       .from(famousPeople)
       .orderBy(sql`RANDOM()`)
-      .limit(2);
+      .limit(3);
     
     log(`Selected ${people.length} people for processing:`);
     people.forEach((person, i) => {
@@ -92,7 +92,7 @@ async function test2PeopleRetry() {
       const person = people[i];
       
       log(`${'='.repeat(40)}`);
-      log(`PROCESSING PERSON ${i + 1}/2: ${person.name}`);
+      log(`PROCESSING PERSON ${i + 1}/3: ${person.name}`);
       log(`${'='.repeat(40)}`);
       
       // Fetch Wikipedia sections with retry
@@ -114,12 +114,12 @@ async function test2PeopleRetry() {
       }
       log('');
       
-      // Check if we have enough sections
-      if (sections.length < 6) {
-        log(`⚠️ WARNING: Only ${sections.length} sections (minimum 6 required)`);
-        log(`Skipping LLM calls for ${person.name} due to insufficient content`);
+      // Check if we have any sections
+      if (sections.length < 1) {
+        log(`⚠️ WARNING: Only ${sections.length} sections - this should not happen after retry logic`);
+        log(`Skipping LLM calls for ${person.name} due to no content`);
       } else {
-        log(`✅ Sufficient sections (${sections.length} >= 6) - proceeding with LLM calls`);
+        log(`✅ Have sections (${sections.length} > 0) - proceeding with LLM calls`);
         
         // Fetch Wikipedia biography
         try {
