@@ -5,7 +5,7 @@ import { wikipediaOAuth } from './wikipedia-oauth';
 import OpenAI from 'openai';
 import { writeFileSync } from 'fs';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// No global OpenAI instance - create fresh instance for each request
 
 function log(message: string, toFile: boolean = true) {
   const timestamp = new Date().toLocaleString();
@@ -15,7 +15,7 @@ function log(message: string, toFile: boolean = true) {
   
   if (toFile) {
     try {
-      writeFileSync('output7.txt', logMessage + '\n', { flag: 'a' });
+      writeFileSync('output4.txt', logMessage + '\n', { flag: 'a' });
     } catch (e) {
       console.error('Failed to write to log file:', e);
     }
@@ -67,20 +67,20 @@ async function fetchWikipediaWithRetry(personName: string, maxRetries: number = 
 
 async function test2PeopleRetry() {
   // Clear output file
-  writeFileSync('output7.txt', '');
+  writeFileSync('output4.txt', '');
   
   log('='.repeat(60));
-  log('TEST: 3 PEOPLE WITH TIMEOUT & RETRY LOGIC');
+  log('TEST: 4 PEOPLE WITH FRESH OPENAI INSTANCES');
   log('='.repeat(60));
   log('');
   
   try {
-    // Get 3 random people
+    // Get 4 random people
     const people = await db
       .select()
       .from(famousPeople)
       .orderBy(sql`RANDOM()`)
-      .limit(3);
+      .limit(4);
     
     log(`Selected ${people.length} people for processing:`);
     people.forEach((person, i) => {
@@ -92,7 +92,7 @@ async function test2PeopleRetry() {
       const person = people[i];
       
       log(`${'='.repeat(40)}`);
-      log(`PROCESSING PERSON ${i + 1}/3: ${person.name}`);
+      log(`PROCESSING PERSON ${i + 1}/4: ${person.name}`);
       log(`${'='.repeat(40)}`);
       
       // Fetch Wikipedia sections with retry
@@ -153,45 +153,64 @@ IMPORTANT RULES:
 
 Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}`;
 
-          // Try OpenAI with timeout and retry logic
+          // Try OpenAI with FRESH INSTANCE for each attempt and timeout logic
           let response;
           let hints;
           
           for (let llmAttempt = 1; llmAttempt <= 3; llmAttempt++) {
             try {
-              log(`LLM attempt ${llmAttempt}/3: Calling OpenAI with 1 second timeout...`);
+              log(`🔄 LLM attempt ${llmAttempt}/3: Creating FRESH OpenAI instance...`);
+              
+              // Create a completely fresh OpenAI client for this attempt
+              const freshOpenAI = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+              log(`✅ Fresh OpenAI instance created for attempt ${llmAttempt}`);
+              
+              log(`⏱️  Starting OpenAI request with 1 second timeout...`);
               
               // Create timeout promise
               const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('OpenAI request timeout after 1 second')), 1000);
+                setTimeout(() => {
+                  log(`⏰ TIMEOUT: 1 second elapsed - abandoning this OpenAI instance`);
+                  reject(new Error('OpenAI request timeout after 1 second'));
+                }, 1000);
               });
               
-              // Create OpenAI request promise
-              const openaiPromise = openai.chat.completions.create({
+              // Create OpenAI request promise with fresh instance
+              const openaiPromise = freshOpenAI.chat.completions.create({
                 model: "gpt-4.1-nano-2025-04-14",
                 messages: [{ role: "user", content: prompt }],
                 response_format: { type: "json_object" },
                 max_tokens: 500
               });
               
+              log(`🏃 Racing timeout vs OpenAI response...`);
+              
               // Race between timeout and OpenAI response
               response = await Promise.race([openaiPromise, timeoutPromise]);
+              
+              log(`🎯 OpenAI responded successfully within timeout!`);
               
               hints = JSON.parse(response.choices[0].message.content || '{}');
               log(`✅ Generated AI hints (${response.usage?.total_tokens || 'unknown'} tokens) on attempt ${llmAttempt}:`);
               log(`  Hint 1: ${hints.hint1}`);
               log(`  Hint 2: ${hints.hint2}`);
               log(`  Hint 3: ${hints.hint3}`);
+              
+              log(`🧹 Fresh OpenAI instance completed successfully - will be garbage collected`);
               break; // Success, exit retry loop
               
             } catch (error) {
-              log(`❌ LLM attempt ${llmAttempt}/3 failed: ${error.message}`);
+              log(`❌ LLM attempt ${llmAttempt}/3 FAILED: ${error.message}`);
+              log(`🗑️  Abandoning hung OpenAI instance from attempt ${llmAttempt} (will remain in background)`);
+              
               if (llmAttempt === 3) {
-                log(`🚨 CRITICAL ERROR: All 3 OpenAI attempts failed with timeouts/errors!`);
-                log(`🚨 STOPPING SCRIPT - OpenAI is not responding within 1 second timeout`);
-                throw new Error(`OpenAI failed after 3 attempts: ${error.message}`);
+                log(`🚨🚨 CRITICAL FAILURE: All 3 fresh OpenAI instances failed with timeouts/errors!`);
+                log(`🚨🚨 This indicates a systematic problem with OpenAI API or our approach!`);
+                log(`🚨🚨 STOPPING SCRIPT - Cannot proceed with unreliable OpenAI responses`);
+                throw new Error(`All 3 fresh OpenAI instances failed: ${error.message}`);
               }
-              log(`Waiting 1 second before retry...`);
+              
+              log(`⏳ Waiting 1 second before creating next fresh instance...`);
               await sleep(1000);
             }
           }
