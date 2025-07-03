@@ -60,7 +60,10 @@
 }
 📖 SUMMARY EXTRACT LENGTH: 304
 📖 SUMMARY EXTRACT: Hans Lipperhey, also known as Johann Lippershey or simply Lippershey, was a German-Dutch spectacle-maker. He is commonly associated with the invention of the telescope, because he was the first one who tried to obtain a patent for it. It is, however, unclear if he was the first one to build a telescope....
-🔗 SECTIONS URL: https://en.wikipedia.org/w/api.php?action=parse&page=Hans_Lippershey&format=json&prop=sections&formatversion=2&origin=*
+🔍 CANONICAL TITLE: Hans_Lipperhey
+🔍 ORIGINAL TITLE: Hans_Lippershey
+🔍 TITLE MATCH: NO
+🔗 SECTIONS URL (ORIGINAL): https://en.wikipedia.org/w/api.php?action=parse&page=Hans_Lippershey&format=json&prop=sections&formatversion=2&origin=*
 📊 SECTIONS RESPONSE STATUS: 200 OK
 📊 SECTIONS RESPONSE: {
   "parse": {
@@ -72,16 +75,164 @@
 }
 📋 RAW SECTIONS COUNT: 0
 📋 RAW SECTIONS DATA: []
-📝 FILTERED SECTION TITLES: []
-📖 Successfully fetched 0 sections and biography for Hans_Lippershey
-📖 WIKI: Successfully fetched 0 sections
-📊 FINAL SECTIONS COUNT: 0
-📊 FINAL SECTIONS: []
+🔄 RETRY: Zero sections with original title, trying canonical title: Hans_Lipperhey
+🔗 SECTIONS URL (CANONICAL): https://en.wikipedia.org/w/api.php?action=parse&page=Hans_Lipperhey&format=json&prop=sections&formatversion=2&origin=*
+📊 CANONICAL SECTIONS RESPONSE STATUS: 200 OK
+📊 CANONICAL SECTIONS RESPONSE: {
+  "parse": {
+    "title": "Hans Lipperhey",
+    "pageid": 198147,
+    "sections": [
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Biography",
+        "number": "1",
+        "index": "1",
+        "fromtitle": "Hans_Lipperhey",
+        "byteoffset": 1533,
+        "anchor": "Biography",
+        "linkAnchor": "Biography"
+      },
+      {
+        "toclevel": 2,
+        "level": "3",
+        "line": "Invention of the telescope",
+        "number": "1.1",
+        "index": "2",
+        "fromtitle": "Hans_Lipperhey",
+        "byteoffset": 1983,
+        "anchor": "Invention_of_the_telescope",
+        "linkAnchor": "Invention_of_the_telescope"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Notes",
+        "number": "2",
+        "index": "3",
+        "fromtitle": "Hans_Lipperhey",
+        "byteoffset": 6793,
+        "anchor": "Notes",
+        "linkAnchor": "Notes"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "References",
+        "number": "3",
+        "index": "4",
+        "fromtitle": "Hans_Lipperhey",
+        "byteoffset": 6819,
+        "anchor": "References",
+        "linkAnchor": "References"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Sources",
+        "number": "4",
+        "index": "5",
+        "fromtitle": "Hans_Lipperhey",
+        "byteoffset": 6849,
+        "anchor": "Sources",
+        "linkAnchor": "Sources"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "External links",
+        "number": "5",
+        "index": "6",
+        "fromtitle": "Hans_Lipperhey",
+        "byteoffset": 8229,
+        "anchor": "External_links",
+        "linkAnchor": "External_links"
+      }
+    ],
+    "showtoc": true
+  }
+}
+📋 CANONICAL SECTIONS COUNT: 6
+📋 CANONICAL SECTIONS DATA: [
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Biography",
+    "number": "1",
+    "index": "1",
+    "fromtitle": "Hans_Lipperhey",
+    "byteoffset": 1533,
+    "anchor": "Biography",
+    "linkAnchor": "Biography"
+  },
+  {
+    "toclevel": 2,
+    "level": "3",
+    "line": "Invention of the telescope",
+    "number": "1.1",
+    "index": "2",
+    "fromtitle": "Hans_Lipperhey",
+    "byteoffset": 1983,
+    "anchor": "Invention_of_the_telescope",
+    "linkAnchor": "Invention_of_the_telescope"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Notes",
+    "number": "2",
+    "index": "3",
+    "fromtitle": "Hans_Lipperhey",
+    "byteoffset": 6793,
+    "anchor": "Notes",
+    "linkAnchor": "Notes"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "References",
+    "number": "3",
+    "index": "4",
+    "fromtitle": "Hans_Lipperhey",
+    "byteoffset": 6819,
+    "anchor": "References",
+    "linkAnchor": "References"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Sources",
+    "number": "4",
+    "index": "5",
+    "fromtitle": "Hans_Lipperhey",
+    "byteoffset": 6849,
+    "anchor": "Sources",
+    "linkAnchor": "Sources"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "External links",
+    "number": "5",
+    "index": "6",
+    "fromtitle": "Hans_Lipperhey",
+    "byteoffset": 8229,
+    "anchor": "External_links",
+    "linkAnchor": "External_links"
+  }
+]
+✅ SUCCESS: Found 6 sections using canonical title!
+📝 FILTERED SECTION TITLES: ["Biography","Invention of the telescope","Sources"]
+📖 Successfully fetched 3 sections and biography for Hans_Lippershey
+📖 WIKI: Successfully fetched 3 sections
+📊 FINAL SECTIONS COUNT: 3
+📊 FINAL SECTIONS: ["Biography","Invention of the telescope","Sources"]
 📊 BIOGRAPHY LENGTH: 304
 🤖 AI: Generating hints for Hans Lippershey
 🤖 Generating AI hints for: Hans Lippershey
-🤖 Using sections: []
-🤖 AI PROMPT: You are creating progressive hints for a guessing game about famous people. Based on these Wikipedia section headings for Hans Lippershey: 
+🤖 Using sections: ["Biography","Invention of the telescope","Sources"]
+🤖 AI PROMPT: You are creating progressive hints for a guessing game about famous people. Based on these Wikipedia section headings for Hans Lippershey: Biography, Invention of the telescope, Sources
 
 Create exactly 3 progressive hints that get more specific:
 1. Hint 1: Very general (profession, era, nationality)
@@ -95,16 +246,16 @@ Return as JSON with this exact format:
   "hint3": "your third hint"
 }
 🤖 AI RAW RESPONSE: {
-  "id": "chatcmpl-BpDDZ9jYffIsoA0dNHH4Rc0VVtU0X",
+  "id": "chatcmpl-BpDMjkvqln3zGIbfxcXR6YuP0JZqu",
   "object": "chat.completion",
-  "created": 1751545237,
+  "created": 1751545805,
   "model": "gpt-4o-2024-08-06",
   "choices": [
     {
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "{\n  \"hint1\": \"This person was a Dutch inventor from the late 16th to early 17th century.\",\n  \"hint2\": \"He is best known for his work related to optical instruments.\",\n  \"hint3\": \"He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'.\"\n}",
+        "content": "{\n  \"hint1\": \"This person was a Dutch lens maker from the late 16th to early 17th century.\",\n  \"hint2\": \"He is credited with the invention of a device that transformed our understanding of the cosmos.\",\n  \"hint3\": \"In 1608, he applied for a patent for an optical device that magnified distant objects, which later became known as the telescope.\"\n}",
         "refusal": null,
         "annotations": []
       },
@@ -113,9 +264,9 @@ Return as JSON with this exact format:
     }
   ],
   "usage": {
-    "prompt_tokens": 130,
-    "completion_tokens": 80,
-    "total_tokens": 210,
+    "prompt_tokens": 139,
+    "completion_tokens": 85,
+    "total_tokens": 224,
     "prompt_tokens_details": {
       "cached_tokens": 0,
       "audio_tokens": 0
@@ -128,15 +279,15 @@ Return as JSON with this exact format:
     }
   },
   "service_tier": "default",
-  "system_fingerprint": "fp_07871e2ad8"
+  "system_fingerprint": "fp_a288987b44"
 }
-🤖 AI PARSED RESULT: {"hint1":"This person was a Dutch inventor from the late 16th to early 17th century.","hint2":"He is best known for his work related to optical instruments.","hint3":"He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'."}
+🤖 AI PARSED RESULT: {"hint1":"This person was a Dutch lens maker from the late 16th to early 17th century.","hint2":"He is credited with the invention of a device that transformed our understanding of the cosmos.","hint3":"In 1608, he applied for a patent for an optical device that magnified distant objects, which later became known as the telescope."}
 🤖 Successfully generated 3 AI hints for Hans Lippershey
 🤖 AI: Successfully generated 3 hints
-🤖 FINAL HINTS: ["This person was a Dutch inventor from the late 16th to early 17th century.","He is best known for his work related to optical instruments.","He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'."]
-📊 AI HINT 1: This person was a Dutch inventor from the late 16th to early 17th century.
-📊 AI HINT 2: He is best known for his work related to optical instruments.
-📊 AI HINT 3: He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'.
+🤖 FINAL HINTS: ["This person was a Dutch lens maker from the late 16th to early 17th century.","He is credited with the invention of a device that transformed our understanding of the cosmos.","In 1608, he applied for a patent for an optical device that magnified distant objects, which later became known as the telescope."]
+📊 AI HINT 1: This person was a Dutch lens maker from the late 16th to early 17th century.
+📊 AI HINT 2: He is credited with the invention of a device that transformed our understanding of the cosmos.
+📊 AI HINT 3: In 1608, he applied for a patent for an optical device that magnified distant objects, which later became known as the telescope.
 ✅ COMPLETED TEST FOR: Hans Lippershey
 =====================================
 
@@ -199,7 +350,10 @@ Return as JSON with this exact format:
 }
 📖 SUMMARY EXTRACT LENGTH: 520
 📖 SUMMARY EXTRACT: Jotham or Yotam was the eleventh king of Judah, and son of Uzziah and Jerusha, daughter of Zadok. Jotham was 25 years old when he began his reign, and he reigned for 16 years. Edwin R. Thiele concluded that his reign commenced as a coregency with his father, which lasted for 11 years. Because his father Uzziah was afflicted with tzaraath after he went into the Temple to burn incense, Jotham became governor of the palace and the land at that time, i.e. coregent, while his father lived in a separa...
-🔗 SECTIONS URL: https://en.wikipedia.org/w/api.php?action=parse&page=Jotham_of_Judah&format=json&prop=sections&formatversion=2&origin=*
+🔍 CANONICAL TITLE: Jotham
+🔍 ORIGINAL TITLE: Jotham_of_Judah
+🔍 TITLE MATCH: NO
+🔗 SECTIONS URL (ORIGINAL): https://en.wikipedia.org/w/api.php?action=parse&page=Jotham_of_Judah&format=json&prop=sections&formatversion=2&origin=*
 📊 SECTIONS RESPONSE STATUS: 200 OK
 📊 SECTIONS RESPONSE: {
   "parse": {
@@ -211,16 +365,186 @@ Return as JSON with this exact format:
 }
 📋 RAW SECTIONS COUNT: 0
 📋 RAW SECTIONS DATA: []
-📝 FILTERED SECTION TITLES: []
-📖 Successfully fetched 0 sections and biography for Jotham_of_Judah
-📖 WIKI: Successfully fetched 0 sections
-📊 FINAL SECTIONS COUNT: 0
-📊 FINAL SECTIONS: []
+🔄 RETRY: Zero sections with original title, trying canonical title: Jotham
+🔗 SECTIONS URL (CANONICAL): https://en.wikipedia.org/w/api.php?action=parse&page=Jotham&format=json&prop=sections&formatversion=2&origin=*
+📊 CANONICAL SECTIONS RESPONSE STATUS: 200 OK
+📊 CANONICAL SECTIONS RESPONSE: {
+  "parse": {
+    "title": "Jotham",
+    "pageid": 457625,
+    "sections": [
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Reign",
+        "number": "1",
+        "index": "1",
+        "fromtitle": "Jotham",
+        "byteoffset": 2320,
+        "anchor": "Reign",
+        "linkAnchor": "Reign"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Chronological issues",
+        "number": "2",
+        "index": "2",
+        "fromtitle": "Jotham",
+        "byteoffset": 4124,
+        "anchor": "Chronological_issues",
+        "linkAnchor": "Chronological_issues"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Further chronological notes",
+        "number": "3",
+        "index": "3",
+        "fromtitle": "Jotham",
+        "byteoffset": 7756,
+        "anchor": "Further_chronological_notes",
+        "linkAnchor": "Further_chronological_notes"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Archeological findings",
+        "number": "4",
+        "index": "4",
+        "fromtitle": "Jotham",
+        "byteoffset": 8885,
+        "anchor": "Archeological_findings",
+        "linkAnchor": "Archeological_findings"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "See also",
+        "number": "5",
+        "index": "5",
+        "fromtitle": "Jotham",
+        "byteoffset": 10566,
+        "anchor": "See_also",
+        "linkAnchor": "See_also"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "Notes",
+        "number": "6",
+        "index": "6",
+        "fromtitle": "Jotham",
+        "byteoffset": 10647,
+        "anchor": "Notes",
+        "linkAnchor": "Notes"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "References",
+        "number": "7",
+        "index": "7",
+        "fromtitle": "Jotham",
+        "byteoffset": 10670,
+        "anchor": "References",
+        "linkAnchor": "References"
+      }
+    ],
+    "showtoc": true
+  }
+}
+📋 CANONICAL SECTIONS COUNT: 7
+📋 CANONICAL SECTIONS DATA: [
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Reign",
+    "number": "1",
+    "index": "1",
+    "fromtitle": "Jotham",
+    "byteoffset": 2320,
+    "anchor": "Reign",
+    "linkAnchor": "Reign"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Chronological issues",
+    "number": "2",
+    "index": "2",
+    "fromtitle": "Jotham",
+    "byteoffset": 4124,
+    "anchor": "Chronological_issues",
+    "linkAnchor": "Chronological_issues"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Further chronological notes",
+    "number": "3",
+    "index": "3",
+    "fromtitle": "Jotham",
+    "byteoffset": 7756,
+    "anchor": "Further_chronological_notes",
+    "linkAnchor": "Further_chronological_notes"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Archeological findings",
+    "number": "4",
+    "index": "4",
+    "fromtitle": "Jotham",
+    "byteoffset": 8885,
+    "anchor": "Archeological_findings",
+    "linkAnchor": "Archeological_findings"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "See also",
+    "number": "5",
+    "index": "5",
+    "fromtitle": "Jotham",
+    "byteoffset": 10566,
+    "anchor": "See_also",
+    "linkAnchor": "See_also"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "Notes",
+    "number": "6",
+    "index": "6",
+    "fromtitle": "Jotham",
+    "byteoffset": 10647,
+    "anchor": "Notes",
+    "linkAnchor": "Notes"
+  },
+  {
+    "toclevel": 1,
+    "level": "2",
+    "line": "References",
+    "number": "7",
+    "index": "7",
+    "fromtitle": "Jotham",
+    "byteoffset": 10670,
+    "anchor": "References",
+    "linkAnchor": "References"
+  }
+]
+✅ SUCCESS: Found 7 sections using canonical title!
+📝 FILTERED SECTION TITLES: ["Reign","Chronological issues","Archeological findings"]
+📖 Successfully fetched 3 sections and biography for Jotham_of_Judah
+📖 WIKI: Successfully fetched 3 sections
+📊 FINAL SECTIONS COUNT: 3
+📊 FINAL SECTIONS: ["Reign","Chronological issues","Archeological findings"]
 📊 BIOGRAPHY LENGTH: 520
 🤖 AI: Generating hints for Jotham of Judah
 🤖 Generating AI hints for: Jotham of Judah
-🤖 Using sections: []
-🤖 AI PROMPT: You are creating progressive hints for a guessing game about famous people. Based on these Wikipedia section headings for Jotham of Judah: 
+🤖 Using sections: ["Reign","Chronological issues","Archeological findings"]
+🤖 AI PROMPT: You are creating progressive hints for a guessing game about famous people. Based on these Wikipedia section headings for Jotham of Judah: Reign, Chronological issues, Archeological findings
 
 Create exactly 3 progressive hints that get more specific:
 1. Hint 1: Very general (profession, era, nationality)
@@ -234,16 +558,16 @@ Return as JSON with this exact format:
   "hint3": "your third hint"
 }
 🤖 AI RAW RESPONSE: {
-  "id": "chatcmpl-BpDDc4xCurIFRBsbonSqfFsUut5Pl",
+  "id": "chatcmpl-BpDMmT7hV2u0pVKRaGb6JnjYl5vLG",
   "object": "chat.completion",
-  "created": 1751545240,
+  "created": 1751545808,
   "model": "gpt-4o-2024-08-06",
   "choices": [
     {
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "{\n  \"hint1\": \"Ancient monarch from the Middle East region.\",\n  \"hint2\": \"Known for being a ruler of the Kingdom of Judah during the 8th century BCE.\",\n  \"hint3\": \"Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem.\"\n}",
+        "content": "{\n  \"hint1\": \"This person was a monarch from the ancient world.\",\n  \"hint2\": \"He was a king in the Iron Age whose reign is mentioned in the Hebrew Bible.\",\n  \"hint3\": \"He ruled the Kingdom of Judah and was known for building projects and strengthening the defenses of Jerusalem.\"\n}",
         "refusal": null,
         "annotations": []
       },
@@ -252,9 +576,9 @@ Return as JSON with this exact format:
     }
   ],
   "usage": {
-    "prompt_tokens": 131,
-    "completion_tokens": 70,
-    "total_tokens": 201,
+    "prompt_tokens": 141,
+    "completion_tokens": 66,
+    "total_tokens": 207,
     "prompt_tokens_details": {
       "cached_tokens": 0,
       "audio_tokens": 0
@@ -269,13 +593,13 @@ Return as JSON with this exact format:
   "service_tier": "default",
   "system_fingerprint": "fp_07871e2ad8"
 }
-🤖 AI PARSED RESULT: {"hint1":"Ancient monarch from the Middle East region.","hint2":"Known for being a ruler of the Kingdom of Judah during the 8th century BCE.","hint3":"Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem."}
+🤖 AI PARSED RESULT: {"hint1":"This person was a monarch from the ancient world.","hint2":"He was a king in the Iron Age whose reign is mentioned in the Hebrew Bible.","hint3":"He ruled the Kingdom of Judah and was known for building projects and strengthening the defenses of Jerusalem."}
 🤖 Successfully generated 3 AI hints for Jotham of Judah
 🤖 AI: Successfully generated 3 hints
-🤖 FINAL HINTS: ["Ancient monarch from the Middle East region.","Known for being a ruler of the Kingdom of Judah during the 8th century BCE.","Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem."]
-📊 AI HINT 1: Ancient monarch from the Middle East region.
-📊 AI HINT 2: Known for being a ruler of the Kingdom of Judah during the 8th century BCE.
-📊 AI HINT 3: Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem.
+🤖 FINAL HINTS: ["This person was a monarch from the ancient world.","He was a king in the Iron Age whose reign is mentioned in the Hebrew Bible.","He ruled the Kingdom of Judah and was known for building projects and strengthening the defenses of Jerusalem."]
+📊 AI HINT 1: This person was a monarch from the ancient world.
+📊 AI HINT 2: He was a king in the Iron Age whose reign is mentioned in the Hebrew Bible.
+📊 AI HINT 3: He ruled the Kingdom of Judah and was known for building projects and strengthening the defenses of Jerusalem.
 ✅ COMPLETED TEST FOR: Jotham of Judah
 =====================================
 

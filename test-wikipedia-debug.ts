@@ -42,9 +42,15 @@ async function fetchWikipediaData(wikipediaTitle: string) {
     log(`📖 SUMMARY EXTRACT LENGTH: ${biography.length}`);
     log(`📖 SUMMARY EXTRACT: ${biography.substring(0, 500)}...`);
     
+    // Extract canonical title from REST API response
+    const canonicalTitle = summaryData.titles?.canonical || wikipediaTitle;
+    log(`🔍 CANONICAL TITLE: ${canonicalTitle}`);
+    log(`🔍 ORIGINAL TITLE: ${wikipediaTitle}`);
+    log(`🔍 TITLE MATCH: ${canonicalTitle === wikipediaTitle ? 'YES' : 'NO'}`);
+    
     // Get sections using the parse API (PRODUCTION METHOD with formatversion=2)
     const sectionsUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(wikipediaTitle)}&format=json&prop=sections&formatversion=2&origin=*`;
-    log(`🔗 SECTIONS URL: ${sectionsUrl}`);
+    log(`🔗 SECTIONS URL (ORIGINAL): ${sectionsUrl}`);
     
     const sectionsResponse = await fetch(sectionsUrl);
     log(`📊 SECTIONS RESPONSE STATUS: ${sectionsResponse.status} ${sectionsResponse.statusText}`);
@@ -61,9 +67,42 @@ async function fetchWikipediaData(wikipediaTitle: string) {
       throw new Error(`Wikipedia API error: ${sectionsData.error.info}`);
     }
     
-    const sections = sectionsData.parse?.sections || [];
+    let sections = sectionsData.parse?.sections || [];
     log(`📋 RAW SECTIONS COUNT: ${sections.length}`);
     log(`📋 RAW SECTIONS DATA: ${JSON.stringify(sections, null, 2)}`);
+    
+    // If we got zero sections and the canonical title is different, try the canonical title
+    if (sections.length === 0 && canonicalTitle !== wikipediaTitle) {
+      log(`🔄 RETRY: Zero sections with original title, trying canonical title: ${canonicalTitle}`);
+      
+      const canonicalSectionsUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(canonicalTitle)}&format=json&prop=sections&formatversion=2&origin=*`;
+      log(`🔗 SECTIONS URL (CANONICAL): ${canonicalSectionsUrl}`);
+      
+      const canonicalSectionsResponse = await fetch(canonicalSectionsUrl);
+      log(`📊 CANONICAL SECTIONS RESPONSE STATUS: ${canonicalSectionsResponse.status} ${canonicalSectionsResponse.statusText}`);
+      
+      if (canonicalSectionsResponse.ok) {
+        const canonicalSectionsData = await canonicalSectionsResponse.json();
+        log(`📊 CANONICAL SECTIONS RESPONSE: ${JSON.stringify(canonicalSectionsData, null, 2)}`);
+        
+        if (!canonicalSectionsData.error) {
+          const canonicalSections = canonicalSectionsData.parse?.sections || [];
+          log(`📋 CANONICAL SECTIONS COUNT: ${canonicalSections.length}`);
+          log(`📋 CANONICAL SECTIONS DATA: ${JSON.stringify(canonicalSections, null, 2)}`);
+          
+          if (canonicalSections.length > 0) {
+            log(`✅ SUCCESS: Found ${canonicalSections.length} sections using canonical title!`);
+            sections = canonicalSections;
+          } else {
+            log(`⚠️ CANONICAL RETRY: Still zero sections with canonical title`);
+          }
+        } else {
+          log(`❌ CANONICAL SECTIONS ERROR: ${JSON.stringify(canonicalSectionsData.error)}`);
+        }
+      } else {
+        log(`❌ CANONICAL SECTIONS HTTP ERROR: ${canonicalSectionsResponse.status}`);
+      }
+    }
     
     const sectionTitles = sections
       .map((section: any) => section.line || section.anchor || 'Unknown')
