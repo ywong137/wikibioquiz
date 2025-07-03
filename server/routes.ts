@@ -594,7 +594,7 @@ async function populatePersonData(famousPerson: any): Promise<any> {
 
 function createWikipediaPersonFromDb(famousPerson: any): WikipediaPerson {
   return {
-    name: famousPerson.name.replace(/ /g, '_'),
+    name: famousPerson.name, // Keep the original human-readable name
     sections: famousPerson.sections || [],
     hint: famousPerson.hint || `"${famousPerson.nationality || famousPerson.category} • ${famousPerson.timeperiod} • ${famousPerson.occupation}"`,
     aiHint: famousPerson.aiHint1 && famousPerson.aiHint1 !== 'AI_ERROR' ? famousPerson.aiHint1 : undefined,
