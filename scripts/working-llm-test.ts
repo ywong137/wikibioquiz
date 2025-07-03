@@ -22,13 +22,19 @@ Context: {NATIONALITY} {OCCUPATION} from the {TIMEPERIOD} period
 Wikipedia Biography Excerpt: {BIOGRAPHY_EXCERPT}
 
 Generate 3 hints that progressively reveal more information:
-1. First hint: General biographical context (birthplace, era, field of work)
+1. First hint: Start with "This person was a..." and describe their field of work. DO NOT mention birthplace or birth year.
 2. Second hint: More specific achievements or notable works  
 3. Third hint: Very specific details that make them identifiable
 
+IMPORTANT RULES:
+- Never use the person's name (including first name) in any hint
+- Refer to them as "he", "she", or "this person" as appropriate
+- Do not mention birthplace or birth year in any hint
+- Focus on their work, achievements, and contributions
+
 Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}`;
 
-  output.push('PROMPT TEMPLATE:');
+  output.push('UPDATED PROMPT TEMPLATE:');
   output.push(promptTemplate);
   output.push('');
   output.push('================================================================================');
@@ -124,8 +130,8 @@ Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}`;
   
   output.push(`END TIME: ${new Date().toLocaleTimeString()}`);
   
-  writeFileSync('output2.txt', output.join('\n'));
-  console.log('✅ COMPLETE - Full LLM test data written to output2.txt');
+  writeFileSync('output3.txt', output.join('\n'));
+  console.log('✅ COMPLETE - Updated LLM test data written to output3.txt');
 }
 
 workingLLMTest().catch(console.error);

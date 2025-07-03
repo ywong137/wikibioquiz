@@ -1,0 +1,69 @@
+OPENAI HINT GENERATION TEST
+3 RANDOM PEOPLE FROM DATABASE
+START TIME: 2:48:46 AM
+
+UPDATED PROMPT TEMPLATE:
+Generate 3 progressive hints for a Wikipedia guessing game about {NAME}.
+
+Context: {NATIONALITY} {OCCUPATION} from the {TIMEPERIOD} period
+
+Wikipedia Biography Excerpt: {BIOGRAPHY_EXCERPT}
+
+Generate 3 hints that progressively reveal more information:
+1. First hint: Start with "This person was a..." and describe their field of work. DO NOT mention birthplace or birth year.
+2. Second hint: More specific achievements or notable works  
+3. Third hint: Very specific details that make them identifiable
+
+IMPORTANT RULES:
+- Never use the person's name (including first name) in any hint
+- Refer to them as "he", "she", or "this person" as appropriate
+- Do not mention birthplace or birth year in any hint
+- Focus on their work, achievements, and contributions
+
+Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}
+
+================================================================================
+
+========== PERSON 1/3: Abraham Ortelius ==========
+Wikipedia Status: 200 OK
+Biography Length: 840 characters
+Biography Excerpt: Abraham Ortelius (; also Ortels, Orthellius, Wortels; 4 or 14 April 1527 – 28 June 1598) was a cartographer, geographer, and cosmographer from Antwerp in the Spanish Netherlands. He is recognized as the creator of the first modern atlas, the Theatrum Orbis Terrarum (Theatre of the World). Along with...
+
+OpenAI Status: SUCCESS
+Model: gpt-4o-mini
+Tokens: 393
+
+GENERATED HINTS:
+  Hint 1: This person was a prominent cartographer and geographer, known for his contributions to the field during the Renaissance period.
+  Hint 2: He is famously recognized for creating the first modern atlas, which compiled maps from various sources to provide a comprehensive view of the world.
+  Hint 3: His most notable work is titled 'Theatrum Orbis Terrarum,' which translates to 'Theatre of the World,' and it is considered a landmark in the history of cartography.
+
+========== PERSON 2/3: Dizzy Gillespie ==========
+Wikipedia Status: 200 OK
+Biography Length: 1428 characters
+Biography Excerpt: John Birks "Dizzy" Gillespie ( gil-ESP-ee; October 21, 1917 – January 6, 1993) was an American jazz trumpeter, bandleader, composer, educator and singer. He was a trumpet virtuoso and improviser, building on the virtuosic style of Roy Eldridge but adding layers of harmonic and rhythmic complexity pr...
+
+OpenAI Status: SUCCESS
+Model: gpt-4o-mini
+Tokens: 386
+
+GENERATED HINTS:
+  Hint 1: This person was a prominent jazz trumpeter and bandleader known for his virtuosic playing and innovative approach to music.
+  Hint 2: He played a key role in developing the bebop style of jazz and is famous for compositions such as 'A Night in Tunisia' and 'Salt Peanuts'.
+  Hint 3: This person was known for his distinctive 'bent' trumpet and his signature style of improvisation, which included complex harmonic and rhythmic elements.
+
+========== PERSON 3/3: Julius Nepos ==========
+Wikipedia Status: 200 OK
+Biography Length: 3217 characters
+Biography Excerpt: Julius Nepos (died 9 May 480), or simply Nepos, ruled as Roman emperor of the West from 24 June 474 to 28 August 475. After losing power in Italy, Nepos retreated to his home province of Dalmatia, from which he continued to claim the western imperial title, with recognition from the Eastern Roman Em...
+
+OpenAI Status: SUCCESS
+Model: gpt-4o-mini
+Tokens: 361
+
+GENERATED HINTS:
+  Hint 1: This person was a Roman emperor who ruled during the late Western Roman Empire.
+  Hint 2: He is known for his brief reign marked by political instability and conflict with usurpers.
+  Hint 3: After being deposed, he sought refuge in Dalmatia, where he continued to assert his claim to the imperial title until his death.
+
+END TIME: 2:48:52 AM
