@@ -7,45 +7,136 @@
 🔗 WIKIPEDIA TITLE: Hans_Lippershey
 📖 WIKI: Fetching sections for Hans_Lippershey
 📖 Fetching Wikipedia data for: Hans_Lippershey
-🔗 SECTIONS URL: https://en.wikipedia.org/w/api.php?action=parse&page=Hans_Lippershey&prop=sections&format=json&origin=*
+🔗 SUMMARY URL: https://en.wikipedia.org/api/rest_v1/page/summary/Hans_Lippershey
+📊 SUMMARY RESPONSE STATUS: 200 OK
+📊 SUMMARY RESPONSE: {
+  "type": "standard",
+  "title": "Hans Lipperhey",
+  "displaytitle": "<span class=\"mw-page-title-main\">Hans Lipperhey</span>",
+  "namespace": {
+    "id": 0,
+    "text": ""
+  },
+  "wikibase_item": "Q76468",
+  "titles": {
+    "canonical": "Hans_Lipperhey",
+    "normalized": "Hans Lipperhey",
+    "display": "<span class=\"mw-page-title-main\">Hans Lipperhey</span>"
+  },
+  "pageid": 198147,
+  "thumbnail": {
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Lipperhey_portrait.jpg/330px-Lipperhey_portrait.jpg",
+    "width": 320,
+    "height": 431
+  },
+  "originalimage": {
+    "source": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Lipperhey_portrait.jpg",
+    "width": 438,
+    "height": 590
+  },
+  "lang": "en",
+  "dir": "ltr",
+  "revision": "1269615888",
+  "tid": "35c9bfea-d351-11ef-9221-f19891627499",
+  "timestamp": "2025-01-15T14:58:42Z",
+  "description": "German-Dutch lens crafter (1570–1619)",
+  "description_source": "local",
+  "content_urls": {
+    "desktop": {
+      "page": "https://en.wikipedia.org/wiki/Hans_Lipperhey",
+      "revisions": "https://en.wikipedia.org/wiki/Hans_Lipperhey?action=history",
+      "edit": "https://en.wikipedia.org/wiki/Hans_Lipperhey?action=edit",
+      "talk": "https://en.wikipedia.org/wiki/Talk:Hans_Lipperhey"
+    },
+    "mobile": {
+      "page": "https://en.m.wikipedia.org/wiki/Hans_Lipperhey",
+      "revisions": "https://en.m.wikipedia.org/wiki/Special:History/Hans_Lipperhey",
+      "edit": "https://en.m.wikipedia.org/wiki/Hans_Lipperhey?action=edit",
+      "talk": "https://en.m.wikipedia.org/wiki/Talk:Hans_Lipperhey"
+    }
+  },
+  "extract": "Hans Lipperhey, also known as Johann Lippershey or simply Lippershey, was a German-Dutch spectacle-maker. He is commonly associated with the invention of the telescope, because he was the first one who tried to obtain a patent for it. It is, however, unclear if he was the first one to build a telescope.",
+  "extract_html": "<p><b>Hans Lipperhey</b>, also known as <b>Johann Lippershey</b> or simply <b>Lippershey</b>, was a German-Dutch spectacle-maker. He is commonly associated with the invention of the telescope, because he was the first one who tried to obtain a patent for it. It is, however, unclear if he was the first one to build a telescope.</p>"
+}
+📖 SUMMARY EXTRACT LENGTH: 304
+📖 SUMMARY EXTRACT: Hans Lipperhey, also known as Johann Lippershey or simply Lippershey, was a German-Dutch spectacle-maker. He is commonly associated with the invention of the telescope, because he was the first one who tried to obtain a patent for it. It is, however, unclear if he was the first one to build a telescope....
+🔗 SECTIONS URL: https://en.wikipedia.org/w/api.php?action=parse&page=Hans_Lippershey&format=json&prop=sections&formatversion=2&origin=*
+📊 SECTIONS RESPONSE STATUS: 200 OK
 📊 SECTIONS RESPONSE: {
   "parse": {
     "title": "Hans Lippershey",
     "pageid": 63031735,
-    "sections": []
+    "sections": [],
+    "showtoc": false
   }
 }
 📋 RAW SECTIONS COUNT: 0
 📋 RAW SECTIONS DATA: []
-📝 SECTION TITLES: []
-🔗 BIOGRAPHY URL: https://en.wikipedia.org/w/api.php?action=query&format=json&titles=Hans_Lippershey&prop=extracts&exintro&explaintext&origin=*
-📊 BIOGRAPHY RESPONSE: {
-  "batchcomplete": "",
-  "query": {
-    "normalized": [
-      {
-        "from": "Hans_Lippershey",
-        "to": "Hans Lippershey"
-      }
-    ],
-    "pages": {
-      "63031735": {
-        "pageid": 63031735,
-        "ns": 0,
-        "title": "Hans Lippershey",
-        "extract": ""
-      }
-    }
-  }
-}
-📖 BIOGRAPHY TEXT LENGTH: 0
-📖 BIOGRAPHY TEXT: ...
+📝 FILTERED SECTION TITLES: []
 📖 Successfully fetched 0 sections and biography for Hans_Lippershey
 📖 WIKI: Successfully fetched 0 sections
 📊 FINAL SECTIONS COUNT: 0
 📊 FINAL SECTIONS: []
-📊 BIOGRAPHY LENGTH: 0
-⚠️ NO DATA FOR AI HINTS
+📊 BIOGRAPHY LENGTH: 304
+🤖 AI: Generating hints for Hans Lippershey
+🤖 Generating AI hints for: Hans Lippershey
+🤖 Using sections: []
+🤖 AI PROMPT: You are creating progressive hints for a guessing game about famous people. Based on these Wikipedia section headings for Hans Lippershey: 
+
+Create exactly 3 progressive hints that get more specific:
+1. Hint 1: Very general (profession, era, nationality)
+2. Hint 2: More specific (major accomplishments or field)
+3. Hint 3: Very specific (but don't give away the name)
+
+Return as JSON with this exact format:
+{
+  "hint1": "your first hint",
+  "hint2": "your second hint", 
+  "hint3": "your third hint"
+}
+🤖 AI RAW RESPONSE: {
+  "id": "chatcmpl-BpDDZ9jYffIsoA0dNHH4Rc0VVtU0X",
+  "object": "chat.completion",
+  "created": 1751545237,
+  "model": "gpt-4o-2024-08-06",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"hint1\": \"This person was a Dutch inventor from the late 16th to early 17th century.\",\n  \"hint2\": \"He is best known for his work related to optical instruments.\",\n  \"hint3\": \"He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'.\"\n}",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 130,
+    "completion_tokens": 80,
+    "total_tokens": 210,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": "fp_07871e2ad8"
+}
+🤖 AI PARSED RESULT: {"hint1":"This person was a Dutch inventor from the late 16th to early 17th century.","hint2":"He is best known for his work related to optical instruments.","hint3":"He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'."}
+🤖 Successfully generated 3 AI hints for Hans Lippershey
+🤖 AI: Successfully generated 3 hints
+🤖 FINAL HINTS: ["This person was a Dutch inventor from the late 16th to early 17th century.","He is best known for his work related to optical instruments.","He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'."]
+📊 AI HINT 1: This person was a Dutch inventor from the late 16th to early 17th century.
+📊 AI HINT 2: He is best known for his work related to optical instruments.
+📊 AI HINT 3: He is often credited with the creation of an early version of the telescope, sometimes called a 'looker' or 'kijker'.
 ✅ COMPLETED TEST FOR: Hans Lippershey
 =====================================
 
@@ -55,45 +146,136 @@
 🔗 WIKIPEDIA TITLE: Jotham_of_Judah
 📖 WIKI: Fetching sections for Jotham_of_Judah
 📖 Fetching Wikipedia data for: Jotham_of_Judah
-🔗 SECTIONS URL: https://en.wikipedia.org/w/api.php?action=parse&page=Jotham_of_Judah&prop=sections&format=json&origin=*
+🔗 SUMMARY URL: https://en.wikipedia.org/api/rest_v1/page/summary/Jotham_of_Judah
+📊 SUMMARY RESPONSE STATUS: 200 OK
+📊 SUMMARY RESPONSE: {
+  "type": "standard",
+  "title": "Jotham",
+  "displaytitle": "<span class=\"mw-page-title-main\">Jotham</span>",
+  "namespace": {
+    "id": 0,
+    "text": ""
+  },
+  "wikibase_item": "Q109920",
+  "titles": {
+    "canonical": "Jotham",
+    "normalized": "Jotham",
+    "display": "<span class=\"mw-page-title-main\">Jotham</span>"
+  },
+  "pageid": 457625,
+  "thumbnail": {
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Joatham_rex.png/330px-Joatham_rex.png",
+    "width": 320,
+    "height": 321
+  },
+  "originalimage": {
+    "source": "https://upload.wikimedia.org/wikipedia/commons/5/50/Joatham_rex.png",
+    "width": 418,
+    "height": 419
+  },
+  "lang": "en",
+  "dir": "ltr",
+  "revision": "1296579333",
+  "tid": "47daeb83-4e1e-11f0-8310-4072fd733a7e",
+  "timestamp": "2025-06-20T21:34:01Z",
+  "description": "11th king of Judah",
+  "description_source": "local",
+  "content_urls": {
+    "desktop": {
+      "page": "https://en.wikipedia.org/wiki/Jotham",
+      "revisions": "https://en.wikipedia.org/wiki/Jotham?action=history",
+      "edit": "https://en.wikipedia.org/wiki/Jotham?action=edit",
+      "talk": "https://en.wikipedia.org/wiki/Talk:Jotham"
+    },
+    "mobile": {
+      "page": "https://en.m.wikipedia.org/wiki/Jotham",
+      "revisions": "https://en.m.wikipedia.org/wiki/Special:History/Jotham",
+      "edit": "https://en.m.wikipedia.org/wiki/Jotham?action=edit",
+      "talk": "https://en.m.wikipedia.org/wiki/Talk:Jotham"
+    }
+  },
+  "extract": "Jotham or Yotam was the eleventh king of Judah, and son of Uzziah and Jerusha, daughter of Zadok. Jotham was 25 years old when he began his reign, and he reigned for 16 years. Edwin R. Thiele concluded that his reign commenced as a coregency with his father, which lasted for 11 years. Because his father Uzziah was afflicted with tzaraath after he went into the Temple to burn incense, Jotham became governor of the palace and the land at that time, i.e. coregent, while his father lived in a separate house as a leper.",
+  "extract_html": "<p><b>Jotham</b> or <b>Yotam</b> was the eleventh king of Judah, and son of Uzziah and Jerusha, daughter of Zadok. Jotham was 25 years old when he began his reign, and he reigned for 16 years. Edwin R. Thiele concluded that his reign commenced as a coregency with his father, which lasted for 11 years. Because his father Uzziah was afflicted with tzaraath after he went into the Temple to burn incense, Jotham became governor of the palace and the land at that time, i.e. coregent, while his father lived in a separate house as a leper.</p>"
+}
+📖 SUMMARY EXTRACT LENGTH: 520
+📖 SUMMARY EXTRACT: Jotham or Yotam was the eleventh king of Judah, and son of Uzziah and Jerusha, daughter of Zadok. Jotham was 25 years old when he began his reign, and he reigned for 16 years. Edwin R. Thiele concluded that his reign commenced as a coregency with his father, which lasted for 11 years. Because his father Uzziah was afflicted with tzaraath after he went into the Temple to burn incense, Jotham became governor of the palace and the land at that time, i.e. coregent, while his father lived in a separa...
+🔗 SECTIONS URL: https://en.wikipedia.org/w/api.php?action=parse&page=Jotham_of_Judah&format=json&prop=sections&formatversion=2&origin=*
+📊 SECTIONS RESPONSE STATUS: 200 OK
 📊 SECTIONS RESPONSE: {
   "parse": {
     "title": "Jotham of Judah",
     "pageid": 69437492,
-    "sections": []
+    "sections": [],
+    "showtoc": false
   }
 }
 📋 RAW SECTIONS COUNT: 0
 📋 RAW SECTIONS DATA: []
-📝 SECTION TITLES: []
-🔗 BIOGRAPHY URL: https://en.wikipedia.org/w/api.php?action=query&format=json&titles=Jotham_of_Judah&prop=extracts&exintro&explaintext&origin=*
-📊 BIOGRAPHY RESPONSE: {
-  "batchcomplete": "",
-  "query": {
-    "normalized": [
-      {
-        "from": "Jotham_of_Judah",
-        "to": "Jotham of Judah"
-      }
-    ],
-    "pages": {
-      "69437492": {
-        "pageid": 69437492,
-        "ns": 0,
-        "title": "Jotham of Judah",
-        "extract": ""
-      }
-    }
-  }
-}
-📖 BIOGRAPHY TEXT LENGTH: 0
-📖 BIOGRAPHY TEXT: ...
+📝 FILTERED SECTION TITLES: []
 📖 Successfully fetched 0 sections and biography for Jotham_of_Judah
 📖 WIKI: Successfully fetched 0 sections
 📊 FINAL SECTIONS COUNT: 0
 📊 FINAL SECTIONS: []
-📊 BIOGRAPHY LENGTH: 0
-⚠️ NO DATA FOR AI HINTS
+📊 BIOGRAPHY LENGTH: 520
+🤖 AI: Generating hints for Jotham of Judah
+🤖 Generating AI hints for: Jotham of Judah
+🤖 Using sections: []
+🤖 AI PROMPT: You are creating progressive hints for a guessing game about famous people. Based on these Wikipedia section headings for Jotham of Judah: 
+
+Create exactly 3 progressive hints that get more specific:
+1. Hint 1: Very general (profession, era, nationality)
+2. Hint 2: More specific (major accomplishments or field)
+3. Hint 3: Very specific (but don't give away the name)
+
+Return as JSON with this exact format:
+{
+  "hint1": "your first hint",
+  "hint2": "your second hint", 
+  "hint3": "your third hint"
+}
+🤖 AI RAW RESPONSE: {
+  "id": "chatcmpl-BpDDc4xCurIFRBsbonSqfFsUut5Pl",
+  "object": "chat.completion",
+  "created": 1751545240,
+  "model": "gpt-4o-2024-08-06",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"hint1\": \"Ancient monarch from the Middle East region.\",\n  \"hint2\": \"Known for being a ruler of the Kingdom of Judah during the 8th century BCE.\",\n  \"hint3\": \"Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem.\"\n}",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 131,
+    "completion_tokens": 70,
+    "total_tokens": 201,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": "fp_07871e2ad8"
+}
+🤖 AI PARSED RESULT: {"hint1":"Ancient monarch from the Middle East region.","hint2":"Known for being a ruler of the Kingdom of Judah during the 8th century BCE.","hint3":"Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem."}
+🤖 Successfully generated 3 AI hints for Jotham of Judah
+🤖 AI: Successfully generated 3 hints
+🤖 FINAL HINTS: ["Ancient monarch from the Middle East region.","Known for being a ruler of the Kingdom of Judah during the 8th century BCE.","Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem."]
+📊 AI HINT 1: Ancient monarch from the Middle East region.
+📊 AI HINT 2: Known for being a ruler of the Kingdom of Judah during the 8th century BCE.
+📊 AI HINT 3: Succeeded by his son Ahaz, he is noted for his construction of the upper gate of the Temple of Jerusalem.
 ✅ COMPLETED TEST FOR: Jotham of Judah
 =====================================
 

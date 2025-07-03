@@ -24,40 +24,58 @@ async function fetchWikipediaData(wikipediaTitle: string) {
   log(`📖 Fetching Wikipedia data for: ${wikipediaTitle}`);
   
   try {
-    // Get sections
-    const sectionsUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(wikipediaTitle)}&prop=sections&format=json&origin=*`;
+    // Get page summary for biography (PRODUCTION METHOD - REST API v1)
+    const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikipediaTitle)}`;
+    log(`🔗 SUMMARY URL: ${summaryUrl}`);
+    
+    const summaryResponse = await fetch(summaryUrl);
+    log(`📊 SUMMARY RESPONSE STATUS: ${summaryResponse.status} ${summaryResponse.statusText}`);
+    
+    if (!summaryResponse.ok) {
+      throw new Error(`Summary API returned ${summaryResponse.status}`);
+    }
+    
+    const summaryData = await summaryResponse.json();
+    log(`📊 SUMMARY RESPONSE: ${JSON.stringify(summaryData, null, 2)}`);
+    
+    const biography = summaryData.extract || '';
+    log(`📖 SUMMARY EXTRACT LENGTH: ${biography.length}`);
+    log(`📖 SUMMARY EXTRACT: ${biography.substring(0, 500)}...`);
+    
+    // Get sections using the parse API (PRODUCTION METHOD with formatversion=2)
+    const sectionsUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(wikipediaTitle)}&format=json&prop=sections&formatversion=2&origin=*`;
     log(`🔗 SECTIONS URL: ${sectionsUrl}`);
     
     const sectionsResponse = await fetch(sectionsUrl);
+    log(`📊 SECTIONS RESPONSE STATUS: ${sectionsResponse.status} ${sectionsResponse.statusText}`);
+    
+    if (!sectionsResponse.ok) {
+      throw new Error(`Parse API returned ${sectionsResponse.status}`);
+    }
+    
     const sectionsData = await sectionsResponse.json();
     log(`📊 SECTIONS RESPONSE: ${JSON.stringify(sectionsData, null, 2)}`);
     
     if (sectionsData.error) {
       log(`❌ SECTIONS ERROR: ${JSON.stringify(sectionsData.error)}`);
-      return { sections: [], biography: '' };
+      throw new Error(`Wikipedia API error: ${sectionsData.error.info}`);
     }
     
     const sections = sectionsData.parse?.sections || [];
     log(`📋 RAW SECTIONS COUNT: ${sections.length}`);
     log(`📋 RAW SECTIONS DATA: ${JSON.stringify(sections, null, 2)}`);
     
-    const sectionTitles = sections.map((section: WikipediaSection) => section.line || section.anchor || 'Unknown').filter(Boolean);
-    log(`📝 SECTION TITLES: ${JSON.stringify(sectionTitles)}`);
+    const sectionTitles = sections
+      .map((section: any) => section.line || section.anchor || 'Unknown')
+      .filter(Boolean)
+      .filter((title: string) => 
+        !title.toLowerCase().includes('reference') && 
+        !title.toLowerCase().includes('external') &&
+        !title.toLowerCase().includes('see also') &&
+        !title.toLowerCase().includes('notes')
+      );
     
-    // Get biography
-    const bioUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent(wikipediaTitle)}&prop=extracts&exintro&explaintext&origin=*`;
-    log(`🔗 BIOGRAPHY URL: ${bioUrl}`);
-    
-    const bioResponse = await fetch(bioUrl);
-    const bioData = await bioResponse.json();
-    log(`📊 BIOGRAPHY RESPONSE: ${JSON.stringify(bioData, null, 2)}`);
-    
-    const pages = bioData.query?.pages || {};
-    const pageId = Object.keys(pages)[0];
-    const biography = pages[pageId]?.extract || '';
-    log(`📖 BIOGRAPHY TEXT LENGTH: ${biography.length}`);
-    log(`📖 BIOGRAPHY TEXT: ${biography.substring(0, 500)}...`);
-    
+    log(`📝 FILTERED SECTION TITLES: ${JSON.stringify(sectionTitles)}`);
     log(`📖 Successfully fetched ${sectionTitles.length} sections and biography for ${wikipediaTitle}`);
     log(`📖 WIKI: Successfully fetched ${sectionTitles.length} sections`);
     
