@@ -294,22 +294,6 @@ export default function Game() {
             </div>
           )}
 
-          {/* Score Display */}
-          <div className="flex justify-center space-x-4 mb-4">
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg">
-              <div className="text-sm font-medium opacity-90">Score</div>
-              <div className="text-2xl font-bold">{gameSession?.score || 0}</div>
-            </div>
-            <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg">
-              <div className="text-sm font-medium opacity-90">Streak</div>
-              <div className="text-2xl font-bold">{gameSession?.streak || 0}</div>
-            </div>
-            <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg">
-              <div className="text-sm font-medium opacity-90">Round</div>
-              <div className="text-2xl font-bold">{gameSession?.round || 1}</div>
-            </div>
-          </div>
-
           {/* Player Greeting */}
           {gameSession?.playerName && (
             <div className="mb-4 text-center">
@@ -348,14 +332,52 @@ export default function Game() {
               <div className="bg-indigo-100 rounded-lg p-3 mt-3">
                 <p className="font-semibold text-indigo-800 mb-2">📊 Scoring System:</p>
                 <div className="text-sm space-y-1">
-                  <p>• 7 points - Correct guess without hints</p>
-                  <p>• 2 points - Correct guess with AI hint</p>
-                  <p>• 1 point - Correct guess with initials hint</p>
-                  <p>• Streak bonus: +1 point per consecutive correct answer</p>
+                  <p>• You get 7 points for every correct answer</p>
+                  <p>• 3 hints are available - but a point is deducted for every hint you use!</p>
+                  <p>• Show the person's initials - but 2 points are deducted!</p>
+                  <p>• Streak milestone bonus for every 5 answers you get right!</p>
                 </div>
               </div>
             </div>
           )}
+        </div>
+
+        {/* Score Display */}
+        <div className="flex justify-center space-x-4 mb-4">
+          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg">
+            <div className="text-sm font-medium opacity-90">Score</div>
+            <div className="text-2xl font-bold">{gameSession?.score || 0}</div>
+          </div>
+          <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg">
+            <div className="text-sm font-medium opacity-90">Streak</div>
+            <div className="text-2xl font-bold">{gameSession?.streak || 0}</div>
+          </div>
+          <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg">
+            <div className="text-sm font-medium opacity-90">Round</div>
+            <div className="text-2xl font-bold">{gameSession?.round || 1}</div>
+          </div>
+        </div>
+
+        {/* Session Statistics */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-sm text-slate-500">Total Guesses</div>
+              <div className="text-lg font-semibold text-slate-700">{gameSession?.totalGuesses || 0}</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-500">Correct</div>
+              <div className="text-lg font-semibold text-green-600">{gameSession?.correctGuesses || 0}</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-500">Accuracy</div>
+              <div className="text-lg font-semibold text-blue-600">{calculateAccuracy()}%</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-500">Best Streak</div>
+              <div className="text-lg font-semibold text-purple-600">{gameSession?.bestStreak || 0}</div>
+            </div>
+          </div>
         </div>
 
         {/* Game Area */}

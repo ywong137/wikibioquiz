@@ -98,6 +98,12 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 03, 2025. UI IMPROVEMENTS & SESSION STATISTICS: Enhanced interface layout and comprehensive statistics tracking
+  - Moved "How to Play" section above score boxes for better user experience flow
+  - Updated scoring system description to match progressive scoring (7 points start, -1 per hint, -2 for initials)
+  - Added comprehensive session statistics display: Total Guesses, Correct Answers, Accuracy %, Best Streak
+  - Backend already tracks all statistics automatically with each guess submission
+  - Enhanced accent matching with Hungarian (ő→o, ű→u) and 30+ European characters for global name support
 - July 02, 2025. TURBO PROCESSING BREAKTHROUGH: Achieved 16,000+ entries/minute processing speed
   - Created parallel processing system eliminating Wikipedia API bottlenecks
   - Processed 4,410 entries (28→4,438) in minutes vs previous slow 2-per-hour rate
