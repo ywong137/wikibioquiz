@@ -24,16 +24,15 @@ function generateInitials(fullName: string): string {
     'XVI': '16', 'XVII': '17', 'XVIII': '18', 'XIX': '19', 'XX': '20'
   };
   
+  // Lowercase components that should remain lowercase in initials
+  const lowercaseComponents = [
+    'of', 'the', 'van', 'der', 'von', 'ibn', 'bin', 'al', 'el', 'la', 'le', 'de', 'da', 'di', 'du', 'des', 'del', 'della', 'dello'
+  ];
+  
   const result: string[] = [];
   
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i];
-    
-    // Handle "of" - preserve as "of"
-    if (part.toLowerCase() === 'of') {
-      result.push('of');
-      continue;
-    }
     
     // Handle "Jr" - preserve as "Jr."
     if (part.toLowerCase() === 'jr' || part.toLowerCase() === 'jr.') {
@@ -47,7 +46,13 @@ function generateInitials(fullName: string): string {
       continue;
     }
     
-    // Handle regular words - take first letter and add period
+    // Handle lowercase components - keep lowercase initial
+    if (lowercaseComponents.includes(part.toLowerCase())) {
+      result.push(part.charAt(0).toLowerCase() + '.');
+      continue;
+    }
+    
+    // Handle regular words - take first letter and add period (uppercase)
     if (part.length > 0) {
       result.push(part.charAt(0).toUpperCase() + '.');
     }
@@ -67,7 +72,8 @@ async function testInitialsAlgorithm() {
   output.push('ALGORITHM RULES:');
   output.push('- Two words: first initial, last initial (John Smith → J. S.)');
   output.push('- Three words: first, middle, last (John Michael Smith → J. M. S.)');
-  output.push('- "of" preserved: William of Orange → W. of O.');
+  output.push('- Lowercase components preserved: Musa ibn Nusayr → M. i. N.');
+  output.push('- Multiple lowercase: Rogier van der Weyden → R. v. d. W.');
   output.push('- Roman numerals converted: Louis XVII → L. 17, Henry VIII → H. 8');
   output.push('- "Jr" preserved: Martin Luther King Jr → M. L. K. Jr.');
   output.push('');
