@@ -1,0 +1,22 @@
+WORKING LLM TEST
+START TIME: 7/3/2025, 4:35:58 AM
+
+Test 1: Simple hello test...
+✅ Simple test: Hello! How can I assist you today?
+
+Test 2: JSON format test...
+✅ JSON test: {
+  "name": "John",
+  "age": 30
+}
+
+Test 3: Hint generation test (exactly like the failing one)...
+✅ Hint generation test successful:
+  Hint 1: You were raised in a palace but have a hidden lineage that connects you to your people.
+  Hint 2: You possess a unique ability to communicate with the divine, and it will guide your actions.
+  Hint 3: A significant journey awaits you, leading to the liberation of your people from oppression across the wilderness.
+  Tokens used: 112
+
+✅ ALL TESTS PASSED - OpenAI API is fully functional
+
+END TIME: 7/3/2025, 4:36:01 AM
