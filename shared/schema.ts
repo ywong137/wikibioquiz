@@ -18,6 +18,7 @@ export const gameSessions = pgTable("game_sessions", {
   correctGuesses: integer("correct_guesses").notNull().default(0),
   bestStreak: integer("best_streak").notNull().default(0),
   usedPeople: text("used_people").array().notNull().default([]),
+  mode: text("mode", { enum: ["everything", "american", "modern"] }).notNull().default("everything"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -105,6 +106,7 @@ export type GameRound = typeof gameRounds.$inferSelect;
 export type InsertGameRound = z.infer<typeof insertGameRoundSchema>;
 export type FamousPerson = typeof famousPeople.$inferSelect;
 export type InsertFamousPerson = z.infer<typeof insertFamousPersonSchema>;
+export type Mode = "everything" | "american" | "modern";
 
 export interface WikipediaPerson {
   name: string;

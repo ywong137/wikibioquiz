@@ -13,7 +13,8 @@ import {
   type GameRound,
   type InsertGameRound,
   type FamousPerson,
-  type InsertFamousPerson
+  type InsertFamousPerson,
+  type Mode
 } from "@shared/schema";
 
 export interface IStorage {
@@ -35,7 +36,7 @@ export interface IStorage {
   addGameRound(round: InsertGameRound): Promise<GameRound>;
   
   // Famous people database
-  getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined>;
+  getRandomFamousPerson(excludeNames: string[], mode?: Mode): Promise<FamousPerson | undefined>;
   getFamousPersonCount(): Promise<number>;
   updateFamousPerson(id: number, updates: Partial<InsertFamousPerson>): Promise<FamousPerson | undefined>;
 }
@@ -143,7 +144,7 @@ export class MemStorage implements IStorage {
 
 // Database storage implementation with PostgreSQL
 import { db } from "./db";
-import { eq, and, notInArray, sql, isNotNull } from "drizzle-orm";
+import { eq, and, or, notInArray, sql, isNotNull } from "drizzle-orm";
 
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
@@ -223,7 +224,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Famous people database methods
-  async getRandomFamousPerson(excludeNames: string[]): Promise<FamousPerson | undefined> {
+  async getRandomFamousPerson(excludeNames: string[], mode: Mode = "everything"): Promise<FamousPerson | undefined> {
     let query = db.select().from(famousPeople);
     
     // Always filter out entries marked as filtered_out = 1, but include both populated and unpopulated entries
@@ -234,6 +235,27 @@ export class DatabaseStorage implements IStorage {
     if (excludeNames.length > 0) {
       conditions.push(notInArray(famousPeople.name, excludeNames));
     }
+    
+    // Apply mode-based filtering
+    if (mode === "american") {
+      // American mode: select only American, British, or Canadian people
+      conditions.push(
+        or(
+          eq(famousPeople.nationality, "American"),
+          eq(famousPeople.nationality, "British"),
+          eq(famousPeople.nationality, "Canadian")
+        )
+      );
+    } else if (mode === "modern") {
+      // Modern mode: select only Modern or Contemporary people
+      conditions.push(
+        or(
+          eq(famousPeople.timeperiod, "Modern"),
+          eq(famousPeople.timeperiod, "Contemporary")
+        )
+      );
+    }
+    // "everything" mode requires no additional filtering
     
     query = query.where(and(...conditions));
     

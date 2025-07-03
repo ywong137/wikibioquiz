@@ -4,9 +4,10 @@ import { apiRequest, queryClient } from '@/lib/queryClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Brain, List, User, Lightbulb, Trophy, ChevronDown, ChevronUp } from 'lucide-react';
-import type { GameSession, WikipediaPerson } from '@shared/schema';
+import type { GameSession, WikipediaPerson, Mode } from '@shared/schema';
 
 interface GuessResponse {
   correct: boolean;
@@ -14,7 +15,24 @@ interface GuessResponse {
   session: GameSession;
 }
 
+function getModeDisplayName(mode: Mode): string {
+  switch (mode) {
+    case 'everything':
+      return 'Everything - HARD MODE';
+    case 'modern':
+      return 'Modern Only - INTERMEDIATE MODE';
+    case 'american':
+      return 'Americans - EASY MODE';
+    default:
+      return 'Everything - HARD MODE';
+  }
+}
+
 export default function Game() {
+  // Parse URL parameters for mode
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlMode = urlParams.get('mode') as Mode | null;
+  
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [currentPerson, setCurrentPerson] = useState<WikipediaPerson | null>(null);
   const [guess, setGuess] = useState('');
@@ -33,13 +51,18 @@ export default function Game() {
   const [showInitials, setShowInitials] = useState(false);
   const [hintsClicked, setHintsClicked] = useState(0);
   const [currentPoints, setCurrentPoints] = useState(7);
+  const [selectedMode, setSelectedMode] = useState<Mode>(
+    urlMode && ['american', 'modern'].includes(urlMode) ? urlMode : 'everything'
+  );
   const { toast } = useToast();
 
   // Create game session (with debugging)
   const createSessionMutation = useMutation({
-    mutationFn: async () => {
-      console.log(`🎮 Frontend: Creating new session...`);
-      const response = await apiRequest('POST', '/api/game/session');
+    mutationFn: async (mode?: Mode) => {
+      console.log(`🎮 Frontend: Creating new session with mode ${mode || selectedMode}...`);
+      const response = await apiRequest('POST', '/api/game/session', {
+        mode: mode || selectedMode
+      });
       return response.json();
     },
     onSuccess: (session: GameSession) => {
@@ -47,6 +70,44 @@ export default function Game() {
       setSessionId(session.id);
       setGameSession(session);
       queryClient.invalidateQueries({ queryKey: ['/api/game/session'] });
+    },
+  });
+
+  // Switch mode mutation
+  const switchModeMutation = useMutation({
+    mutationFn: async (mode: Mode) => {
+      console.log(`🎮 Frontend: Switching to mode ${mode}...`);
+      const response = await apiRequest('POST', '/api/game/session/switch-mode', { mode });
+      return response.json();
+    },
+    onSuccess: (session: GameSession) => {
+      console.log(`🎮 Frontend: Mode switched successfully to ${session.mode}`);
+      setSessionId(session.id);
+      setGameSession(session);
+      setSelectedMode(session.mode);
+      // Reset game state
+      setCurrentPerson(null);
+      setGuess('');
+      setShowFeedback(false);
+      setHintUsed(false);
+      setInitialsUsed(false);
+      setShowHint(false);
+      setShowInitials(false);
+      setHintsClicked(0);
+      setCurrentPoints(7);
+      queryClient.invalidateQueries({ queryKey: ['/api/game/session'] });
+      
+      toast({
+        title: "Mode Switched",
+        description: `Now playing in ${getModeDisplayName(session.mode)} mode`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to switch mode. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -329,6 +390,35 @@ export default function Game() {
             <div className="text-sm font-medium opacity-90">Round</div>
             <div className="text-2xl font-bold">{gameSession?.round || 1}</div>
           </div>
+        </div>
+
+        {/* Mode Selection */}
+        <div className="flex justify-center items-center space-x-4 mb-8">
+          <span className="text-slate-600 font-medium">Too Hard? Try something easier:</span>
+          <Select value={selectedMode} onValueChange={setSelectedMode}>
+            <SelectTrigger className="w-80">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="everything">Everything - HARD MODE</SelectItem>
+              <SelectItem value="modern">Modern Only - INTERMEDIATE MODE</SelectItem>
+              <SelectItem value="american">Americans - EASY MODE</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button 
+            onClick={() => switchModeMutation.mutate(selectedMode)}
+            disabled={switchModeMutation.isPending || selectedMode === gameSession?.mode}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2"
+          >
+            {switchModeMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Switching...
+              </>
+            ) : (
+              'Switch Mode'
+            )}
+          </Button>
         </div>
 
         {/* Game Area */}

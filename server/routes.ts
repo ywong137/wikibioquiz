@@ -22,7 +22,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create new game session
   app.post("/api/game/session", async (req, res) => {
     try {
-      const { playerName } = req.body;
+      const { playerName, mode } = req.body;
       const session = await storage.createGameSession({
         playerName: playerName || null,
         score: 0,
@@ -32,10 +32,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         correctGuesses: 0,
         bestStreak: 0,
         usedPeople: [],
+        mode: mode || "everything",
       });
       res.json(session);
     } catch (error) {
       res.status(500).json({ error: "Failed to create game session" });
+    }
+  });
+
+  // Switch game mode (creates new session with different mode)
+  app.post("/api/game/session/switch-mode", async (req, res) => {
+    try {
+      const { mode } = req.body;
+      
+      // Validate mode
+      if (!["everything", "american", "modern"].includes(mode)) {
+        return res.status(400).json({ error: "Invalid mode" });
+      }
+      
+      const session = await storage.createGameSession({
+        playerName: null,
+        score: 0,
+        streak: 0,
+        round: 1,
+        totalGuesses: 0,
+        correctGuesses: 0,
+        bestStreak: 0,
+        usedPeople: [],
+        mode: mode,
+      });
+      res.json(session);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to switch mode" });
     }
   });
 
@@ -117,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Start new curated person fetch with lock
       lockRequestId = requestId;
-      wikipediaFetchLock = getFamousPersonFromDatabase(session.usedPeople, session.round);
+      wikipediaFetchLock = getFamousPersonFromDatabase(session.usedPeople, session.round, session.mode);
       
       try {
         const person = await wikipediaFetchLock;
@@ -750,12 +778,12 @@ Examples:
 }
 
 // New curated approach: Select from famous people database, then fetch from Wikipedia
-async function getFamousPersonFromDatabase(usedPeople: string[], round: number): Promise<WikipediaPerson> {
+async function getFamousPersonFromDatabase(usedPeople: string[], round: number, mode: string = "everything"): Promise<WikipediaPerson> {
   console.log(`\n🎯 ROUND ${round}: Selecting from famous people database with runtime population...`);
   
   try {
     // Get random famous person from database (not filtered out)
-    const famousPerson = await storage.getRandomFamousPerson(usedPeople);
+    const famousPerson = await storage.getRandomFamousPerson(usedPeople, mode as any);
     
     if (!famousPerson) {
       throw new Error("No famous people available in database");
