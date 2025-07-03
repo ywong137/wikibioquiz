@@ -98,12 +98,12 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
-- July 03, 2025. SOCIAL MEDIA FIX: Implemented dynamic absolute URL injection for social media meta tags
-  - Converted SVG social preview to PNG format for better platform compatibility (101KB, 1200x630px)
-  - Created server-side HTML processing route that replaces relative URLs with absolute ones
-  - Uses environment-based URL detection: production uses wiki-bio-quiz.replit.app, development uses REPLIT_DOMAINS
-  - Ensures Twitter, Facebook, LinkedIn scrapers can properly access preview images with absolute URLs
-  - Fixed Twitter Card compatibility issue where relative paths weren't being scraped correctly
+- July 03, 2025. SOCIAL MEDIA OPTIMIZATION: Fixed Twitter Card issues and updated branding
+  - Converted SVG social preview to PNG format for better platform compatibility (101KB, 1200x630px)  
+  - Hardcoded absolute URLs in meta tags: https://wiki-bio-quiz.replit.app/social-preview.png
+  - Updated title to "Guess Famous People From Wikipedia" across all social platforms
+  - Updated description to "This game is really hard and you're probably not smart enough"
+  - Fixed Twitter Card compatibility ensuring proper image scraping by social media platforms
 - July 03, 2025. UI CLEANUP: Streamlined interface by removing unnecessary features
   - Removed player name input section (no longer requiring user names)
   - Deleted action buttons row (Reset Game, Share Score, Leaderboard)
