@@ -603,7 +603,7 @@ export default function Game() {
           </p>
           <div className="bg-slate-100 border border-slate-200 rounded-lg p-3 max-w-md mx-auto">
             <p className="text-xs text-slate-500">
-              Disclaimer: This was vibe-coded so there are errors. The robot 🤖 is not that great and the human has a day job 🌳. Just have fun and try not to sweat the details.
+              Note: This was vibe-coded so there are errors. The robot 🤖 is not that great and the human has a day job 🌳. Just have fun and try not to sweat the details. <a href="https://plant.terraformation.com" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 underline">Reforestation is the best solution to climate change.</a>
             </p>
           </div>
         </footer>
