@@ -332,6 +332,18 @@ function removeMiddleInitials(nameParts: string[]): string[] {
   return result;
 }
 
+function removeOfSuffix(nameParts: string[]): string[] {
+  // Find the "of" pattern and remove "of [Location]" suffix
+  for (let i = 0; i < nameParts.length - 1; i++) {
+    if (nameParts[i].toLowerCase() === 'of') {
+      // Return everything before "of"
+      return nameParts.slice(0, i);
+    }
+  }
+  // No "of" pattern found, return original
+  return nameParts;
+}
+
 function isCorrectGuess(guess: string, personName: string): boolean {
   const normalizedGuess = normalizeGuess(guess);
   const normalizedName = normalizeGuess(personName);
@@ -350,6 +362,14 @@ function isCorrectGuess(guess: string, personName: string): boolean {
   const nameWithoutMiddleInitials = removeMiddleInitials(nameParts);
   
   if (guessWithoutMiddleInitials.join(' ') === nameWithoutMiddleInitials.join(' ')) {
+    return true;
+  }
+  
+  // Check if guess matches name with "of [Location]" suffix removed
+  const guessWithoutOfSuffix = removeOfSuffix(guessParts);
+  const nameWithoutOfSuffix = removeOfSuffix(nameParts);
+  
+  if (guessWithoutOfSuffix.join(' ') === nameWithoutOfSuffix.join(' ')) {
     return true;
   }
   
