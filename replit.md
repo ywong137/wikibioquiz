@@ -168,3 +168,15 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Data Integrity Guidelines
+
+**Critical Principle: Never use fallback or synthetic data. Always fail explicitly when real data isn't available.**
+
+- No fallback sections like `['Biography', 'Early Life', 'Career', 'Legacy']` when Wikipedia fails
+- No generic AI hints when OpenAI API fails  
+- No placeholder initials when calculation fails
+- Scripts must break with clear error messages when APIs fail
+- Use explicit error codes like `NOT_FOUND` or `API_FAILED`
+- Silent failures with fake data are worse than loud failures with no data
+- Goal: "Make sure we do the correct thing, and break when we don't" vs "always run to completion"
