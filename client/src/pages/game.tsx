@@ -269,7 +269,7 @@ export default function Game() {
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
               <Brain className="inline mr-3 text-indigo-600" size={48} />
-              WikiGuess
+              WikiBioQuiz
             </h1>
             <p className="text-slate-600 text-lg font-medium">Can you guess the famous person from their biography sections?</p>
           </div>
