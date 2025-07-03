@@ -70,17 +70,17 @@ async function test2PeopleRetry() {
   writeFileSync('output7.txt', '');
   
   log('='.repeat(60));
-  log('TEST: 4 PEOPLE WITH RETRY LOGIC');
+  log('TEST: 3 PEOPLE WITH TIMEOUT & RETRY LOGIC');
   log('='.repeat(60));
   log('');
   
   try {
-    // Get 4 random people
+    // Get 3 random people
     const people = await db
       .select()
       .from(famousPeople)
       .orderBy(sql`RANDOM()`)
-      .limit(4);
+      .limit(3);
     
     log(`Selected ${people.length} people for processing:`);
     people.forEach((person, i) => {
@@ -92,7 +92,7 @@ async function test2PeopleRetry() {
       const person = people[i];
       
       log(`${'='.repeat(40)}`);
-      log(`PROCESSING PERSON ${i + 1}/4: ${person.name}`);
+      log(`PROCESSING PERSON ${i + 1}/3: ${person.name}`);
       log(`${'='.repeat(40)}`);
       
       // Fetch Wikipedia sections with retry
@@ -153,18 +153,48 @@ IMPORTANT RULES:
 
 Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}`;
 
-          const response = await openai.chat.completions.create({
-            model: "gpt-4.1-nano-2025-04-14",
-            messages: [{ role: "user", content: prompt }],
-            response_format: { type: "json_object" },
-            max_tokens: 500
-          });
+          // Try OpenAI with timeout and retry logic
+          let response;
+          let hints;
           
-          const hints = JSON.parse(response.choices[0].message.content || '{}');
-          log(`✅ Generated AI hints (${response.usage?.total_tokens || 'unknown'} tokens):`);
-          log(`  Hint 1: ${hints.hint1}`);
-          log(`  Hint 2: ${hints.hint2}`);
-          log(`  Hint 3: ${hints.hint3}`);
+          for (let llmAttempt = 1; llmAttempt <= 3; llmAttempt++) {
+            try {
+              log(`LLM attempt ${llmAttempt}/3: Calling OpenAI with 1 second timeout...`);
+              
+              // Create timeout promise
+              const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('OpenAI request timeout after 1 second')), 1000);
+              });
+              
+              // Create OpenAI request promise
+              const openaiPromise = openai.chat.completions.create({
+                model: "gpt-4.1-nano-2025-04-14",
+                messages: [{ role: "user", content: prompt }],
+                response_format: { type: "json_object" },
+                max_tokens: 500
+              });
+              
+              // Race between timeout and OpenAI response
+              response = await Promise.race([openaiPromise, timeoutPromise]);
+              
+              hints = JSON.parse(response.choices[0].message.content || '{}');
+              log(`✅ Generated AI hints (${response.usage?.total_tokens || 'unknown'} tokens) on attempt ${llmAttempt}:`);
+              log(`  Hint 1: ${hints.hint1}`);
+              log(`  Hint 2: ${hints.hint2}`);
+              log(`  Hint 3: ${hints.hint3}`);
+              break; // Success, exit retry loop
+              
+            } catch (error) {
+              log(`❌ LLM attempt ${llmAttempt}/3 failed: ${error.message}`);
+              if (llmAttempt === 3) {
+                log(`🚨 CRITICAL ERROR: All 3 OpenAI attempts failed with timeouts/errors!`);
+                log(`🚨 STOPPING SCRIPT - OpenAI is not responding within 1 second timeout`);
+                throw new Error(`OpenAI failed after 3 attempts: ${error.message}`);
+              }
+              log(`Waiting 1 second before retry...`);
+              await sleep(1000);
+            }
+          }
           
         } catch (error) {
           log(`❌ Failed to generate AI hints for ${person.name}: ${error}`);
