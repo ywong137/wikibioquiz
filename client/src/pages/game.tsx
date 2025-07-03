@@ -31,6 +31,8 @@ export default function Game() {
   const [initialsUsed, setInitialsUsed] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [showInitials, setShowInitials] = useState(false);
+  const [hintsClicked, setHintsClicked] = useState(0);
+  const [currentPoints, setCurrentPoints] = useState(7);
   const { toast } = useToast();
 
   // Create game session (with debugging)
@@ -84,6 +86,13 @@ export default function Game() {
       setCurrentPerson(person);
       setShowFeedback(false);
       setGuess('');
+      // Reset hint/scoring state for new person
+      setHintsClicked(0);
+      setCurrentPoints(7);
+      setHintUsed(false);
+      setInitialsUsed(false);
+      setShowHint(false);
+      setShowInitials(false);
     }
   }, [person]);
 
@@ -180,15 +189,22 @@ export default function Game() {
     setInitialsUsed(false);
     setShowHint(false);
     setShowInitials(false);
+    setHintsClicked(0);
+    setCurrentPoints(7);
     
     // Increment round number to trigger new fetch
     setRoundNumber(prev => prev + 1);
   };
 
   const handleGetHint = () => {
-    if (!hintUsed && currentPerson) {
-      setHintUsed(true);
+    if (hintsClicked < 3 && currentPerson) {
+      setHintsClicked(prev => prev + 1);
+      setCurrentPoints(prev => prev - 1);
       setShowHint(true);
+      
+      if (hintsClicked === 0) {
+        setHintUsed(true);
+      }
     }
   };
 
@@ -196,6 +212,7 @@ export default function Game() {
     if (!initialsUsed && currentPerson) {
       setInitialsUsed(true);
       setShowInitials(true);
+      setCurrentPoints(prev => prev - 2);
     }
   };
 
@@ -439,7 +456,7 @@ export default function Game() {
                         ) : (
                           <>
                             <span className="mr-2">📨</span>
-                            Submit Guess
+                            Submit Guess ({currentPoints} points)
                           </>
                         )}
                       </Button>
@@ -450,16 +467,16 @@ export default function Game() {
                   <div className="flex justify-center space-x-4 mb-6">
                     <Button 
                       onClick={handleGetHint}
-                      disabled={hintUsed}
+                      disabled={hintsClicked >= 3}
                       variant="outline"
                       className={`px-6 py-3 font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 ${
-                        hintUsed 
+                        hintsClicked >= 3 
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
                           : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white border-0'
                       }`}
                     >
                       <Lightbulb className="mr-2" size={16} />
-                      {hintUsed ? 'Hint Used' : 'Hint'}
+                      {hintsClicked >= 3 ? 'All Hints Used' : `Hint (${hintsClicked + 1}/3)`}
                     </Button>
                     <Button 
                       onClick={handleGetInitials}
@@ -476,14 +493,33 @@ export default function Game() {
                     </Button>
                   </div>
 
-                  {/* Display Hints */}
-                  {showHint && currentPerson && (
+                  {/* Display Progressive Hints */}
+                  {showHint && currentPerson && hintsClicked > 0 && (
                     <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
-                      <div className="flex items-center text-yellow-800 mb-2">
+                      <div className="flex items-center text-yellow-800 mb-3">
                         <Lightbulb className="mr-2" size={16} />
-                        <span className="font-semibold">Hint:</span>
+                        <span className="font-semibold">AI Hints:</span>
                       </div>
-                      <p className="text-yellow-700">{currentPerson.aiHint || "Additional hint not available"}</p>
+                      <div className="space-y-2">
+                        {hintsClicked >= 1 && currentPerson.aiHint1 && (
+                          <div className="flex items-start">
+                            <span className="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-yellow-700">{currentPerson.aiHint1}</p>
+                          </div>
+                        )}
+                        {hintsClicked >= 2 && currentPerson.aiHint2 && (
+                          <div className="flex items-start">
+                            <span className="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-yellow-700">{currentPerson.aiHint2}</p>
+                          </div>
+                        )}
+                        {hintsClicked >= 3 && currentPerson.aiHint3 && (
+                          <div className="flex items-start">
+                            <span className="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-yellow-700">{currentPerson.aiHint3}</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
 

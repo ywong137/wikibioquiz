@@ -597,7 +597,9 @@ function createWikipediaPersonFromDb(famousPerson: any): WikipediaPerson {
     name: famousPerson.name, // Keep the original human-readable name
     sections: famousPerson.sections || [],
     hint: famousPerson.hint || `"${famousPerson.nationality || famousPerson.category} • ${famousPerson.timeperiod} • ${famousPerson.occupation}"`,
-    aiHint: famousPerson.aiHint1 && famousPerson.aiHint1 !== 'AI_ERROR' ? famousPerson.aiHint1 : undefined,
+    aiHint1: famousPerson.aiHint1 && famousPerson.aiHint1 !== 'AI_ERROR' ? famousPerson.aiHint1 : undefined,
+    aiHint2: famousPerson.aiHint2 && famousPerson.aiHint2 !== 'AI_ERROR' ? famousPerson.aiHint2 : undefined,
+    aiHint3: famousPerson.aiHint3 && famousPerson.aiHint3 !== 'AI_ERROR' ? famousPerson.aiHint3 : undefined,
     initials: famousPerson.initials || generateInitials(famousPerson.name),
     url: `https://en.wikipedia.org/wiki/${encodeURIComponent(famousPerson.wikipediaTitle || famousPerson.name.replace(/ /g, '_'))}`,
   };
@@ -651,7 +653,9 @@ async function createPersonFromWikipediaTitle(title: string): Promise<WikipediaP
     name: title,
     sections: sections,
     hint: hint,
-    aiHint: aiHint,
+    aiHint1: aiHint,
+    aiHint2: undefined,
+    aiHint3: undefined,
     initials: initials,
     url: `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`
   };

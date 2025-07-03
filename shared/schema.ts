@@ -110,7 +110,9 @@ export interface WikipediaPerson {
   name: string;
   sections: string[];
   hint: string;           // Always visible clue at top
-  aiHint?: string;        // Additional AI-generated hint (on demand)
+  aiHint1?: string;       // First AI-generated hint
+  aiHint2?: string;       // Second AI-generated hint
+  aiHint3?: string;       // Third AI-generated hint
   initials: string;       // Initials hint
   url: string;
 }
