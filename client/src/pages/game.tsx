@@ -117,6 +117,9 @@ export default function Game() {
       setGameSession(data.session);
       setShowFeedback(true);
       
+      // Invalidate session query to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/game/session'] });
+      
       if (data.correct) {
         // Show special toast for milestone streak bonuses
         if (data.streakBonus && data.streakBonus % 5 === 0) {
@@ -187,7 +190,14 @@ export default function Game() {
     
     try {
       // First, increment the round in the backend
-      await apiRequest('POST', `/api/game/session/${sessionId}/next-round`, {});
+      const response = await apiRequest('POST', `/api/game/session/${sessionId}/next-round`, {});
+      const updatedSession = await response.json();
+      
+      // Update session data immediately
+      setGameSession(updatedSession);
+      
+      // Invalidate session query to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/game/session'] });
       
       // Reset all state for new round
       setShowFeedback(false);

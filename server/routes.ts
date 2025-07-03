@@ -308,7 +308,13 @@ function normalizeAccentedText(text: string): string {
   }
   
   // Remove any remaining non-alphanumeric characters except spaces
-  return normalized.replace(/[^\w\s]/g, '');
+  normalized = normalized.replace(/[^\w\s]/g, '');
+  
+  // Handle abbreviations: remove periods and condense spaces for better matching
+  // "A. J. Cronin" becomes "AJ Cronin"
+  normalized = normalized.replace(/\b([a-z])\.\s*/g, '$1');
+  
+  return normalized;
 }
 
 function decodeHtmlEntities(text: string): string {
