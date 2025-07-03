@@ -344,6 +344,57 @@ function removeOfSuffix(nameParts: string[]): string[] {
   return nameParts;
 }
 
+function isOfNameMatch(guess: string, fullName: string): boolean {
+  // For "of" names, use very restrictive matching
+  // Only accept: "everything before the of" and "the whole thing"
+  
+  // Check for exact match (already handled in caller, but include for completeness)
+  if (guess === fullName) {
+    return true;
+  }
+  
+  // Handle comma + "of" pattern: "Diana, Princess of Wales"
+  if (fullName.includes(', ') && fullName.includes(' of ')) {
+    const commaIndex = fullName.indexOf(', ');
+    const ofIndex = fullName.indexOf(' of ');
+    
+    if (commaIndex < ofIndex) {
+      // Pattern: "FirstName, Title of Location"
+      const firstName = fullName.substring(0, commaIndex).trim();
+      const titlePart = fullName.substring(commaIndex + 2, ofIndex).trim();
+      
+      // Valid formats:
+      // 1. "Diana" (first name only)
+      // 2. "Princess Diana" (title + first name)
+      // 3. "Diana, Princess of Wales" (full name - already checked above)
+      
+      if (guess === firstName) {
+        return true; // "Diana"
+      }
+      
+      if (guess === `${titlePart} ${firstName}`) {
+        return true; // "Princess Diana"
+      }
+      
+      return false; // Block everything else
+    }
+  }
+  
+  // Standard "of" pattern: "Ivan V of Russia", "Catherine of Aragon"
+  const ofIndex = fullName.indexOf(' of ');
+  if (ofIndex > 0) {
+    const beforeOf = fullName.substring(0, ofIndex).trim();
+    
+    // Only accept "everything before the of"
+    if (guess === beforeOf) {
+      return true;
+    }
+  }
+  
+  // Block all other matches for "of" names
+  return false;
+}
+
 function isCorrectGuess(guess: string, personName: string): boolean {
   const normalizedGuess = normalizeGuess(guess);
   const normalizedName = normalizeGuess(personName);
@@ -353,7 +404,12 @@ function isCorrectGuess(guess: string, personName: string): boolean {
     return true;
   }
   
-  // Split name into parts
+  // Special handling for "of" names - use restrictive matching
+  if (normalizedName.includes(' of ')) {
+    return isOfNameMatch(normalizedGuess, normalizedName);
+  }
+  
+  // Split name into parts for non-"of" names
   const nameParts = normalizedName.split(/\s+/);
   const guessParts = normalizedGuess.split(/\s+/);
   
@@ -362,14 +418,6 @@ function isCorrectGuess(guess: string, personName: string): boolean {
   const nameWithoutMiddleInitials = removeMiddleInitials(nameParts);
   
   if (guessWithoutMiddleInitials.join(' ') === nameWithoutMiddleInitials.join(' ')) {
-    return true;
-  }
-  
-  // Check if guess matches name with "of [Location]" suffix removed
-  const guessWithoutOfSuffix = removeOfSuffix(guessParts);
-  const nameWithoutOfSuffix = removeOfSuffix(nameParts);
-  
-  if (guessWithoutOfSuffix.join(' ') === nameWithoutOfSuffix.join(' ')) {
     return true;
   }
   
