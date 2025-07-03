@@ -105,6 +105,7 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
   - LOCATION BLOCKING: Standalone location names like "Russia", "Aragon", "Wales" completely rejected
   - TITLE BLOCKING: Standalone titles like "Battler", "Conqueror", "Great" completely rejected
   - ROUND/GUESS SEPARATION: Fixed counting - Round advances only on "Next Person", Guesses advance on each attempt
+  - COMPLETE DECOUPLING: Removed all round incrementing from person fetch endpoints for clean separation
 - July 03, 2025. ADVANCED NAME MATCHING SYSTEM: Implemented comprehensive contiguity-based surname validation
   - Created sophisticated name parsing with contiguous sequence validation and semantic filtering
   - CONNECTOR REJECTION: Blocks standalone connectors ("von", "de", "ibn" all rejected as non-identifying)  

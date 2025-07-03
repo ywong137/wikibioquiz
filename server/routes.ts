@@ -106,7 +106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const person = await wikipediaFetchLock;
         console.log(`🔓 REQUEST [${requestId}]: Reusing person from existing fetch: ${person.name}`);
         
-        // Update session with the new person (round increments only on "Next Person" click)
+        // Update session with the new person (round NEVER increments here)
         await storage.updateGameSession(sessionId, {
           usedPeople: [...session.usedPeople, person.name],
         });
@@ -123,7 +123,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const person = await wikipediaFetchLock;
         console.log(`🔓 REQUEST [${requestId}]: Famous person fetch completed: ${person.name}`);
         
-        // Update session with the new person (round increments only on "Next Person" click)
+        // Update session with the new person (round NEVER increments here)
         await storage.updateGameSession(sessionId, {
           usedPeople: [...session.usedPeople, person.name],
         });
