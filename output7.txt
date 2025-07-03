@@ -1,64 +1,44 @@
-[7/3/2025, 4:52:54 AM] ============================================================
-[7/3/2025, 4:52:54 AM] TEST: 3 PEOPLE WITH RETRY LOGIC
-[7/3/2025, 4:52:54 AM] ============================================================
-[7/3/2025, 4:52:54 AM] 
-[7/3/2025, 4:52:55 AM] Selected 3 people for processing:
-[7/3/2025, 4:52:55 AM]   1. Albert Roussel (French, Composer)
-[7/3/2025, 4:52:55 AM]   2. Matthias, Holy Roman Emperor (Austrian, Politician)
-[7/3/2025, 4:52:55 AM]   3. Svatopluk I of Moravia (International, Politician)
-[7/3/2025, 4:52:55 AM] 
-[7/3/2025, 4:52:55 AM] ========================================
-[7/3/2025, 4:52:55 AM] PROCESSING PERSON 1/3: Albert Roussel
-[7/3/2025, 4:52:55 AM] ========================================
-[7/3/2025, 4:52:55 AM] Attempt 1/3: Fetching Wikipedia sections for Albert Roussel...
-[7/3/2025, 4:52:55 AM] Wikipedia returned 18 sections
-[7/3/2025, 4:52:55 AM] ✅ Successfully retrieved 18 sections for Albert Roussel
-[7/3/2025, 4:52:55 AM] Wikipedia sections (18 total):
-[7/3/2025, 4:52:55 AM]   1. Biography
-[7/3/2025, 4:52:55 AM]   2. Compositions
-[7/3/2025, 4:52:55 AM]   3. Critical reception
-[7/3/2025, 4:52:55 AM]   4. The Albert Roussel Collection
-[7/3/2025, 4:52:55 AM]   5. Works
-[7/3/2025, 4:52:55 AM]   6. Stage
-[7/3/2025, 4:52:55 AM]   7. Orchestral
-[7/3/2025, 4:52:55 AM]   8. Concertante
-[7/3/2025, 4:52:55 AM]   9. Band
-[7/3/2025, 4:52:55 AM]   10. Choral
-[7/3/2025, 4:52:55 AM]   ... and 8 more sections
-[7/3/2025, 4:52:55 AM] 
-[7/3/2025, 4:52:55 AM] ✅ Have sections (18 > 0) - proceeding with LLM calls
-[7/3/2025, 4:52:55 AM] Fetching Wikipedia biography for Albert Roussel...
-[7/3/2025, 4:52:55 AM] ✅ Retrieved biography (412 characters)
-[7/3/2025, 4:52:55 AM] Generating AI hints for Albert Roussel...
-[7/3/2025, 4:52:55 AM] Using biography excerpt (412 characters)
-[7/3/2025, 4:52:57 AM] ✅ Generated AI hints (395 tokens):
-[7/3/2025, 4:52:57 AM]   Hint 1: This person was a prominent French composer known for his contributions to the Modern period of classical music.
-[7/3/2025, 4:52:57 AM]   Hint 2: He is renowned for works such as 'Bacchus et Ariane' and 'Concerto for the Left Hand,' showcasing a transition from Impressionism to neoclassicism.
-[7/3/2025, 4:52:57 AM]   Hint 3: His musical career was preceded by seven years as a midshipman, and he is celebrated for his innovative use of rhythm and orchestration.
-[7/3/2025, 4:52:57 AM] 
-[7/3/2025, 4:52:57 AM] Waiting 1 second before next person...
-[7/3/2025, 4:52:58 AM] 
-[7/3/2025, 4:52:58 AM] ========================================
-[7/3/2025, 4:52:58 AM] PROCESSING PERSON 2/3: Matthias, Holy Roman Emperor
-[7/3/2025, 4:52:58 AM] ========================================
-[7/3/2025, 4:52:58 AM] Attempt 1/3: Fetching Wikipedia sections for Matthias, Holy Roman Emperor...
-[7/3/2025, 4:52:58 AM] Wikipedia returned 15 sections
-[7/3/2025, 4:52:58 AM] ✅ Successfully retrieved 15 sections for Matthias, Holy Roman Emperor
-[7/3/2025, 4:52:58 AM] Wikipedia sections (15 total):
-[7/3/2025, 4:52:58 AM]   1. Biography
-[7/3/2025, 4:52:58 AM]   2. Early life and family
-[7/3/2025, 4:52:58 AM]   3. Governor in Netherlands
-[7/3/2025, 4:52:58 AM]   4. Governor of Austria
-[7/3/2025, 4:52:58 AM]   5. Power struggle among Habsburg brothers
-[7/3/2025, 4:52:58 AM]   6. Sovereign rule
-[7/3/2025, 4:52:58 AM]   7. Burial
-[7/3/2025, 4:52:58 AM]   8. Names
-[7/3/2025, 4:52:58 AM]   9. Ancestry
-[7/3/2025, 4:52:58 AM]   10. Male-line family tree
-[7/3/2025, 4:52:58 AM]   ... and 5 more sections
-[7/3/2025, 4:52:58 AM] 
-[7/3/2025, 4:52:58 AM] ✅ Have sections (15 > 0) - proceeding with LLM calls
-[7/3/2025, 4:52:58 AM] Fetching Wikipedia biography for Matthias, Holy Roman Emperor...
-[7/3/2025, 4:52:58 AM] ✅ Retrieved biography (758 characters)
-[7/3/2025, 4:52:58 AM] Generating AI hints for Matthias, Holy Roman Emperor...
-[7/3/2025, 4:52:58 AM] Using biography excerpt (758 characters)
+[7/3/2025, 4:56:55 AM] ============================================================
+[7/3/2025, 4:56:55 AM] TEST: 3 PEOPLE WITH RETRY LOGIC
+[7/3/2025, 4:56:55 AM] ============================================================
+[7/3/2025, 4:56:55 AM] 
+[7/3/2025, 4:56:55 AM] Selected 3 people for processing:
+[7/3/2025, 4:56:55 AM]   1. Afonso de Albuquerque (Portuguese, Nobleman)
+[7/3/2025, 4:56:55 AM]   2. Georgia O'Keeffe (American, Painter)
+[7/3/2025, 4:56:55 AM]   3. Matilda of Flanders (Belgian, Companion)
+[7/3/2025, 4:56:55 AM] 
+[7/3/2025, 4:56:55 AM] ========================================
+[7/3/2025, 4:56:55 AM] PROCESSING PERSON 1/3: Afonso de Albuquerque
+[7/3/2025, 4:56:55 AM] ========================================
+[7/3/2025, 4:56:55 AM] Attempt 1/3: Fetching Wikipedia sections for Afonso de Albuquerque...
+[7/3/2025, 4:56:56 AM] Wikipedia returned 28 sections
+[7/3/2025, 4:56:56 AM] ✅ Successfully retrieved 28 sections for Afonso de Albuquerque
+[7/3/2025, 4:56:56 AM] Wikipedia sections (28 total):
+[7/3/2025, 4:56:56 AM]   1. Early life
+[7/3/2025, 4:56:56 AM]   2. Early military service, 1471–1509
+[7/3/2025, 4:56:56 AM]   3. First expedition to India, 1503
+[7/3/2025, 4:56:56 AM]   4. Second expedition to India, 1506–1509
+[7/3/2025, 4:56:56 AM]   5. Return, 1506
+[7/3/2025, 4:56:56 AM]   6. First conquest of Socotra, Muscat and Ormuz, 1507
+[7/3/2025, 4:56:56 AM]   7. Arrest at Cannanore, 1509
+[7/3/2025, 4:56:56 AM]   8. Governor of Portuguese India, 1509–1515
+[7/3/2025, 4:56:56 AM]   9. Conquest of Goa, 1510
+[7/3/2025, 4:56:56 AM]   10. Conquest of Malacca, 1511
+[7/3/2025, 4:56:56 AM]   ... and 18 more sections
+[7/3/2025, 4:56:56 AM] 
+[7/3/2025, 4:56:56 AM] ✅ Have sections (28 > 0) - proceeding with LLM calls
+[7/3/2025, 4:56:56 AM] Fetching Wikipedia biography for Afonso de Albuquerque...
+[7/3/2025, 4:56:56 AM] ✅ Retrieved biography (2331 characters)
+[7/3/2025, 4:56:56 AM] Generating AI hints for Afonso de Albuquerque...
+[7/3/2025, 4:56:56 AM] Using biography excerpt (1503 characters)
+[7/3/2025, 4:56:59 AM] ✅ Generated AI hints (583 tokens):
+[7/3/2025, 4:56:59 AM]   Hint 1: This person was a Portuguese general, admiral, and conquistador during the Renaissance period.
+[7/3/2025, 4:56:59 AM]   Hint 2: He served as viceroy of Portuguese India and is known for expanding Portuguese influence across the Indian Ocean and for his role in the conquest of Goa.
+[7/3/2025, 4:56:59 AM]   Hint 3: He was the first European to raid the Persian Gulf and led the first European fleet into the Red Sea, earning a reputation as one of the greatest naval commanders of his time.
+[7/3/2025, 4:56:59 AM] 
+[7/3/2025, 4:56:59 AM] Waiting 1 second before next person...
+[7/3/2025, 4:57:00 AM] 
+[7/3/2025, 4:57:00 AM] ========================================
+[7/3/2025, 4:57:00 AM] PROCESSING PERSON 2/3: Georgia O'Keeffe
+[7/3/2025, 4:57:00 AM] ========================================
+[7/3/2025, 4:57:00 AM] Attempt 1/3: Fetching Wikipedia sections for Georgia O'Keeffe...
