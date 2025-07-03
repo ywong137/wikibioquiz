@@ -534,10 +534,8 @@ async function populatePersonData(famousPerson: any): Promise<any> {
   let aiHint1 = '';
   let aiHint2 = '';
   let aiHint3 = '';
-  let initials = '';
-  
-  // Calculate initials
-  initials = generateInitials(famousPerson.name);
+  // Use existing initials from database (already pre-calculated correctly)
+  const initials = famousPerson.initials;
   
   // Try to fetch Wikipedia data
   try {
@@ -600,7 +598,7 @@ function createWikipediaPersonFromDb(famousPerson: any): WikipediaPerson {
     aiHint1: famousPerson.aiHint1 && famousPerson.aiHint1 !== 'AI_ERROR' ? famousPerson.aiHint1 : undefined,
     aiHint2: famousPerson.aiHint2 && famousPerson.aiHint2 !== 'AI_ERROR' ? famousPerson.aiHint2 : undefined,
     aiHint3: famousPerson.aiHint3 && famousPerson.aiHint3 !== 'AI_ERROR' ? famousPerson.aiHint3 : undefined,
-    initials: famousPerson.initials || generateInitials(famousPerson.name),
+    initials: famousPerson.initials, // Use pre-calculated initials from database
     url: `https://en.wikipedia.org/wiki/${encodeURIComponent(famousPerson.wikipediaTitle || famousPerson.name.replace(/ /g, '_'))}`,
   };
 }
