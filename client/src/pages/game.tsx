@@ -596,7 +596,11 @@ export default function Game() {
 
         {/* Game Footer */}
         <footer className="text-center text-slate-600 space-y-4">
-          <p className="text-sm">Powered by Wikipedia API and OpenAI • Made with ❤️ for trivia lovers</p>
+          <p className="text-sm">
+            <span className="block sm:inline">Powered by Wikipedia API and OpenAI</span>
+            <span className="hidden sm:inline"> • </span>
+            <span className="block sm:inline">Made with ❤️ for trivia lovers</span>
+          </p>
           <div className="bg-slate-100 border border-slate-200 rounded-lg p-3 max-w-md mx-auto">
             <p className="text-xs text-slate-500">
               Disclaimer: This was vibe-coded so there are errors. The robot 🤖 is not that great and the human has a day job 🌳. Just have fun and try not to sweat the details.
