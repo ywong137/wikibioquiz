@@ -98,6 +98,12 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 03, 2025. ACCURACY CALCULATION FIX: Fixed stuck accuracy percentage using real session data instead of mock data
+  - Replaced hardcoded mock accuracy calculation (57%) with dynamic calculation from gameSession data
+  - Added proper session invalidation after guess mutations to ensure UI reflects latest statistics
+  - Enhanced period normalization for abbreviations: "A.J. Cronin" now accepts "AJ Cronin" guesses
+  - Fixed type errors in guess submission mutation parameters
+  - Accuracy now updates correctly in real-time as players submit guesses
 - July 03, 2025. RESTRICTIVE HISTORICAL NAME MATCHING: Revolutionary location and title-aware validation system
   - RESTRICTIVE "OF" LOGIC: "Ivan V of Russia" accepts ONLY "Ivan V" and "Ivan V of Russia" (blocks "Russia")
   - RESTRICTIVE "THE" LOGIC: "Alfonso the Battler" accepts ONLY "Alfonso" and "Alfonso the Battler" (blocks "Battler") 

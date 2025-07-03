@@ -181,7 +181,6 @@ export default function Game() {
       personName: currentPerson.name,
       hintUsed,
       initialsUsed,
-      hintsUsedCount: hintsClicked,
     });
   };
 
@@ -266,13 +265,8 @@ export default function Game() {
   };
 
   const calculateAccuracy = () => {
-    const mockSession = {
-      totalGuesses: 7,
-      correctGuesses: 4,
-    };
-    return mockSession.totalGuesses > 0 
-      ? Math.round((mockSession.correctGuesses / mockSession.totalGuesses) * 100) 
-      : 0;
+    if (!gameSession || gameSession.totalGuesses === 0) return 0;
+    return Math.round((gameSession.correctGuesses / gameSession.totalGuesses) * 100);
   };
 
   if (sessionLoading || createSessionMutation.isPending) {
