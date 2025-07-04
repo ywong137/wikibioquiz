@@ -393,32 +393,66 @@ export default function Game() {
         </div>
 
         {/* Mode Selection */}
-        <div className="flex justify-center items-center space-x-4 mb-8">
-          <span className="text-slate-600 font-medium">Too Hard? Try something easier:</span>
-          <Select value={selectedMode} onValueChange={setSelectedMode}>
-            <SelectTrigger className="w-80">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="everything">Everything - HARD MODE</SelectItem>
-              <SelectItem value="modern">Modern Only - INTERMEDIATE MODE</SelectItem>
-              <SelectItem value="american">Americans - EASY MODE</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button 
-            onClick={() => switchModeMutation.mutate(selectedMode)}
-            disabled={switchModeMutation.isPending || selectedMode === gameSession?.mode}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2"
-          >
-            {switchModeMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Switching...
-              </>
-            ) : (
-              'Switch Mode'
-            )}
-          </Button>
+        <div className="mb-8">
+          {/* Desktop layout: single line */}
+          <div className="hidden md:flex justify-center items-center space-x-4">
+            <span className="text-slate-600 font-medium">Too Hard? Try something easier:</span>
+            <Select value={selectedMode} onValueChange={setSelectedMode}>
+              <SelectTrigger className="w-80">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="everything">Everything - HARD MODE</SelectItem>
+                <SelectItem value="modern">Modern Only - INTERMEDIATE MODE</SelectItem>
+                <SelectItem value="american">Americans - EASY MODE</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button 
+              onClick={() => switchModeMutation.mutate(selectedMode)}
+              disabled={switchModeMutation.isPending || selectedMode === gameSession?.mode}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2"
+            >
+              {switchModeMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Switching...
+                </>
+              ) : (
+                'Switch Mode'
+              )}
+            </Button>
+          </div>
+          
+          {/* Mobile layout: two lines */}
+          <div className="md:hidden text-center">
+            <div className="text-slate-600 font-medium mb-3">Too Hard? Try something easier:</div>
+            <div className="flex justify-center items-center space-x-3">
+              <Select value={selectedMode} onValueChange={setSelectedMode}>
+                <SelectTrigger className="w-64">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="everything">Everything - HARD MODE</SelectItem>
+                  <SelectItem value="modern">Modern Only - INTERMEDIATE MODE</SelectItem>
+                  <SelectItem value="american">Americans - EASY MODE</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={() => switchModeMutation.mutate(selectedMode)}
+                disabled={switchModeMutation.isPending || selectedMode === gameSession?.mode}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2"
+              >
+                {switchModeMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Switch
+                  </>
+                ) : (
+                  'Switch Mode'
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Game Area */}
