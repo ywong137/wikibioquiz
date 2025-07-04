@@ -202,6 +202,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { guess, sessionId, personName, hintUsed, initialsUsed, hintsUsedCount } = req.body;
       
+      console.log(`🎯 Player guessed: ${guess}`);
+      
       const session = await storage.getGameSession(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
