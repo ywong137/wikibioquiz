@@ -121,43 +121,43 @@ async function fetchWikipediaData(wikipediaTitle: string) {
   }
 }
 
-async function testRudolfMossbauer() {
-  console.log('\n🧪 TESTING RUDOLF MÖSSBAUER WITH PRODUCTION TEMPLATE');
-  console.log('=====================================================\n');
+async function testPersonHints(personName: string, testNumber: number) {
+  console.log(`\n🧪 TEST ${testNumber}: ${personName.toUpperCase()}`);
+  console.log('='.repeat(50 + personName.length));
   
   try {
     // Get person from database
-    const person = await db.select().from(famousPeople).where(eq(famousPeople.name, 'Rudolf Mössbauer')).limit(1);
+    const person = await db.select().from(famousPeople).where(eq(famousPeople.name, personName)).limit(1);
     
     if (person.length === 0) {
-      console.log('❌ Rudolf Mössbauer not found in database');
+      console.log(`❌ ${personName} not found in database`);
       return;
     }
     
-    const rudolfData = person[0];
+    const personData = person[0];
     console.log('👤 PERSON DATA FROM DATABASE:');
-    console.log(`   Name: ${rudolfData.name}`);
-    console.log(`   Nationality: ${rudolfData.nationality}`);
-    console.log(`   Time Period: ${rudolfData.timeperiod}`);
-    console.log(`   Occupation: ${rudolfData.occupation}`);
-    console.log(`   Wikipedia Title: ${rudolfData.wikipediaTitle}`);
-    console.log(`   Initials: ${rudolfData.initials}`);
+    console.log(`   Name: ${personData.name}`);
+    console.log(`   Nationality: ${personData.nationality}`);
+    console.log(`   Time Period: ${personData.timeperiod}`);
+    console.log(`   Occupation: ${personData.occupation}`);
+    console.log(`   Wikipedia Title: ${personData.wikipediaTitle}`);
+    console.log(`   Initials: ${personData.initials}`);
     console.log('');
     
     // Fetch Wikipedia data
-    const wikipediaData = await fetchWikipediaData(rudolfData.wikipediaTitle!);
+    const wikipediaData = await fetchWikipediaData(personData.wikipediaTitle!);
     
     console.log('📚 WIKIPEDIA DATA:');
     console.log(`   Sections (${wikipediaData.sections.length}): ${wikipediaData.sections.join(', ')}`);
-    console.log(`   Biography: ${wikipediaData.biography.substring(0, 200)}...`);
+    console.log(`   Biography: ${wikipediaData.biography.substring(0, 150)}...`);
     console.log('');
     
-    // Generate AI hints using the EXACT production function
+    // Generate AI hints using the centralized template
     const [hint1, hint2, hint3] = await generateAIHints(
-      rudolfData.name,
-      rudolfData.nationality || 'Unknown',
-      rudolfData.timeperiod || 'Historical',
-      rudolfData.occupation || 'Historical Figure',
+      personData.name,
+      personData.nationality || 'Unknown',
+      personData.timeperiod || 'Historical',
+      personData.occupation || 'Historical Figure',
       wikipediaData.biography
     );
     
@@ -167,12 +167,63 @@ async function testRudolfMossbauer() {
     console.log(`   Hint 3 (Very Specific): ${hint3}`);
     console.log('');
     
-    console.log('🏁 TESTING COMPLETE - USING PRODUCTION server/routes.ts generateAIHints FUNCTION');
+  } catch (error: any) {
+    console.error(`❌ Test failed for ${personName}:`, error.message);
+  }
+}
+
+async function test3RandomPeople() {
+  console.log('\n🧪 TESTING 3 RANDOM PEOPLE WITH CENTRALIZED PRODUCTION TEMPLATE');
+  console.log('================================================================\n');
+  
+  try {
+    // Get 3 random people from database
+    const randomPeople = await db.select({
+      name: famousPeople.name,
+      nationality: famousPeople.nationality,
+      timeperiod: famousPeople.timeperiod,
+      occupation: famousPeople.occupation,
+      wikipediaTitle: famousPeople.wikipediaTitle,
+      initials: famousPeople.initials
+    }).from(famousPeople)
+      .where(eq(famousPeople.filteredOut, 0))
+      .orderBy(famousPeople.id) // Use consistent ordering, then limit
+      .limit(2000); // Get a larger sample to pick from
+    
+    if (randomPeople.length < 3) {
+      console.log('❌ Not enough people in database');
+      return;
+    }
+    
+    // Pick 3 random people from the sample
+    const selectedPeople = [];
+    const usedIndices = new Set();
+    
+    while (selectedPeople.length < 3) {
+      const randomIndex = Math.floor(Math.random() * randomPeople.length);
+      if (!usedIndices.has(randomIndex)) {
+        usedIndices.add(randomIndex);
+        selectedPeople.push(randomPeople[randomIndex]);
+      }
+    }
+    
+    console.log('🎯 SELECTED PEOPLE:');
+    selectedPeople.forEach((person, i) => {
+      console.log(`   ${i + 1}. ${person.name} (${person.nationality}, ${person.occupation})`);
+    });
+    console.log('');
+    
+    // Test each person
+    for (let i = 0; i < selectedPeople.length; i++) {
+      await testPersonHints(selectedPeople[i].name, i + 1);
+    }
+    
+    console.log('🏁 ALL TESTS COMPLETE - USING CENTRALIZED TEMPLATE FROM shared/prompt-templates.ts');
     
   } catch (error: any) {
-    console.error('❌ Test failed:', error.message);
+    console.error('❌ Test suite failed:', error.message);
   }
 }
 
 // Run the test
-testRudolfMossbauer().catch(console.error);
+test3RandomPeople().catch(console.error);
