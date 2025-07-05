@@ -167,6 +167,7 @@ export default function Game() {
       personName: string;
       hintUsed: boolean;
       initialsUsed: boolean;
+      hintsUsedCount: number;
     }) => {
       const response = await apiRequest('POST', '/api/game/guess', guessData);
       return response.json();
@@ -242,6 +243,7 @@ export default function Game() {
       personName: currentPerson.name,
       hintUsed,
       initialsUsed,
+      hintsUsedCount: hintsClicked,
     });
   };
 
