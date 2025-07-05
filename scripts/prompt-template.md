@@ -15,7 +15,7 @@ Generate 3 hints that progressively reveal more information:
 3. Third hint: Very specific details that make them identifiable.
 
 IMPORTANT RULES:
-- Never use the person's name (including first name) in any hint
+- Never use the person's name (including first name OR last name) in any hint
 - Refer to them as "he", "she", or "this person" as appropriate
 - Do not mention birthplace or birth year in any hint
 - Focus on their work, achievements, contributions, or notable events they were involved in
