@@ -1533,7 +1533,7 @@ Refer to the person as he, she, or "this person" as appropriate.
 Keep each hint under 50 words.
 
 Format as JSON:
-{"hint1": "...", "hint2": "...", "hint3": "..."}`;
+{"hint1": "...", "hint2": "...", "hint3": "...", "traceID": "2025-07-05 12:18a"}`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini", // Use gpt-4o-mini for reliability as per user requirement
