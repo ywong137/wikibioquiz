@@ -10,7 +10,7 @@ Context: {NATIONALITY} {OCCUPATION} from the {TIMEPERIOD} period
 Wikipedia Biography Excerpt: {BIOGRAPHY_EXCERPT}
 
 Generate 3 hints that progressively reveal more information:
-1. First hint: Start with "This person..." and describe something about them beyond their nationality, occupation, and time period.
+1. First hint: Start with "This person..." and describe something about them that does NOT involve their nationality, occupation, and time period.
 2. Second hint: More specific achievements or notable works.
 3. Third hint: Very specific details that make them identifiable.
 
