@@ -1,3 +1,12 @@
+/**
+ * ⚠️ DEPRECATED: This script uses an outdated AI hint generation template.
+ * 
+ * For current AI hint generation, use the centralized template in:
+ * - shared/prompt-templates.ts (template definition)
+ * - server/routes.ts (production usage)
+ * - test-production-hints.ts (testing)
+ */
+
 import { db } from '../server/db';
 import { famousPeople } from '../shared/schema';
 import { eq, isNotNull } from 'drizzle-orm';

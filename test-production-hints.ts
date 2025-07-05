@@ -1,56 +1,40 @@
 import { db } from './server/db';
 import { famousPeople } from './shared/schema';
 import { eq } from 'drizzle-orm';
-
-// Import the actual production function from server/routes.ts
-// We'll extract it since it's not exported
 import OpenAI from 'openai';
+import { getAIHintGenerationPrompt, AI_HINT_SYSTEM_MESSAGE, AI_HINT_CONFIG } from './shared/prompt-templates';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// EXACT COPY of generateAIHints function from server/routes.ts (lines 1510-1568)
+// 🎯 USING CENTRALIZED TEMPLATE FROM shared/prompt-templates.ts
 async function generateAIHints(name: string, nationality: string, timeperiod: string, occupation: string, biography: string): Promise<[string, string, string]> {
   try {
     console.log(`🤖 Generating AI hints for: ${name}`);
     
-    const excerpt = biography.substring(0, 1500); // Limit to 1500 chars as per user requirement
-    
-    const prompt = `You are creating hints for a Wikipedia guessing game about ${name}.
-
-Context:
-- Nationality: ${nationality || 'Unknown'}
-- Time period: ${timeperiod || 'Historical'}
-- Occupation: ${occupation || 'Historical Figure'}
-- Biography excerpt: ${excerpt}
-
-Create exactly 3 progressive hints that help players guess this person:
-
-HINT 1 (7→2 points): A subtle, general clue about their field or era. Don't mention birthplace, birth year, or their name.
-HINT 2 (2→1 points): A more specific clue about their major achievement or what they're famous for.
-HINT 3 (1→1 points): A direct clue that clearly identifies them without giving away the name.
-
-Each hint should start with "This person was a..." or "This person is known for..." format.
-Keep each hint under 50 words.
-Be factual and avoid mentioning birthplace, birth year, or the person's name.
-
-Format as JSON:
-{"hint1": "...", "hint2": "...", "hint3": "..."}`;
+    // Use centralized template - any changes you make will automatically be reflected here
+    const prompt = getAIHintGenerationPrompt({
+      name,
+      nationality,
+      timeperiod,
+      occupation,
+      biography
+    });
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Use gpt-4o-mini for reliability as per user requirement
+      model: AI_HINT_CONFIG.model,
       messages: [
         {
           role: "system",
-          content: "You are an expert at creating engaging, educational biographical hints for a Wikipedia guessing game."
+          content: AI_HINT_SYSTEM_MESSAGE
         },
         {
           role: "user",
           content: prompt
         }
       ],
-      response_format: { type: "json_object" },
-      max_tokens: 500,
-      temperature: 0.7
+      response_format: AI_HINT_CONFIG.response_format,
+      max_tokens: AI_HINT_CONFIG.max_tokens,
+      temperature: AI_HINT_CONFIG.temperature
     });
 
     const rawContent = response.choices[0].message.content || '{}';

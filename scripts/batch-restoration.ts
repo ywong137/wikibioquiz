@@ -1,3 +1,14 @@
+/**
+ * ⚠️ DEPRECATED: This script uses an outdated AI hint generation template.
+ * 
+ * For current AI hint generation, use the centralized template in:
+ * - shared/prompt-templates.ts (template definition)
+ * - server/routes.ts (production usage)
+ * - test-production-hints.ts (testing)
+ * 
+ * This script is kept for reference but should not be used for new hint generation.
+ */
+
 import { db } from '../server/db';
 import { famousPeople } from '../shared/schema';
 import { eq, isNotNull } from 'drizzle-orm';
@@ -5,6 +16,7 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// ⚠️ DEPRECATED: Use shared/prompt-templates.ts instead
 async function generateHighQualityHints(name: string, nationality: string, timeperiod: string, occupation: string): Promise<[string, string, string]> {
   try {
     const prompt = `Generate 3 progressive hints for a Wikipedia guessing game about ${name}.

@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertGameSessionSchema, type WikipediaPerson } from "@shared/schema";
 import { z } from "zod";
 import OpenAI from "openai";
+import { getAIHintGenerationPrompt, AI_HINT_SYSTEM_MESSAGE, AI_HINT_CONFIG } from "@shared/prompt-templates";
 
 const guessSchema = z.object({
   guess: z.string().min(1),
@@ -1511,45 +1512,30 @@ async function generateAIHints(name: string, nationality: string, timeperiod: st
   try {
     console.log(`🤖 Generating AI hints for: ${name}`);
     
-    const excerpt = biography.substring(0, 1500); // Limit to 1500 chars as per user requirement
-    
-    const prompt = `You are creating hints for a Wikipedia guessing game about ${name}.
-
-Context:
-- Nationality: ${nationality || 'Unknown'}
-- Time period: ${timeperiod || 'Historical'}
-- Occupation: ${occupation || 'Historical Figure'}
-- Biography excerpt: ${excerpt}
-
-Create exactly 3 progressive hints that help players guess this person:
-
-HINT 1: A general clue about them going beyond their nationality, time period, or occupation. 
-HINT 2: A more specific clue about their major achievement or what they're famous for.
-HINT 3: A direct clue that clearly identifies them without giving away the name.
-
-None of the clues should mention birthplace, birth year, or the person's name (either first name or last name)
-Each hint should start with "This person was a..." or "This person is known for..." format.
-Refer to the person as he, she, or "this person" as appropriate.
-Keep each hint under 50 words.
-
-Format as JSON (including the last field called 'traceID'):
-{"hint1": "...", "hint2": "...", "hint3": "...", "traceID": "2025-07-05 12:18a"}`;
+    // 🎯 USING CENTRALIZED TEMPLATE FROM shared/prompt-templates.ts
+    const prompt = getAIHintGenerationPrompt({
+      name,
+      nationality,
+      timeperiod,
+      occupation,
+      biography
+    });
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Use gpt-4o-mini for reliability as per user requirement
+      model: AI_HINT_CONFIG.model,
       messages: [
         {
           role: "system",
-          content: "You are an expert at creating engaging, educational biographical hints for a Wikipedia guessing game."
+          content: AI_HINT_SYSTEM_MESSAGE
         },
         {
           role: "user",
           content: prompt
         }
       ],
-      response_format: { type: "json_object" },
-      max_tokens: 500,
-      temperature: 0.7
+      response_format: AI_HINT_CONFIG.response_format,
+      max_tokens: AI_HINT_CONFIG.max_tokens,
+      temperature: AI_HINT_CONFIG.temperature
     });
 
     const result = JSON.parse(response.choices[0].message.content || '{}');

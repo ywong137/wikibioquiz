@@ -98,6 +98,13 @@ This is a full-stack web application that implements a Wikipedia-based guessing 
 - Session persistence with PostgreSQL store
 
 ## Changelog
+- July 05, 2025. CENTRALIZED TEMPLATE SYSTEM: Implemented single source of truth for AI prompt templates
+  - Created shared/prompt-templates.ts as centralized template repository with type-safe interface
+  - Updated production server/routes.ts to use centralized template instead of hardcoded prompt
+  - Updated test-production-hints.ts to use same centralized template ensuring consistency
+  - Added deprecation warnings to 5+ legacy script files with outdated AI hint functions
+  - Template changes now automatically affect both production and testing with zero code duplication
+  - System supports your latest template: no nationality/occupation in first hint, includes traceID field
 - July 03, 2025. SOCIAL MEDIA OPTIMIZATION: Fixed Twitter Card issues and updated branding
   - Converted SVG social preview to PNG format for better platform compatibility (101KB, 1200x630px)  
   - Hardcoded absolute URLs in meta tags: https://wiki-bio-quiz.replit.app/social-preview.png
