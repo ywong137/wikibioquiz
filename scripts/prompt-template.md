@@ -34,7 +34,7 @@ Replace these placeholders:
 
 ## OpenAI Configuration
 
-- Model: `gpt-4o-mini` (cost-effective, reliable)
+- Model: `gpt-4o-2024-08-06` (cost-effective, reliable)
 - Response format: `{ type: "json_object" }`
 - Max tokens: 500
 - Temperature: 0.7
