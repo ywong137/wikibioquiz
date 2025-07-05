@@ -10,15 +10,15 @@ Context: {NATIONALITY} {OCCUPATION} from the {TIMEPERIOD} period
 Wikipedia Biography Excerpt: {BIOGRAPHY_EXCERPT}
 
 Generate 3 hints that progressively reveal more information:
-1. First hint: Start with "This person was a..." and describe their field of work. DO NOT mention birthplace or birth year.
-2. Second hint: More specific achievements or notable works  
-3. Third hint: Very specific details that make them identifiable
+1. First hint: Start with "This person..." and describe what made them notable beyond the context given above. 
+2. Second hint: More specific achievements or notable works.
+3. Third hint: Very specific details that make them identifiable.
 
 IMPORTANT RULES:
 - Never use the person's name (including first name) in any hint
 - Refer to them as "he", "she", or "this person" as appropriate
 - Do not mention birthplace or birth year in any hint
-- Focus on their work, achievements, and contributions
+- Focus on their work, achievements, contributions, or notable events they were involved in
 
 Format as JSON: {"hint1": "...", "hint2": "...", "hint3": "..."}
 ```
@@ -41,7 +41,6 @@ Replace these placeholders:
 
 ## Quality Requirements
 
-- Hints must be educational and progressive
+- Hints must be educational and progressively more specific
 - No synthetic/fallback data - fail explicitly if APIs don't work
 - Follow "nationality - timeperiod - occupation" format in context
-- Tested successfully on diverse historical figures
