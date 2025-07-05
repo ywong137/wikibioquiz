@@ -49,50 +49,64 @@ async function fetchWikipediaData(wikipediaTitle: string) {
   }
 }
 
-// AI hint generation function
-async function generateAIHints(name: string, nationality: string, timeperiod: string, occupation: string, biography: string) {
-  console.log(`🤖 Generating AI hints for: ${name}`);
-  
-  const prompt = `You are creating progressive hints for a Wikipedia guessing game. Generate exactly 3 hints of increasing specificity for "${name}".
-
-Person details:
-- Name: ${name}
-- Nationality: ${nationality}
-- Time period: ${timeperiod}
-- Occupation: ${occupation}
-- Biography excerpt: ${biography.substring(0, 500)}...
-
-Requirements:
-- Hint 1: Very general (era, field, broad accomplishments)
-- Hint 2: More specific (key works, events, or relationships)
-- Hint 3: Very specific (unique details that almost give it away)
-- Each hint should be 1-2 sentences maximum
-- Never mention the person's name directly
-- Make hints progressively more revealing
-- Focus on facts that would help someone guess the identity
-
-Respond in JSON format:
-{
-  "hint1": "...",
-  "hint2": "...", 
-  "hint3": "..."
-}`;
-
+// AI hint generation function (COPIED EXACTLY FROM PRODUCTION server/routes.ts)
+async function generateAIHints(name: string, nationality: string, timeperiod: string, occupation: string, biography: string): Promise<[string, string, string]> {
   try {
+    console.log(`🤖 Generating AI hints for: ${name}`);
+    
+    const excerpt = biography.substring(0, 1500); // Limit to 1500 chars as per user requirement
+    
+    const prompt = `You are creating hints for a Wikipedia guessing game about ${name}.
+
+Context:
+- Nationality: ${nationality || 'Unknown'}
+- Time period: ${timeperiod || 'Historical'}
+- Occupation: ${occupation || 'Historical Figure'}
+- Biography excerpt: ${excerpt}
+
+Create exactly 3 progressive hints that help players guess this person:
+
+HINT 1 (7→2 points): A subtle, general clue about their field or era. Don't mention birthplace, birth year, or their name.
+HINT 2 (2→1 points): A more specific clue about their major achievement or what they're famous for.
+HINT 3 (1→1 points): A direct clue that clearly identifies them without giving away the name.
+
+Each hint should start with "This person was a..." or "This person is known for..." format.
+Keep each hint under 50 words.
+Be factual and avoid mentioning birthplace, birth year, or the person's name.
+
+Format as JSON:
+{"hint1": "...", "hint2": "...", "hint3": "..."}`;
+
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [{ role: "user", content: prompt }],
+      model: "gpt-4o-mini", // Use gpt-4o-mini for reliability as per user requirement
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert at creating engaging, educational biographical hints for a Wikipedia guessing game."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
       response_format: { type: "json_object" },
-      temperature: 0.7,
+      max_tokens: 500,
+      temperature: 0.7
     });
 
-    const result = JSON.parse(response.choices[0].message.content!);
+    const result = JSON.parse(response.choices[0].message.content || '{}');
+    
+    if (!result.hint1 || !result.hint2 || !result.hint3) {
+      throw new Error('Invalid hint response from OpenAI');
+    }
+
     console.log(`🤖 Successfully generated 3 AI hints for ${name}`);
     
     return [result.hint1, result.hint2, result.hint3];
+    
   } catch (error: any) {
-    console.error(`❌ AI hint generation failed: ${error.message}`);
-    throw error;
+    console.error(`❌ AI hint generation failed for ${name}:`, error);
+    throw new Error(`AI hint generation failed: ${error}`);
   }
 }
 
