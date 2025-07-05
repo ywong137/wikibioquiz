@@ -105,15 +105,15 @@ async function generateAIHints(name: string, nationality: string, timeperiod: st
 }
 
 async function testFreshAPICall() {
-  console.log('🧪 TESTING FRESH API CALLS FOR HANS VON BÜLOW');
+  console.log('🧪 TESTING FRESH API CALLS FOR RUDOLF MÖSSBAUER');
   console.log('================================================================');
 
   const testPerson = {
-    name: 'Hans von Bülow',
+    name: 'Rudolf Mössbauer',
     nationality: 'German',
-    timeperiod: 'Modern',
-    occupation: 'Musician',
-    wikipediaTitle: 'Hans_von_Bülow'
+    timeperiod: 'Contemporary',
+    occupation: 'Physicist',
+    wikipediaTitle: 'Rudolf_Mössbauer'
   };
 
   try {
