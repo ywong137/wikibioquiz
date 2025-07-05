@@ -39,12 +39,12 @@ HINT 2: A more specific clue about their major achievement or what they're famou
 HINT 3: A direct clue that clearly identifies them without giving away the name.
 
 None of the clues should mention birthplace, birth year, or the person's name (either first name or last name)
-Each hint should start with "This person was a..." or "This person is known for..." format.
 Refer to the person as he, she, or "this person" as appropriate.
+Focus on their work, achievements, contributions, or notable events they were involved in
 Keep each hint under 50 words.
 
 Format as JSON (including the last field called 'traceID'):
-{"hint1": "...", "hint2": "...", "hint3": "...", "traceID": "2025-07-05 12:31a"}`;
+{"hint1": "...", "hint2": "...", "hint3": "...", "traceID": "2025-07-05 12:34a"}`;
 }
 
 /**
