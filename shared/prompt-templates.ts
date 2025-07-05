@@ -34,7 +34,7 @@ Context:
 
 Create exactly 3 progressive hints that help players guess this person:
 
-HINT 1: A general clue about them that makes no reference to nationality, the time period they lived in, or occupation.  This includes references like "music" if the person is a "musician."
+HINT 1: A general clue about them that makes no reference to nationality, the time period they lived in, or occupation.  This includes references like not having the word "music" if the person is a musician or "physics" if the person was a physicist.
 HINT 2: A more specific clue about their major achievement or what they're famous for.
 HINT 3: A direct clue that clearly identifies them without giving away the name.
 
@@ -45,7 +45,7 @@ Focus on their work, achievements, contributions, or notable events they were in
 Keep each hint under 50 words.
 
 Format as JSON (including the last field called 'traceID'):
-{"hint1": "...", "hint2": "...", "hint3": "...", "traceID": "2025-07-05 1:03a"}`;
+{"hint1": "...", "hint2": "...", "hint3": "...", "traceID": "2025-07-05 1:07a"}`;
 }
 
 /**
