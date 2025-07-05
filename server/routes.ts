@@ -1523,13 +1523,14 @@ Context:
 
 Create exactly 3 progressive hints that help players guess this person:
 
-HINT 1 (7→2 points): A subtle, general clue about their field or era. Don't mention birthplace, birth year, or their name.
-HINT 2 (2→1 points): A more specific clue about their major achievement or what they're famous for.
-HINT 3 (1→1 points): A direct clue that clearly identifies them without giving away the name.
+HINT 1: A general clue about them going beyond their nationality, time period, or occupation. 
+HINT 2: A more specific clue about their major achievement or what they're famous for.
+HINT 3: A direct clue that clearly identifies them without giving away the name.
 
+None of the clues should mention birthplace, birth year, or the person's name (either first name or last name)
 Each hint should start with "This person was a..." or "This person is known for..." format.
+Refer to the person as he, she, or "this person" as appropriate.
 Keep each hint under 50 words.
-Be factual and avoid mentioning birthplace, birth year, or the person's name.
 
 Format as JSON:
 {"hint1": "...", "hint2": "...", "hint3": "..."}`;

@@ -1,5 +1,8 @@
 # OpenAI Hint Generation Prompt Template
 
+# Note: this file is deprecated - the real prompt template is near the end of server/routes.ts
+# in the generateAIHints() function.
+
 ## Final Approved Template
 
 ```
