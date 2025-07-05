@@ -1532,7 +1532,7 @@ Each hint should start with "This person was a..." or "This person is known for.
 Refer to the person as he, she, or "this person" as appropriate.
 Keep each hint under 50 words.
 
-Format as JSON:
+Format as JSON (including the last field called 'traceID'):
 {"hint1": "...", "hint2": "...", "hint3": "...", "traceID": "2025-07-05 12:18a"}`;
 
     const response = await openai.chat.completions.create({

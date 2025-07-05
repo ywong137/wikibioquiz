@@ -53,7 +53,12 @@ Format as JSON:
       temperature: 0.7
     });
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
+    const rawContent = response.choices[0].message.content || '{}';
+    console.log(`🔍 RAW OPENAI RESPONSE: ${rawContent}`);
+    
+    const result = JSON.parse(rawContent);
+    console.log(`🔍 PARSED JSON OBJECT:`, result);
+    console.log(`🔍 ALL JSON KEYS:`, Object.keys(result));
     
     if (!result.hint1 || !result.hint2 || !result.hint3) {
       throw new Error('Invalid hint response from OpenAI');
